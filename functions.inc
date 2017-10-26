@@ -943,4 +943,10 @@ function agenda_slider()
 
 	return $page;
 }
+
+function agenda_validateDate($date, $format = 'Y-m-d H:i:s')
+{
+    $d = DateTime::createFromFormat($format, $date);
+    return $d && $d->format($format) == $date;
+}
 ?>

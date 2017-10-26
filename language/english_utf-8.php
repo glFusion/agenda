@@ -22,12 +22,17 @@ $LANG_AC = array (
     'plugin'            => 'agenda',
     'plugin_name'       => 'Agenda',
     'plugin_admin'		=> 'Agenda Admin',
+    'event_list'        => 'Agenda Events',
+    'admin_help'        => 'Administer events',
     'access_denied'     => 'Access Denied',
     'access_denied_msg' => 'You are not authorized to view this Page.  Your user name and IP have been recorded.',
+    'category_list'     => 'Categories',
     'admin'		        => 'Agenda Admin',
     'cancel'			=> 'Cancel',
     'delete'			=> 'Delete',
     'save'				=> 'Save',
+    'create'            => 'New Event',
+    'header'            => 'Agenda',
 );
 
 $LANG_AC_ERRORS = array(

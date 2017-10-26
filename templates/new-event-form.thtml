@@ -1,0 +1,107 @@
+<h3>New Event Form</h3>
+
+<form class="uk-form" action="" id="event-form" name="event-form">
+	<input type="hidden" name="action" value="new-event">
+	<div class="uk-form-row">
+		<input class="required uk-form-width-large" type="text" name="title" id="title" placeholder="Event Title">
+	</div>
+
+	<div class="uk-form-row">
+		<input type="text" id="event-date" name="event-date" data-uk-datepicker="{format:'YYYY-MM-DD'}">
+		&nbsp;to&nbsp;
+		<input class="uk-form-width-small" type="text" id="event-end-date" name="event-end-date" tabindex="-1" data-uk-datepicker="{format:'YYYY-MM-DD'}">
+	</div>
+
+	<div class="uk-form-row">
+		<input type="checkbox" id="event-allday" name="event-allday" tabindex="-1"  checked="checked">&nbsp;All Day
+		<input type="checkbox" name="repeats" id="repeats" value="1">&nbsp;Repeat...
+	</div>
+
+	<!-- build a grid here -->
+
+	<div class="uk-grid uk-margin">
+		<div class="uk-width-1-2">
+			<div class="uk-form-row" id="time-entry" style="display:none;">
+
+				<div class="uk-form-row">
+					<label class="uk-form-label" for="add-start-time">Start Time</label>
+					<div class="uk-form-controls">
+						<input type="text" name="start-time" id="start-time"  data-uk-timepicker="{format:'24h'}">
+					</div>
+				</div>
+
+				<div class="uk-form-row" id="end-time-row">
+					<label class="uk-form-label" for="add-end-time">End Time</label>
+					<div class="uk-form-controls">
+						<input type="text" name="end-time" id="end-time"   data-uk-timepicker="{format:'24h'}">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="uk-width-1-2">
+			<div class="uk-form-row" id="repeat-entry" style="display:none;">
+				<div class="uk-form-row">
+					<div class="uk-form-controls">
+						<div id="repeat-options" >
+							Repeat every:<br>
+							<input type="radio" value="1" name="repeat-freq" align="bottom"> Day<br>
+							<input type="radio" value="7" name="repeat-freq" align="bottom"> Week<br>
+							<input type="radio" value="14" name="repeat-freq" align="bottom"> Two Weeks<br>
+							<input type="radio" value="30" name="repeat-freq" align="bottom"> Monthly<br>
+							<input type="radio" value="365" name="repeat-freq" align="bottom"> Yearly<br>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="uk-form-row">
+		<label class="uk-form-label" for="category">Category</label>
+		<div class="uk-form-controls">
+			<select id="category" name="category">
+				<option value="0">Reminder</option>
+				<option value="1">Work</option>
+				<option value="2">Birthday</option>
+				<option value="3">Anniversay</option>
+				<option value="4">Other</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="uk-form-row">
+		<label class="uk-form-label" for="location">Where</label>
+		<div class="uk-form-controls">
+			<input type="text" class="uk-form-width-large" name="location" id="location" value="" placeholder="Event Location">
+		</div>
+	</div>
+
+	<div class="uk-form-row">
+		<label class="uk-form-label" for="add-end-time">Description</label>
+		<div class="uk-form-controls">
+			<textarea id="description" name="description" rows="10" width="120" style="width:100%;"></textarea>
+		</div>
+	</div>
+</form>
+
+<script>
+	$('#event-allday').change(function(){
+		if ($('#event-allday').is(':checked') == true){
+			$('#start-time').val('').prop('disabled', true);
+			$('#end-time').val('').prop('disabled', true);
+			$('#time-entry').hide();
+		} else {
+			$('#start-time').val('00:00').prop('disabled', false);
+			$('#end-time').val('01:00').prop('disabled', false);
+			$('#time-entry').show();
+		}
+	});
+	$('#repeats').change(function(){
+		if ($('#repeats').is(':checked') == true){
+			$('#repeat-entry').show();
+		} else {
+			$('#repeat-entry').hide();
+		}
+	});
+</script>
