@@ -33,6 +33,8 @@ while ( $row = DB_fetchArray($result) ) {
     $eventArray['title']        = stripslashes($row['title']);
     $eventArray['start']        = $row['start'];
     $eventArray['end']          = $row['end'];
+    $eventArray['location']     = $row['location'];
+    $eventArray['description']  = $row['description'];
     $events[]                   = $eventArray;
 }
 echo json_encode($events);

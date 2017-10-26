@@ -27,8 +27,199 @@ if (!SEC_hasRights('agenda.admin')) {
     exit;
 }
 
+USES_lib_admin();
+
+/*
+ * Display admin list of all testimonials
+*/
+function listEvents()
+{
+    global $_CONF, $_TABLES, $LANG_ADMIN, $LANG_AC, $_IMAGE_TYPE;
+
+    $retval = "";
+
+    $header_arr = array(      # display 'text' and use table field 'field'
+            array('text' => $LANG_AC['edit'],   'field' => 'parent_id', 'sort' => false, 'align' => 'center'),
+            array('text' => $LANG_AC['title'], 'field' => 'title', 'sort' => true, 'align' => 'left'),
+            array('text' => $LANG_AC['owner'], 'field' => 'owner', 'sort' => true, 'align' => 'left'),
+            array('text' => $LANG_AC['access'], 'field' => 'title', 'sort' => true, 'align' => 'left'),
+            array('text' => $LANG_AC['start_date'], 'field' => 'start_date', 'sort' => true, 'align' => 'left'),
+            array('text' => $LANG_AC['end_date'], 'field' => 'title', 'sort' => true, 'align' => 'left'),
+            array('text' => $LANG_AC['allday'], 'field' => 'title', 'sort' => true, 'align' => 'left'),
+            array('text' => $LANG_AC['delete'], 'field' => 'title', 'sort' => true, 'align' => 'left'),
+            array('text' => $LANG_AC['enabed'], 'field' => 'title', 'sort' => true, 'align' => 'left'),
+    );
+    $defsort_arr = array('field'     => 'start_date',
+                         'direction' => 'DESC');
+    $text_arr = array(
+            'form_url'      => $_CONF['site_admin_url'] . '/plugins/agenda/index.php',
+            'help_url'      => '',
+            'has_search'    => true,
+            'has_limit'     => true,
+            'has_paging'    => true,
+            'no_data'       => $LANG_AC['no_events'],
+    );
+
+    $sql = "SELECT parent_id AS id1,title,weekday,start_date,start_time,end_time,repeats,repeat_freq "
+            . "FROM {$_TABLES['ac_event']} ";
+
+    $query_arr = array('table' => 'ac_event',
+                        'sql' => $sql,
+                        'query_fields' => array('parent_id','title'),
+                        'default_filter' => " WHERE 1=1 ",
+                        'group_by' => "");
+
+    $filter = '';
+
+    $actions = '<input name="delsel" type="image" src="'
+            . $_CONF['layout_url'] . '/images/admin/delete.' . $_IMAGE_TYPE
+            . '" style="vertical-align:bottom;" title="' . $LANG_AC['delete_checked']
+            . '" onclick="return confirm(\'' . $LANG_AC['delete_confirm'] . '\');"'
+            . ' value="x" '
+            . '/>&nbsp;' . $LANG_AC['delete_checked'];
+
+    $option_arr = array('chkselect' => true,
+            'chkfield' => 'id1',
+            'chkname' => 'parent_ids',
+            'chkminimum' => 0,
+            'chkall' => true,
+            'chkactions' => $actions
+    );
+
+    $token = SEC_createToken();
+
+    $formfields = '
+        <input name="action" type="hidden" value="delete">
+        <input type="hidden" name="' . CSRF_TOKEN . '" value="'. $token .'">
+    ';
+
+    $form_arr = array(
+        'top' => $formfields
+    );
+
+    $retval .= ADMIN_list('taglist', 'AC_getListField', $header_arr,
+    $text_arr, $query_arr, $defsort_arr, $filter, "", $option_arr, $form_arr);
+
+    return $retval;
+}
+
+function AC_getListField($fieldname, $fieldvalue, $A, $icon_arr, $token = "")
+{
+    global $_CONF, $_USER, $_TABLES, $LANG_ADMIN, $LANG04, $LANG28, $_IMAGE_TYPE;
+
+    $retval = '';
+
+    switch ($fieldname) {
+        case 'company' :
+            $retval = $fieldvalue;
+            break;
+
+        case 'testid' :
+            $url = $_CONF['site_admin_url'].'/plugins/testimonials/index.php?edit=x&testid='.$A['testid'];
+            $retval = '<a href="'.$url.'"><i class="uk-icon uk-icon-pencil"></i></a>';
+            break;
+
+        case 'text_full' :
+            $retval = '<a class="'.COM_getToolTipStyle().'" title="' . htmlspecialchars($A['text_full']).'"><i class="uk-icon uk-icon-info-circle"></i></a>';
+            break;
+
+        case 'queued' :
+            if ( $fieldvalue != 0 ) {
+                $retval = '<i class="uk-icon uk-icon-times uk-text-danger"></i>';
+            } else {
+                $retval = '<i class="uk-icon uk-icon-check-circle uk-text-success"></i>';
+            }
+            break;
+        default:
+            $retval = $fieldvalue;
+            break;
+    }
+
+    return $retval;
+}
+
+
+
+function agenda_admin_menu($action)
+{
+    global $_CONF, $_AC_CONF, $LANG_ADMIN,$LANG_AC;
+
+    $retval = '';
+
+    $menu_arr = array(
+        array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php?list=x','text' => $LANG_AC['event_list'],'active' => ($action == 'list' ? true : false)),
+        array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php?edit=x','text'=> ($action == 'edit_existing' ? $LANG_AC['edit'] : $LANG_AC['create']), 'active'=> ($action == 'edit' || $action == 'edit_existing' ? true : false)),
+        array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php?catlist=x','text' => $LANG_AC['category_list'],'active' => ($action == 'catlist' ? true : false)),
+        array( 'url' => $_CONF['site_admin_url'], 'text' => $LANG_ADMIN['admin_home'])
+    );
+
+    $retval = '<h2>'.$LANG_AC['plugin_name'].'</h2>';
+
+    $retval .= ADMIN_createMenu(
+        $menu_arr,
+        $LANG_AC['admin_help'],
+        $_CONF['site_url'] . '/agenda/images/agenda.png'
+    );
+
+    return $retval;
+}
+
+$page = '';
+$display = '';
+$cmd ='list';
+
+$expectedActions = array('list','edit','delete','save','delsel_x');
+foreach ( $expectedActions AS $action ) {
+    if ( isset($_POST[$action])) {
+        $cmd = $action;
+    } elseif ( isset($_GET[$action])) {
+        $cmd = $action;
+    }
+}
+if ( isset($_POST['cancel'])) {
+    $src = COM_applyFilter($_POST['cancel']);
+    if ( $src == 'mod' ) COM_refresh($_CONF['site_admin_url'].'/moderation.php');
+    $cmd = 'list';
+}
+
+switch ( $cmd ) {
+    case 'edit' :
+        if (empty ($_GET['id'])) {
+            $page = editEntry ($cmd);
+        } else {
+            $page = editEntry ($cmd, (int) COM_applyFilter ($_GET['id']));
+            $cmd = 'edit_existing';
+        }
+        break;
+    case 'save' :
+        if (SEC_checkToken()) {
+            $page = saveEntry();
+        } else {
+            $page = listEntries();
+        }
+        break;
+
+    case  'delsel_x':
+        if (SEC_checkToken()) {
+            delEntry();
+        }
+        $page = listEntries();
+        break;
+
+    case 'delete' :
+        $page = 'Not implemented yet';
+        break;
+
+    case 'list' :
+    default :
+        $page = ''; // listEvents();
+        break;
+}
+
 $display  = COM_siteHeader ('menu', $LANG_AC['admin']);
-$display .= 'No admin interface at this point';
+$display .= agenda_admin_menu($cmd);
+$display .= $page;
 $display .= COM_siteFooter (false);
 echo $display;
+
 ?>

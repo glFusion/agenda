@@ -37,6 +37,8 @@ $T->set_file (array (
     'page' => 'calendar.thtml',
 ));
 
+$T->set_var('write_access',true);
+
 $T->set_var ('header', $LANG_AC['header']);
 
 
