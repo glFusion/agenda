@@ -1,6 +1,10 @@
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.1/fullcalendar.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.1/fullcalendar.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.js"></script>
+
 <style>
 .ui-dialog { z-index: 1001 !important ;}
 .ui-dialog {background:#f5f5f5 !important; }​
@@ -9,9 +13,11 @@
 <div id="calendar-area" class="uk-height-1-1 uk-width-1-1">
 	<div id="calendar">
 	</div>
+
 	<div id="dialog-form-full" title="Agenda" style="display:none;">
 	</div>
 </div>
+
 
 <div id="dialog-series" title="Edit Event or Series" style="display:none;">
 	<p>
@@ -41,8 +47,41 @@
 		start:0
 	});
 
+	var tooltip = $('<div/>').qtip({
+		id: 'calendar',
+		prerender: true,
+		content: {
+			text: ' ',
+			title: {
+				button: true
+			}
+		},
+    position: {
+        target: 'event'
+    },
+/*
+		position: {
+			my: 'bottom center',
+			at: 'top center',
+			target: 'mouse',
+			viewport: $('#calendar'),
+			adjust: {
+				mouse: false,
+				scroll: false
+			}
+		},
+*/
+
+
+		show: false,
+		hide: false,
+		style: 'qtip-light'
+	}).qtip('api');
+
 	// document ready - create the calendar widget
 	$(document).ready(function() {
+
+
 		var date = new Date();
 		var d = date.getDate();
 		var m = date.getMonth();
@@ -53,6 +92,10 @@
 			// click on the day - Add Event
 {!if write_access}
 			dayClick: function(date, jsEvent, view) {
+
+tooltip.hide();
+
+
 				var clickDate = date.format();
 				$('#dialog-form-full').dialog('option', 'title', 'Add Event');
 				$("#dialog-form-full").html('');
@@ -99,14 +142,49 @@
 				dialog.dialog("open");
 			},
 			// click on event - make this edit
-			eventClick: function(event) {
+			eventClick: function(event, element) {
 				// check event.repeats - if 1 - open dialog
 				if ( event.repeats == 1 ) {
 					$("#dialog-series").data('event-data', event).dialog('open');
 				} else {
 					edit_single_event(event);
 				}
-
+			},
+			eventRender: function(event, element) {
+		    element.qtip({
+		        content:{
+	        	  title : event.title,
+	            text : '<p><b>When:</b>'+ event.when +
+	            			(event.location && '<p><b>Location:</b><br>'+event.location+'</p>' || '') +
+	            			(event.description && '<p><b>Details:</b><br>'+event.description+'</p>' || '')
+		        },
+		        show: {
+				      delay: 500
+				    },
+				    style: {
+			        classes: 'qtip-bootstrap qtip-shadow',
+			        width: 	 '1000px'
+				    },
+				    position: {
+			        my: 'top center',
+			        at: 'bottom center',
+			        target: false, // Defaults to target element
+			        container: false, // Defaults to $(document.body)
+			        viewport: false, // Requires Viewport plugin
+			        adjust: {
+		            x: 0, y: 0, // Minor x/y adjustments
+		            mouse: true, // Follow mouse when using target:'mouse'
+		            resize: true, // Reposition on resize by default
+		            method: 'flip flip' // Requires Viewport plugin
+			        },
+			        effect: function(api, pos, viewport) {
+		            $(this).animate(pos, {
+	                duration: 200,
+	                queue: false
+		            });
+			        }
+				    },
+		    });
 			},
 			// moved an event
 			eventDrop: function(event, delta, revertFunc) {
@@ -186,7 +264,10 @@
           buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
       },
 			close: function() {
-				$("#event-form")[ 0 ].reset();
+				var openForm = $("event-form");
+				if ( typeof $("#event-form")[ 0 ] !== 'undefined' ) {
+					$("#event-form")[ 0 ].reset();
+				}
 			}
 		});
 
