@@ -1,6 +1,8 @@
 <h3>Edit Event Form - {parent_id}</h3>
 <form class="uk-form" action="" id="event-form" name="event-form">
 	<input type="hidden" name="action" value="edit-event">
+	<input type="hidden" name="parent_id" value="{parent_id}">
+	<input type="hidden" name="event_id" value="{event_id}">
 	<div class="uk-form-row">
 		<input class="required uk-form-width-large" type="text" name="title" id="title" placeholder="Event Title" value="{event_title}">
 	</div>
@@ -13,7 +15,9 @@
 
 	<div class="uk-form-row">
 		<input type="checkbox" id="event-allday" name="event-allday" tabindex="-1"  {allday_checked}>&nbsp;All Day
+{!if repeats}
 		<input type="checkbox" name="repeats" id="repeats" value="1" {repeats_checked}>&nbsp;Repeat...
+{!endif}
 	</div>
 
 	<!-- build a grid here -->
@@ -37,7 +41,7 @@
 				</div>
 			</div>
 		</div>
-
+{!if repeats}
 		<div class="uk-width-1-2">
 			<div class="uk-form-row" id="repeat-entry" style="display:none;">
 				<div class="uk-form-row">
@@ -54,6 +58,7 @@
 				</div>
 			</div>
 		</div>
+{!endif}
 	</div>
 
 	<div class="uk-form-row">
@@ -87,12 +92,10 @@
 <script>
 	$('#event-allday').change(function(){
 		if ($('#event-allday').is(':checked') == true){
-			$('#start-time').val('').prop('disabled', true);
-			$('#end-time').val('').prop('disabled', true);
 			$('#time-entry').hide();
 		} else {
-			$('#start-time').val('00:00').prop('disabled', false);
-			$('#end-time').val('01:00').prop('disabled', false);
+			$('#start-time').prop('disabled', false);
+			$('#end-time').prop('disabled', false);
 			$('#time-entry').show();
 		}
 	});
@@ -103,11 +106,16 @@
 			$('#repeat-entry').hide();
 		}
 	});
+	$('#start-time').change(function() {
+		var evt_start_time = parseInt($("#start-time").val().substr(0, 2));
+		evt_start_time = evt_start_time + 1;
+		evt_start_time_field = evt_start_time + ":00";
+		$('#end-time').val(evt_start_time_field)
+		$("#end-time").attr('data-uk-timepicker', "{format:'24h',start:" + evt_start_time +"}");
 
+	});
 	$(document).ready(function() {
 		if ($('#event-allday').is(':checked') == true){
-			$('#start-time').val('').prop('disabled', true);
-			$('#end-time').val('').prop('disabled', true);
 			$('#time-entry').hide();
 		} else {
 			$('#time-entry').show();
