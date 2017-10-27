@@ -2,32 +2,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.1/fullcalendar.min.js"></script>
 <style>
-	.ui-dialog { z-index: 1001 !important ;}
-
+.ui-dialog { z-index: 1001 !important ;}
 .ui-dialog {background:#f5f5f5 !important; }​
-
 .ui-dialog-titlebar, .ui-widget-header {background: #339CDA !important; color:#fff !important; }
-
 </style>
 <div id="calendar-area" class="uk-height-1-1 uk-width-1-1">
-
 	<div id="calendar">
 	</div>
-
-	<!-- New form -->
-
-	<div id="dialog-form-full" title="Add Event" style="display:none;">
+	<div id="dialog-form-full" title="Agenda" style="display:none;">
 	</div>
+</div>
 
-	<!-- End of new form -->
-
+<div id="dialog-series" title="Edit Event or Series" style="display:none;">
+	<p>
+		This is one event in a series. What do you want to edit?
+	</p>
+	<div class="container">
+		<form id="what-to-edit">
+		<input class="required" type="radio" id="edit-series" name="edit-series" value="0">&nbsp;Just this one<br>
+		<input type="radio" id="edit-series" name="edit-series" value="1">&nbsp;The entire series<br>
+		</form>
+		<div id="validate-error"></div>
+	</div>
 </div>
 
 <script>
 	var modal;
 	var calendar;
 	var dialog;
+	var dialog_series;
 	var form = $( "#event-form" );	// entry form
+	var whattoeditform = $("#what-to-edit");
 
 	var calheight;
 	var calwidth;
@@ -42,6 +47,7 @@
 		var d = date.getDate();
 		var m = date.getMonth();
 		var y = date.getFullYear();
+
 		// initialize the calendar
 		calendar = $('#calendar').fullCalendar({
 			// click on the day - Add Event
@@ -94,53 +100,13 @@
 			},
 			// click on event - make this edit
 			eventClick: function(event) {
-				$('#dialog-form-full').dialog('option', 'title', 'Edit Event');
-				$("#dialog-form-full").html('');
+				// check event.repeats - if 1 - open dialog
+				if ( event.repeats == 1 ) {
+					$("#dialog-series").data('event-data', event).dialog('open');
+				} else {
+					edit_single_event(event);
+				}
 
-				url = '/agenda/includes/ajax-form-manager.php';
-				$.ajax({
-					type: "POST",
-					dataType: "html",
-					url: url,
-					data: {"action" : "edit-event", "parent_id" : event.parent_id },
-					success: function (data) {
-						$("#dialog-form-full").html(data);
-						form = $( "#event-form" );
-						form.validate();
-					},
-					error: function (e) {
-						console.log("Error retrieving form");
-					}
-				});
-				// override the dialog buttons
-				var editButtons = [
-								{
-									text: "Save Event",
-									"class" : 'uk-button uk-button-success',
-									click: function() {
-										saveevent();
-									}
-								},
-								{
-									text: "Delete Event",
-									"class" : 'uk-button uk-button-danger',
-									click: function() {
-										deleteevent(event.parent_id);
-									}
-								},
-								{
-									text: "Cancel",
-									"class": 'uk-button uk-button',
-									click : function () {
-										dialog.dialog('close');
-									}
-								}
-				];
-
-				dialog.dialog("option", "buttons", editButtons); // setter
-				var buttons = $('.ui-dialog-buttonset').children('button');
-				buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
-				dialog.dialog("open");
 			},
 			// moved an event
 			eventDrop: function(event, delta, revertFunc) {
@@ -223,6 +189,80 @@
 				$("#event-form")[ 0 ].reset();
 			}
 		});
+
+//
+// recurring event edit dialog to
+// determine if editing the event
+// or the series
+
+
+  	dialog_series = $( "#dialog-series" ).dialog({
+      autoOpen: false,
+			buttons: [
+				{
+					text: "OK",
+					"class" : 'uk-button uk-button-primary',
+					click: function() {
+						// restore the event object
+						event = $(this).data('event-data');
+
+						// check if form is valid
+						if ( whattoeditform.valid() == false ) return false;
+						var answer = $('input[name="edit-series"]:checked').val();
+						dialog_series.dialog('close');
+						alert('anwer is ' + answer + ' for event id ' + event.id);
+//						editEvent( event,answer );
+					}
+				},
+				{
+					text: "Cancel",
+					"class": 'uk-button uk-button-danger',
+					click : function () {
+						dialog_series.dialog('close');
+					}
+				}
+			],
+			close: function() {
+				$("#what-to-edit")[0].reset();
+
+			},
+			open: function() {
+//				whattoeditform.validate();
+			    var vform = whattoeditform.validate({
+			        rules: {
+								"edit-series": {
+										required:true
+								}
+			        },
+			        messages:
+			        {
+			            "edit-series":
+			            {
+			                required:"Please select an option<br/>"
+			            }
+			        },
+			        errorPlacement: function(error, element)
+			        {
+			        	console.log(error);
+			            if ( element.is(":radio") ) {
+
+            			error.replaceAll($("#validate-error"));
+
+			                //error.appendTo( element.parents('.container') );
+			               // error.insertAfter( element );
+			            } else { // This is the default behavior
+			                 error.insertAfter( element );
+			            }
+			        }
+			    });
+
+			}
+    });
+
+
+
+
+
 	}); // end of document ready
 
 	// save an event
@@ -256,9 +296,93 @@
 		return true;
 	};
 
-	function deleteevent ( parent_id ) {
-		alert('Delete feature not implemented yet');
+	function deleteevent ( event ) {
+		// ensure the form is valid
+		if ( form.valid() == false ) return false;
+
+		// need to know if we are editing or adding or deleting
+
+		//  url = $( '#dbbackupform' ).attr( 'action' );
+		url = '/agenda/includes/ajax-save-event.php';
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url: url,
+			data: {"action" : "delete-event", "parent_id" : event.parent_id, "event_id" : event.id },
+			success: function (data) {
+				console.log('Deleting an event returned successfully');
+				$('#calendar').fullCalendar('refetchEvents');
+			},
+			error: function (e) {
+				console.log("Error deleting event");
+				$('#calendar').fullCalendar('refetchEvents');
+			}
+		});
+
+		$("#event-form")[0].reset();
+		$('#start-time').val('00:00').prop('disabled', false);
+		$('#end-time').val('01:00').prop('disabled', false);
+		dialog.dialog( "close" );
 		return true;
 	};
+
+	function edit_single_event( event )
+	{
+				$('#dialog-form-full').dialog('option', 'title', 'Edit Event');
+				$("#dialog-form-full").html('');
+
+				url = '/agenda/includes/ajax-form-manager.php';
+				$.ajax({
+					type: "POST",
+					dataType: "html",
+					url: url,
+					data: {"action" : "edit-event", "parent_id" : event.parent_id, "event_id" : event.id },
+					success: function (data) {
+						$("#dialog-form-full").html(data);
+						form = $( "#event-form" );
+						form.validate();
+					},
+					error: function (e) {
+						console.log("Error retrieving form");
+					}
+				});
+				// override the dialog buttons
+				var editButtons = [
+								{
+									text: "Save Event",
+									"class" : 'uk-button uk-button-success',
+									click: function() {
+										saveevent();
+									}
+								},
+								{
+									text: "Delete Event",
+									"class" : 'uk-button uk-button-danger',
+									click: function() {
+										deleteevent(event);
+									}
+								},
+								{
+									text: "Cancel",
+									"class": 'uk-button uk-button',
+									click : function () {
+										dialog.dialog('close');
+									}
+								}
+				];
+
+				dialog.dialog("option", "buttons", editButtons); // setter
+				var buttons = $('.ui-dialog-buttonset').children('button');
+				buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
+				dialog.dialog("open");
+
+
+	}
+
+	function series_or_single_dialog(event)
+	{
+
+	}
+
 
 </script>
