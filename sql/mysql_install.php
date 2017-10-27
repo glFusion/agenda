@@ -30,11 +30,8 @@ $_SQL['ac_event'] = "CREATE TABLE {$_TABLES['ac_event']} (
     end_time	time		    default '00:00:00',
     repeats	    tinyint(1)      default NULL,
     repeat_freq	int(30)		    default NULL,
-
     queued      tinyint(1)      default '0',
-
     owner_id mediumint(8) unsigned NOT NULL default '1',
-
     PRIMARY KEY  (parent_id)
 ) ENGINE=MyISAM
 ";
@@ -48,9 +45,9 @@ $_SQL['ac_events'] = "CREATE TABLE {$_TABLES['ac_events']} (
     title       varchar(120) default NULL,
     location    varchar(120) default NULL,
     description text default NULL,
-
+    repeats     tinyint(1)  default '0',
+    exception   tinyint(1) unsigned default '0',
     owner_id mediumint(8) unsigned NOT NULL default '1',
-
     PRIMARY KEY  (event_id)
 ) ENGINE=MyISAM
 ";
