@@ -40,8 +40,10 @@ $_SQL['ac_events'] = "CREATE TABLE {$_TABLES['ac_events']} (
     event_id    int(30) unsigned auto_increment,
     parent_id   int(30) unsigned default NULL,
     allday      tinyint(1) unsigned default '0',
-    start       datetime default NULL,
-    end	        datetime default NULL,
+
+    start       int(11) unsigned default 0,
+    end         int(11) unsigned default 0,
+
     title       varchar(120) default NULL,
     location    varchar(120) default NULL,
     description text default NULL,
