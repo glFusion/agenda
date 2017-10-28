@@ -5,9 +5,9 @@
 	</div>
 
 	<div class="uk-form-row">
-		<input type="text" id="event-date" name="event-date" data-uk-datepicker="{format:'YYYY-MM-DD'}">
+		<input type="text" id="event-date" name="event-date" data-uk-datepicker="{format:'YYYY-MM-DD',weekstart:0}">
 		&nbsp;to&nbsp;
-		<input class="uk-form-width-small" type="text" id="event-end-date" name="event-end-date" tabindex="-1" data-uk-datepicker="{format:'YYYY-MM-DD'}">
+		<input class="uk-form-width-small" type="text" id="event-end-date" name="event-end-date" tabindex="-1" data-uk-datepicker="{format:'YYYY-MM-DD',weekstart:0}">
 	</div>
 
 	<div class="uk-form-row">
