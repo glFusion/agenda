@@ -17,7 +17,6 @@
 require_once '../../lib-common.php';
 
 $eventID = isset($_POST['id']) ? COM_applyFilter($_POST['id'],true) : -1;
-COM_errorLog("deleting event " . $eventID);
 if ( $eventID == -1 ) die;
 
 // get the parent_id
@@ -25,13 +24,13 @@ if ( $eventID == -1 ) die;
 $parentID = DB_getItem($_TABLES['ac_events'],'parent_id','event_id='.$eventID);
 if ( $parentID == null ) die;
 
-DB_query("DELETE FROM {$_TABLES['ac_events']} WHERE parent_id=".$parentID);
+DB_query("DELETE FROM {$_TABLES['ac_events']} WHERE parent_id=".(int) $parentID);
 
 // now check to see if other events are tied to this one
 
-$count = DB_count($_TABLES['ac_events'],'parent_id',$parentID);
+$count = DB_count($_TABLES['ac_events'],'parent_id',(int)$parentID);
 if ( $count == 0 ) {
-    DB_query("DELETE FROM {$_TABLES['ac_event']} WHERE parent_id=".$parentID);
+    DB_query("DELETE FROM {$_TABLES['ac_event']} WHERE parent_id=".(int)$parentID);
 }
 
 $retval = array();
