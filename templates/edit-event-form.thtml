@@ -1,4 +1,3 @@
-<h3>Edit Event Form - {parent_id}</h3>
 <form class="uk-form" action="" id="event-form" name="event-form">
 	<input type="hidden" name="action" value="edit-event">
 	<input type="hidden" name="parent_id" value="{parent_id}">

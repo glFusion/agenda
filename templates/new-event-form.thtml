@@ -1,5 +1,3 @@
-<h3>New Event Form</h3>
-
 <form class="uk-form" action="" id="event-form" name="event-form">
 	<input type="hidden" name="action" value="new-event">
 	<div class="uk-form-row">
