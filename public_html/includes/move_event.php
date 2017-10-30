@@ -18,7 +18,7 @@ require_once '../../lib-common.php';
 
 $sqlValues = '';
 
-//COM_errorLog(print_r($_POST,true));
+COM_errorLog(print_r($_POST,true));
 
 
 $eventID = isset($_POST['id']) ? COM_applyFilter($_POST['id'],true) : -1;
@@ -32,22 +32,32 @@ if ( $parentID == null ) die;
 
 $repeats = DB_getItem($_TABLES['ac_events'],'repeats','event_id='.$eventID);
 
+$allday = 0;
+if ( isset($_POST['allday'])) {
+    switch ($_POST['allday']) {
+        case 'true' :
+            $allday = 1;
+            break;
+        default :
+            $allday = 0;
+            break;
+    }
+}
+
+COM_errorLog("All day is " . $allday);
+
 // we need to update the event date
 
 $dt = new Date($_POST['date'],$_USER['tzid']);
 $db_start_date = $dt->toUnix();
 
-//$start_date = $_POST['date'];
-//$db_start_date = DB_escapeString($start_date);
-
 $sqlValues = "start='{$db_start_date}' ";
+
+$sqlValues .= ",allday=".(int) $allday . " ";
 
 if ( isset($_POST['end'])) {
     $dt = new Date($_POST['end'],$_USER['tzid']);
     $db_end_date = $dt->toUnix();
-
-//    $end_date = $_POST['end'];
-//    $db_end_date = DB_escapeString($end_date);
     $sqlValues .= ", end='{$db_end_date}' ";
 } else {
     $db_end_date = $db_start_date;
@@ -59,8 +69,28 @@ if ( $repeats == 1 ) {
     $sqlValues .= ", exception=1 ";
 }
 
-$sql = "UPDATE {$_TABLES['ac_events']} SET ".$sqlValues." WHERE event_id=".$eventID;
+// set my all day dates
+if ( $allday ) {
+    COM_errorLog("in all day processing");
+    if ( isset($_POST['date'])) {
+        $start_date = COM_applyFilter($_POST['date']);
+    }
+    if ( isset($_POST['end'])) {
+        $end_date = COM_applyFilter($_POST['end']);
+    } else {
+        $end_date = $start_date;
+    }
+    $db_start_date_ad = DB_escapeString($start_date);
+    if ( $start_date != $end_date ) {
+        $db_end_date_ad = DB_escapeString(date('Y-m-d', strtotime('-1 day', strtotime($end_date))));
+    } else {
+        $db_end_date_ad = $db_start_date_ad;
+    }
+    $sqlValues .= ", start_date='{$db_start_date_ad}', end_date='{$db_end_date_ad}' ";
+}
 
+$sql = "UPDATE {$_TABLES['ac_events']} SET ".$sqlValues." WHERE event_id=".$eventID;
+COM_errorLog($sql);
 DB_query($sql,1);
 
 $retval = array();

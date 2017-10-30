@@ -36,39 +36,32 @@
 
 				<h2>Agenda Plugin Configuration Options</h2>
 
+				<dl id="desc_allow_anonymous_view">
+					<dt>Allow Anonymous View</dt>
+					<dd>If set to TRUE - anonymous (non-logged-in-users) will be able to view the calendar. If set to FALSE, anonymous users will not be able to access the calendar. See the Security Exit option below to control how glFusion responds to a user without access.</dd>
+				</dl>
+
+				<dl id="desc_security_exit">
+					<dt>Security Exit</dt>
+					<dd>If Allow Anonymous View is FALSE, this option controls how glFusion responds to an anonymous user. The user can receive a Page Not Found error or be redirected to the login to access the calendar.</dd>
+				</dl>
+
+				<dl id="desc_allow_entry">
+					<dt>Who can enter Events</dt>
+					<dd>This setting controls who can enter new events on the calendar. Options include No One (only admins), Logged-in-users or anyone. See the Submission Queue setting to enable / disable submission queuing of user submitted events.</dd>
+				</dl>
+
+				<dl id="desc_submission_queue">
+					<dt>Submission Queue</dt>
+					<dd>Controls what events are queued for review prior to publishing. Options include Disabled - all submissions are immediately published, Anonymous Only - only non-logged-in users will have their submissions queued, All - all user submitted events will be queued. Note: Admin users are exempt from the submission queue.</dd>
+				</dl>
+
 				<dl id="desc_displayblocks">
 					<dt>Display Blocks</dt>
-					<dd>Which glFusion blocks to display when viewing Testimonials.</dd>
+					<dd>Which glFusion blocks to display when viewing the Agenda Calendar.</dd>
 				</dl>
 
-				<dl id="desc_disable_submissions">
-					<dt>Disable Testimonial Submissions</dt>
-					<dd>If this is set to TRUE, all user submissions will be disabled. Only the Testimonial Admin can enter testimonials through the admin interface.</dd>
-				</dl>
 
-				<dl id="desc_anonymous_submit">
-					<dt>Allow Anonymous Users to Submit Testimonials</dt>
-					<dd>If this is set to YES, anonymous (non-logged-in users) will be able to submit testimonials. See Moderation Queue Below.</dd>
-				</dl>
-
-				<dl id="desc_queue_submissions">
-					<dt>User Moderation Queue for User Submitted Testimonials</dt>
-					<dd>If set to TRUE (Recommended Settings), user submitted testimonials will be placed in a moderation queue for review and approval. Testimonials will not be available for public view until they have been approved by a Testimonials Administrator.</dd>
-				</dl>
-
-				<dl id="desc_speedlimit">
-					<dt>Time User must wait between testimonial submissions</dt>
-					<dd>The amount of time (in seconds) that a user must wait before submitting a new testimonial. Generally this value should be very high as most users do not submit more than one testimonial.</dd>
-				</dl>
-
-				<dl id="desc_per_page">
-					<dt>Number of Testimonials Per Page</dt>
-					<dd>The number of testimonials to display per page.</dd>
-				</dl>
-				<dl id="desc_centerblock_where">
-					<dt>Enable Testimonial Centerblock</dt>
-					<dd>Select where to place a random testimonial centerblock.</dd>
-				</dl>
 			</div>
 			<div class="tm-push"></div>
 		</div>

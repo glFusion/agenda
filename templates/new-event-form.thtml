@@ -1,17 +1,17 @@
 <form class="uk-form" action="" id="event-form" name="event-form">
 	<input type="hidden" name="action" value="new-event">
 	<div class="uk-form-row">
-		<input class="required uk-form-width-large" type="text" name="title" id="title" placeholder="Event Title">
+		<input class="required uk-form-width-large" type="text" name="title" id="title" maxlength="120" placeholder="Event Title">
 	</div>
 
 	<div class="uk-form-row">
-		<input type="text" id="event-date" name="event-date" data-uk-datepicker="{format:'YYYY-MM-DD',weekstart:0}">
+		<input class="uk-form-width-small" type="text" id="event-date" name="event-date" value="{start-date}" data-uk-datepicker="{format:'YYYY-MM-DD',weekstart:0}">
 		&nbsp;to&nbsp;
-		<input class="uk-form-width-small" type="text" id="event-end-date" name="event-end-date" tabindex="-1" data-uk-datepicker="{format:'YYYY-MM-DD',weekstart:0}">
+		<input class="uk-form-width-small" type="text" id="event-end-date" name="event-end-date" value="{end-date}" tabindex="-1" data-uk-datepicker="{format:'YYYY-MM-DD',weekstart:0}">
 	</div>
 
 	<div class="uk-form-row">
-		<input type="checkbox" id="event-allday" name="event-allday" tabindex="-1"  checked="checked">&nbsp;All Day
+		<input type="checkbox" id="event-allday" name="event-allday" tabindex="-1"  {allday_checked}>&nbsp;All Day
 		<input type="checkbox" name="repeats" id="repeats" value="1">&nbsp;Repeat...
 	</div>
 
@@ -19,19 +19,19 @@
 
 	<div class="uk-grid uk-margin">
 		<div class="uk-width-1-2">
-			<div class="uk-form-row" id="time-entry" style="display:none;">
+			<div class="uk-form-row" id="time-entry" {!if allday_checked} style="display:none;" {!endif}>
 
 				<div class="uk-form-row">
 					<label class="uk-form-label" for="add-start-time">Start Time</label>
 					<div class="uk-form-controls">
-						<input type="text" name="start-time" id="start-time"  data-uk-timepicker="{format:'24h', start:8}">
+						<input type="text" name="start-time" id="start-time" value="{start-time}" data-uk-timepicker="{format:'12h'}">
 					</div>
 				</div>
 
 				<div class="uk-form-row" id="end-time-row">
 					<label class="uk-form-label" for="add-end-time">End Time</label>
 					<div class="uk-form-controls">
-						<input type="text" name="end-time" id="end-time"   data-uk-timepicker="{format:'24h'}">
+						<input type="text" name="end-time" id="end-time" value="{end-time}" data-uk-timepicker="{format:'12h'}">
 					</div>
 				</div>
 			</div>
@@ -102,10 +102,9 @@
 	});
 
 	$('#start-time').change(function() {
-		var evt_start_time = parseInt($("#start-time").val().substr(0, 2));
-		evt_start_time = evt_start_time + 1;
-		evt_start_time_field = evt_start_time + ":00";
-		$('#end-time').val(evt_start_time_field)
-		$("#end-time").attr('data-uk-timepicker', "{format:'24h',start:" + evt_start_time +"}");
+		var evt_start_time = $("#start-time").val();
+		var evt_start_time_int = parseInt($("#start-time").val().substr(0, 2));
+		$('#end-time').val(evt_start_time);
+		$("#end-time").attr('data-uk-timepicker', "{format:'12h',start:" + evt_start_time_int +"}");
 	});
 </script>

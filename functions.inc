@@ -21,8 +21,17 @@ if (!defined ('GVERSION')) {
 $ac_config = \config::get_instance();
 $_AC_CONF = $ac_config->get_config('agenda');
 
+/*
+$_AC_CONF['allow_anonymous_view'] = true;
+$_AC_CONF['security_exit'] = 0; // 0 = not found - 1 = login screen
+$_AC_CONF['allow_entry'] = 0; // 0 = none, 1 = logged in, 2 = anyone
+$_AC_CONF['submission_queue'] = 0; // 0 none - 1 anonymous only 2 = anyone
+
 if ( !isset($_AC_CONF['disable_submissions'] ) ) $_AC_CONF['disable_submissions'] = false;
+*/
 if ( !isset($_AC_CONF['centerblock_where'] ) ) $_AC_CONF['centerblock_where'] = -1;
+
+
 
 /**
 * Language file Include
@@ -69,7 +78,14 @@ switch( $_AC_CONF['displayblocks'] ) {
 */
 function plugin_getmenuitems_agenda()
 {
-    global $_CONF, $_TABLES, $LANG_AC;
+    global $_CONF, $_AC_CONF, $_TABLES, $LANG_AC;
+
+    if ( COM_isAnonUser() && $_AC_CONF['allow_anonymous_view'] == false )  {
+        if ( $_AC_CONF['security_exit'] == 0 ) {
+            return array();
+            exit;
+        }
+    }
 
     $menulabel = $LANG_AC['plugin_name'];
     $menurul = $_CONF['site_url'] . "/agenda/index.php";
@@ -78,7 +94,6 @@ function plugin_getmenuitems_agenda()
   	$menuitems[$menulabel] = $menurul;
 
     return $menuitems;
-
 }
 
 /**

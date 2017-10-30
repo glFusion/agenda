@@ -82,7 +82,7 @@ function plugin_install_agenda()
 *
 *   @return boolean     True = proceed, False = an error occured
 */
-function plugin_load_configuration_agendaXXX()
+function plugin_load_configuration_agenda()
 {
     require_once dirname(__FILE__) . '/install_defaults.php';
     return plugin_initconfig_agenda();

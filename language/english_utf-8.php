@@ -45,6 +45,10 @@ $LANG_configsections['agenda'] = array(
 );
 
 $LANG_confignames['agenda'] = array(
+    'allow_anonymous_view'  => 'Allow Non-Logged-In users to view calendar',
+    'security_exit'         => 'Security Exit',
+    'allow_entry'           => 'Who Can Submit Events',
+    'submission_queue'      => 'Submission Queue',
     'displayblocks'         => 'Display Blocks',
 );
 
@@ -54,13 +58,16 @@ $LANG_configsubgroups['agenda'] = array(
 
 $LANG_fs['agenda'] = array(
     'fs_main' => 'Main Settings',
+    'fs_permissions' => 'Permission Settings',
+    'fs_display'    => 'Display Settings',
 );
 
 $LANG_configselects['agenda'] = array(
     0  => array('True' => 1, 'False' => 0 ),
-    1  => array('Left Blocks' => 0, 'Right Blocks' => 1, 'All Blocks' => 2, 'No Blocks' => 3),
-    2  => array('Yes' => 1, 'No' => 0 ),
-    3  => array('No Centerblock' => -1, 'Top of Page' => 1, 'After Featured Story' => 2, 'Bottom of Page' => 3),
+    1  => array('Not Found Page (404)' => 0, 'Login Screen' => 1),
+    2  => array('Admin Only' => 0,'Logged-In-Users' => 1, 'All Users' => 2),
+    3  => array('Disabled' => 0, 'Anonymous Only' => 1, 'All Users' => 2),
+    4  => array('Left Blocks' => 0, 'Right Blocks' => 1, 'All Blocks' => 2, 'No Blocks' => 3),
 );
 
 ?>

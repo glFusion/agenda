@@ -19,15 +19,6 @@ require_once '../../lib-common.php';
 $errorCode = 0;
 $errors    = 0;
 
-// we need to account for new events and updated events.
-// probably need an 'exception' flag for events that have been
-// moved outside of the recurrence pattern. For example.
-//   Out of recurrence pattern:
-//     - deleted - not a problem won't be there to udate.
-//     - moved - we would skip any edits for edit
-//     - if we delete the master - we delete all the exceptions too.
-
-
 $retval = array();
 $action = '';
 
@@ -42,8 +33,15 @@ switch ($action) {
     case 'edit-event' : // save an edit
         $rc = saveEditEvent();
         break;
+    case 'edit-event-series' : // save an event series edit
+        $rc = saveEditEventSeries();
+        break;
     case 'delete-event' : // delete a SINGLE event
         $rc = deleteEvent();
+        break;
+
+    case 'delete-event-series' :
+        $rc = deleteEventSeries();
         break;
 
     default :
@@ -69,10 +67,11 @@ function saveNewEvent()
 
 // set defaults
     $repeats = 0;
-    $repeats_freq = 0;
+    $repeat_freq = 0;
     $allday = 0;
+    $queued = 0;
 
-// pull submitted data
+// parse submitted data
     $title          = $_POST['title'];
     $start_date     = $_POST['event-date'];
     $end_date       = $_POST['event-end-date'];
@@ -81,8 +80,8 @@ function saveNewEvent()
     $location       = $_POST['location'];
     $description    = $_POST['description'];
     if (isset($_POST['repeats'])) {
-        $repeats = $_POST['repeats'];
-        $repeat_freq = $_POST['repeat-freq'];
+        $repeats     = 1;
+        $repeat_freq = COM_applyFilter($_POST['repeat-freq'],true);
     }
     if ( isset($_POST['event-allday'] ) ) {
         $allday = 1;
@@ -97,6 +96,11 @@ function saveNewEvent()
     if ( $end_time == '' ) {
         $end_time = '24:00:00';
     }
+
+    $start_time = date("H:i", strtotime($start_time));
+    $end_time   = date("H:i", strtotime($end_time));
+
+    // create the full start / end time for the event
     $start          = trim($start_date . " " . $start_time);
     $end            = trim($end_date . " " . $end_time);
 
@@ -127,41 +131,60 @@ COM_errorLog("end date failed validation");
     $title = $filter->filterText($title);
     $location = $filter->filterText($location);
 
-// now do our date conversions
+    // initilize the date objects for start / end
 
     $dtStart = new Date($start,$_USER['tzid']);
     $dtEnd   = new Date($end,  $_USER['tzid']);
 
-    if (!isset($_POST['repeats'])) {
-        $repeats = 0;
-        $repeat_freq = 0;
-
-        // prepare vars for DB
-        $db_title           = DB_escapeString($title);
-
-$start_date = $dtStart->format('Y-m-d',true);
-$start_time = $dtStart->format('H:i',true);
-
-
-        $db_start_date      = DB_escapeString($start_date);
-        $db_start_time      = DB_escapeString($start_time);
-
-$end_date = $dtEnd->format('Y-m-d',true);
-$end_time = $dtEnd->format('H:i',true);
-
-
-        $db_end_date        = DB_escapeString($end_date);
-        $db_end_time        = DB_escapeString($end_time);
+    if ($repeats == 0 ) {   // non-repeating event
+        // create the unix timestamp start / end dates
 
         $db_start = $dtStart->toUnix(false);
         $db_end   = $dtEnd->toUnix(false);
 
+        $db_start_date = DB_escapeString($start_date);
+        $db_end_date   = DB_escapeString($end_date);
+
+        // escape out the other ones
+        $db_title           = DB_escapeString($title);
         $db_location        = DB_escapeString($location);
         $db_description     = DB_escapeString($description);
 
-        // save parent event
-        $sql = "INSERT INTO {$_TABLES['ac_event']} ( title,location,description,allday,start_date,start_time,end_date,end_time,repeats,repeat_freq ) ";
-        $sql .= "VALUES ('{$db_title}','{$db_location}','{$db_description}',{$allday},'{$db_start_date}','{$db_start_time}','{$db_end_date}','{$db_end_time}',$repeats,$repeat_freq)";
+        $queued = 0;
+
+        if ( COM_isAnonUser() ) {
+            $owner_id = 1;
+        } else {
+            $owner_id = $_USER['uid'];
+        }
+
+        $sql = "INSERT INTO {$_TABLES['ac_event']} (
+                title,
+                location,
+                description,
+                allday,
+                start_date,
+                end_date,
+                start,
+                end,
+                repeats,
+                repeat_freq,
+                queued,
+                owner_id ) ";
+
+        $sql .= " VALUES (
+            '{$db_title}',
+            '{$db_location}',
+            '{$db_description}',
+            '{$allday}',
+            '{$db_start_date}',
+            '{$db_end_date}',
+            '{$db_start}',
+            '{$db_end}',
+            '{$repeats}',
+            '{$repeat_freq}',
+            '{$queued}',
+            '{$owner_id}' )";
 
         $result = DB_query($sql,1);
 
@@ -169,18 +192,44 @@ $end_time = $dtEnd->format('H:i',true);
             $errorCode = 1;
         } else {
             $parent_id = DB_insertId($result);
-            // save child events
-            $sql =  "INSERT INTO {$_TABLES['ac_events']} (title,location,description,allday,repeats,start,end,parent_id) ";
-            $sql .= "VALUES ('{$db_title}','{$db_location}','{$db_description}',{$allday},{$repeats},'{$db_start}','{$db_end}',$parent_id)";
+
+            $sql = "INSERT INTO {$_TABLES['ac_events']}
+                (   parent_id,
+                    title,
+                    location,
+                    description,
+                    allday,
+                    start_date,
+                    end_date,
+                    start,
+                    end,
+                    repeats,
+                    repeat_freq,
+                    exception,
+                    owner_id ) ";
+            $sql .= "VALUES (
+                 $parent_id,
+                '{$db_title}',
+                '{$db_location}',
+                '{$db_description}',
+                 {$allday},
+                '{$db_start_date}',
+                '{$db_end_date}',
+                 $db_start,
+                 $db_end,
+                 $repeats,
+                 $repeat_freq,
+                 0,
+                 $owner_id )";
 
             DB_query($sql,1);
 
-            if ( DB_error() ) $errorCode = 2;
+            if ( DB_error() ) {
+                $errorCode = 2;
+            }
         }
     } else {
-        $repeats = $_POST['repeats'];
-        $repeat_freq = $_POST['repeat-freq'];
-
+        // repeating events
         $future = 365;
         if ( $repeat_freq == 365 ) $future = 3650;
 
@@ -192,34 +241,92 @@ $end_time = $dtEnd->format('H:i',true);
             $allday = 0;
         }
 
-        // prepare vars for DB
-        $db_title = DB_escapeString($title);
-
-        $db_start_date = DB_escapeString($start_date);
-        $db_start_time = DB_escapeString($start_time);
-
-        $db_end_date = DB_escapeString($end_date);
-        $db_end_time = DB_escapeString($end_time);
-
-        $dtStart = new Date($start,$_USER['tzid']);
-        $dtEnd   = new Date($end,  $_USER['tzid']);
         $db_start = $dtStart->toUnix(false);
         $db_end   = $dtEnd->toUnix(false);
 
+        $db_start_date = DB_escapeString($start_date);
+        $db_end_date   = DB_escapeString($end_date);
+
+        // prepare vars for DB
+        $db_title = DB_escapeString($title);
         $db_location = DB_escapeString($location);
         $db_description = DB_escapeString($description);
 
-        // save parent event
-        $sql = "INSERT INTO {$_TABLES['ac_event']} ( title,location,description,allday,start_date,start_time,end_date,end_time,repeats,repeat_freq ) ";
-        $sql .= "VALUES ('{$db_title}','{$db_location}','{$db_description}',{$allday},'{$db_start_date}','{$db_start_time}','{$db_end_date}','{$db_end_time}',$repeats,$repeat_freq)";
+        $queued = 0;
 
-        $result = DB_query($sql);
+        if ( COM_isAnonUser() ) {
+            $owner_id = 1;
+        } else {
+            $owner_id = $_USER['uid'];
+        }
+        // save the parent event
+        $sql = "INSERT INTO {$_TABLES['ac_event']} (
+                title,
+                location,
+                description,
+                allday,
+                start_date,
+                end_date,
+                start,
+                end,
+                repeats,
+                repeat_freq,
+                queued,
+                owner_id ) ";
+
+        $sql .= " VALUES (
+            '{$db_title}',
+            '{$db_location}',
+            '{$db_description}',
+            '{$allday}',
+            '{$db_start_date}',
+            '{$db_end_date}',
+            '{$db_start}',
+            '{$db_end}',
+            '{$repeats}',
+            '{$repeat_freq}',
+            '{$queued}',
+            '{$owner_id}' )";
+
+        $result = DB_query($sql,1);
+
+        if ( DB_error() ) {
+            $errorCode = 1;
+        }
+
         $parent_id = DB_insertId($result);
 
-        // insert the initial event
-        $sql =  "INSERT INTO {$_TABLES['ac_events']} (title,location,description,allday,repeats,start,end,parent_id) ";
-        $sql .= "VALUES ('{$db_title}','{$db_location}','{$db_description}',{$allday},{$repeats},'{$db_start}','{$db_end}',$parent_id)";
-        DB_query($sql);
+        // save the initial event
+        $sql = "INSERT INTO {$_TABLES['ac_events']}
+            (   parent_id,
+                title,
+                location,
+                description,
+                allday,
+                start_date,
+                end_date,
+                start,
+                end,
+                repeats,
+                repeat_freq,
+                exception,
+                owner_id ) ";
+        $sql .= "VALUES (
+             $parent_id,
+            '{$db_title}',
+            '{$db_location}',
+            '{$db_description}',
+             {$allday},
+            '{$db_start_date}',
+            '{$db_end_date}',
+             $db_start,
+             $db_end,
+             $repeats,
+             $repeat_freq,
+             0,
+             $owner_id )";
+
+        DB_query($sql,1);
 
     // now do the recurrence
 
@@ -263,18 +370,57 @@ $end_time = $dtEnd->format('H:i',true);
 
             $dtStart = new Date($start,$_USER['tzid']);
             $dtEnd   = new Date($end,  $_USER['tzid']);
+
             $db_start = $dtStart->toUnix(false);
             $db_end   = $dtEnd->toUnix(false);
 
-            $sql =  "INSERT INTO {$_TABLES['ac_events']} (title,allday,repeats,start,end,parent_id) ";
-            $sql .= "VALUES ('{$db_title}',{$allday},{$repeats},'{$db_start}','{$db_end}',$parent_id)";
-            DB_query($sql);
+            // add the start_date_ad / end_date_ad
+            $db_start_date = DB_escapeString($dtStart->format('Y-m-d',true));
+            $db_end_date   = DB_escapeString($dtEnd->format('Y-m-d',true));
+
+            $sql = "INSERT INTO {$_TABLES['ac_events']}
+                (   parent_id,
+                    title,
+                    location,
+                    description,
+                    allday,
+                    start_date,
+                    end_date,
+                    start,
+                    end,
+                    repeats,
+                    repeat_freq,
+                    exception,
+                    owner_id ) ";
+            $sql .= "VALUES (
+                 $parent_id,
+                '{$db_title}',
+                '{$db_location}',
+                '{$db_description}',
+                 {$allday},
+                '{$db_start_date}',
+                '{$db_end_date}',
+                 $db_start,
+                 $db_end,
+                 $repeats,
+                 $repeat_freq,
+                 0,
+                 $owner_id )";
+
+            DB_query($sql,1);
         }
     }
 
     return $errorCode;
 }
 
+//
+// saves an edited event
+//
+//  rules - a non-recurring event cannot be changed to a recurring event and vice versa
+//
+// this only saves a single, non-recurring event
+//
 function saveEditEvent()
 {
     global $_CONF, $_AC_CONF, $_USER, $_TABLES;
@@ -282,9 +428,29 @@ function saveEditEvent()
     $errorCode = 0;
     $errors = 0;
 
+// set defaults
+    $allday = 0;
+
+    // get the parentid and the event id
+
     $parent_id      = (int) COM_applyFilter($_POST['parent_id'],true);
     $event_id       = (int) COM_applyFilter($_POST['event_id'],true);
 
+    // we can retrieve the original event and determine if it is a recurring
+    // event - if it is - we are only updating the single instance, which means
+    // we set exception to 1
+    // we can change any other attribute about the event - even the allday or not flags
+
+    $recurring = DB_getItem($_TABLES['ac_events'],'repeats','event_id='.(int) $event_id);
+    COM_errorLog("Recurring Flag is " . $recurring);
+
+    $exception = 0;
+    if ( $recurring == 1 ) {
+        $exception = 1;
+    }
+
+
+// parse submitted data
     $title          = $_POST['title'];
     $start_date     = $_POST['event-date'];
     $end_date       = $_POST['event-end-date'];
@@ -294,25 +460,19 @@ function saveEditEvent()
     $description    = $_POST['description'];
     if ( isset($_POST['event-allday'] ) ) {
         $allday = 1;
-    } else {
-        $allday = 0;
-    }
-
-    if ( $allday == 1 ) {
-        $start_time = '';
-        $end_time = '';
+        $end_time = '24:00:00';
     }
     if ( $start_time == '' ) {
-        $start_time = '00:00:00';
+        $start_time = '00:00';
     }
     if ( $end_time == '' ) {
         $end_time = '24:00:00';
     }
-    if ( $end_date == '' || empty($end_date)) {
-        $end_date = $start_date;
-    }
-    $start          = $start_date . " " . $start_time;
-    $end            = $end_date . " " . $end_time;
+    $start_time = date("H:i", strtotime($start_time));
+    $end_time   = date("H:i", strtotime($end_time));
+    // create the full start / end time for the event
+    $start          = trim($start_date . " " . $start_time);
+    $end            = trim($end_date . " " . $end_time);
 
     // validation checks
 
@@ -330,66 +490,121 @@ function saveEditEvent()
         return $errorCode;
     }
 
-    $repeats = 0;
-    $repeat_freq = 0;
-
+    // filter our input
     $filter = new sanitizer();
     $filter->setPostmode('text');
     $description = $filter->filterText($description);
     $title = $filter->filterText($title);
     $location = $filter->filterText($location);
 
+    // calculate the dates
+
     $dtStart = new Date($start,$_USER['tzid']);
     $dtEnd   = new Date($end,  $_USER['tzid']);
+    // create the unix timestamp start / end dates
     $db_start = $dtStart->toUnix(false);
     $db_end   = $dtEnd->toUnix(false);
+    // use the entered start / end date
+    $db_start_date = DB_escapeString($start_date);
+    $db_end_date   = DB_escapeString($end_date);
 
-
-    // prepare vars for DB
+    // prepare other stuff for db
     $db_title           = DB_escapeString($title);
-    $db_start_date      = DB_escapeString($start_date);
-    $db_end_date        = DB_escapeString($end_date);
-    $db_start_time      = DB_escapeString($start_time);
-    $db_end_time        = DB_escapeString($end_time);
-//    $db_start           = DB_escapeString($start);
-//    $db_end             = DB_escapeString($end);
+    $db_location        = DB_escapeString($location);
+    $db_description     = DB_escapeString($description);
 
-    $db_location = DB_escapeString($location);
-    $db_description = DB_escapeString($description);
-
-    // update parent event
-    // save parent event
+    // update parent record
     $sql = "UPDATE {$_TABLES['ac_event']} SET
-        title = '{$db_title}',
-        location = '{$db_location}',
-        description = '{$db_description}',
-        allday = {$allday},
-        start_date = '{$db_start_date}',
-        start_time = '{$db_start_time}',
-        end_date   = '{$db_end_date}',
-        end_time = '{$db_end_time}',
-        repeats = {$repeats},
-        repeat_freq = {$repeat_freq}";
-    $sql .= " WHERE parent_id=".(int) $parent_id;
-
-    $result = DB_query($sql,1);
-
-    if ( DB_error() ) {
-        $errorCode = 1;
-    } else {
-        $sql =  "UPDATE {$_TABLES['ac_events']} SET
             title = '{$db_title}',
             location = '{$db_location}',
             description = '{$db_description}',
             allday = {$allday},
-            repeats = {$repeats},
+            start_date = '{$db_start_date}',
+            end_date = '{$db_end_date}',
             start = '{$db_start}',
-            end = '{$db_end}' ";
-        $sql .= " WHERE event_id=".(int) $event_id . " AND parent_id = " . (int) $parent_id;
+            end = '{$db_end}'";
 
+    $sql .= " WHERE parent_id=".(int) $parent_id;
+    DB_query($sql,1);
+
+    if ( DB_error() ) {
+        $errorCode = 1;
+    } else {
+        // updat events record
+        $sql = "UPDATE {$_TABLES['ac_events']} SET
+                title = '{$db_title}',
+                location = '{$db_location}',
+                description = '{$db_description}',
+                allday = {$allday},
+                start_date = '{$db_start_date}',
+                end_date = '{$db_end_date}',
+                start = '{$db_start}',
+                end = '{$db_end}',
+                exception = {$exception} ";
+        $sql .= " WHERE event_id=".(int) $event_id;
         DB_query($sql,1);
 
-        if ( DB_error() ) $errorCode = 2;
+        if ( DB_error() ) {
+            $errorCode = 2;
+        }
+    }
+    return $errorCode;
+}
+
+function saveEditEventSeries()
+{
+    global $_CONF, $_AC_CONF, $_USER, $_TABLES;
+
+COM_errorLog("in saveEditEventSeries");
+
+    $errorCode = 0;
+    $errors = 0;
+
+    // get the parentid and the event id
+
+    $parent_id      = (int) COM_applyFilter($_POST['parent_id'],true);
+    $event_id       = (int) COM_applyFilter($_POST['event_id'],true);
+
+    $title          = $_POST['title'];
+    $location       = $_POST['location'];
+    $description    = $_POST['description'];
+
+    // filter our input
+    $filter = new sanitizer();
+    $filter->setPostmode('text');
+    $description = $filter->filterText($description);
+    $title = $filter->filterText($title);
+    $location = $filter->filterText($location);
+
+    // prepare other stuff for db
+    $db_title           = DB_escapeString($title);
+    $db_location        = DB_escapeString($location);
+    $db_description     = DB_escapeString($description);
+COM_errorLog("preparing to update parent");
+   // update parent record
+    $sql = "UPDATE {$_TABLES['ac_event']} SET
+            title = '{$db_title}',
+            location = '{$db_location}',
+            description = '{$db_description}'";
+
+    $sql .= " WHERE parent_id=".(int) $parent_id;
+COM_errorLog($sql);
+    DB_query($sql,1);
+
+    if ( DB_error() ) {
+        $errorCode = 1;
+    } else {
+        // updat events record
+        $sql = "UPDATE {$_TABLES['ac_events']} SET
+                title = '{$db_title}',
+                location = '{$db_location}',
+                description = '{$db_description}'";
+        $sql .= " WHERE parent_id=".(int) $parent_id . " AND exception = 0";
+        DB_query($sql,1);
+COM_errorLog($sql);
+        if ( DB_error() ) {
+            $errorCode = 2;
+        }
     }
     return $errorCode;
 }
@@ -411,6 +626,21 @@ function deleteEvent()
     return 0;
 }
 
+
+function deleteEventSeries()
+{
+    global $_CONF, $_AC_CONF, $_TABLES;
+
+    $parent_id      = (int) COM_applyFilter($_POST['parent_id'],true);
+    $event_id       = (int) COM_applyFilter($_POST['event_id'],true);
+
+    $sql = "DELETE FROM {$_TABLES['ac_events']} WHERE parent_id=".(int) $parent_id;
+    DB_query($sql);
+    $sql = "DELETE FROM {$_TABLES['ac_event']} WHERE parent_id=".(int) $parent_id;
+    DB_query($sql);
+
+    return 0;
+}
 
 function agendaAddDay( $date, $interval = 1 ) {
 

@@ -16,6 +16,24 @@
 
 require_once '../lib-common.php';
 
+if (!in_array('agenda', $_PLUGINS)) {
+    COM_404();
+    exit;
+}
+
+if ( COM_isAnonUser() && $_AC_CONF['allow_anonymous_view'] == false )  {
+    if ( $_AC_CONF['security_exit'] == 0 ) {
+        COM_404();
+        exit;
+    } else {
+        $display  = COM_siteHeader();
+        $display .= SEC_loginRequiredForm();
+        $display .= COM_siteFooter();
+        echo $display;
+        exit;
+    }
+}
+
 /*
 * Main Function
 */
@@ -37,10 +55,15 @@ $T->set_file (array (
     'page' => 'calendar.thtml',
 ));
 
-$T->set_var('write_access',true);
+if ( SEC_hasRights('agenda.admin') ) {
+    $T->set_var('write_access',true);
+} else {
+
+// $_AC_CONF['allow_entry'] // 0 = none, 1 = logged in, 2 = anyone
+    $T->unset_var('write_access');
+}
 
 $T->set_var ('header', $LANG_AC['header']);
-
 
 $T->parse('output', 'page');
 $page = $T->finish($T->get_var('output'));
