@@ -42,8 +42,32 @@ $query  = '';
 $eid    = 0;
 $page   = 1;
 
-COM_setArgNames( array('id') );
-$tid = (int) COM_applyFilter(COM_getArgument( 'id' ),true);
+$allowedViews = array('month','agendaWeek','agendaDay','listMonth');
+
+COM_setArgNames( array('v','y','m','d') );
+$view = COM_applyFilter(COM_getArgument('v'));
+if ( !in_array($view,$allowedViews)) {
+    $view = 'month';
+}
+
+$year   = COM_getArgument('y');
+$month  = COM_getArgument('m');
+$day    = COM_getArgument('d');
+
+$dt = new Date('now',$_USER['tzid']);
+
+if ( $year == '' ) {
+    $defaultDate = $dt->format('Y-m-d');
+} else {
+    if ( $month == '' ) {
+        $month = 1;
+    }
+    if ( $day == '' ) {
+        $day = 1;
+    }
+    $defaultDate = sprintf("%4d-%02d-%02d",$year,$month,$day);
+}
+
 
 if (isset ($_GET['query'])) {
     $query = trim(COM_applyFilter ($_GET['query']));
@@ -64,6 +88,10 @@ if ( SEC_hasRights('agenda.admin') ) {
 }
 
 $T->set_var ('header', $LANG_AC['header']);
+
+
+$T->set_var('view',$view);
+$T->set_var('defaultdate',$defaultDate);
 
 $T->parse('output', 'page');
 $page = $T->finish($T->get_var('output'));

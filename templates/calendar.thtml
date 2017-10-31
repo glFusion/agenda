@@ -11,6 +11,8 @@
 {!else}
 	var ac_conf_write_access = false;
 {!endif}
+  var defaultview = '{view}';
+  var defaultdate = '{defaultdate}';
 </script>
 
 

@@ -107,10 +107,9 @@ $(document).ready(function() {
 
 // click on event - make this edit
 		eventClick: function(event, element) {
-
 			if ( agendaConfig['allow_edit'] ) {
+				$('.qtip').remove();
 				qTipArray[event.id].hide();
-				qTipArray[event.id].qtip('destroy', true);
 
 				if ( event.repeats == 1 ) {
 					$("#dialog-series").data('event-data', event).dialog('open');
@@ -168,6 +167,7 @@ $(document).ready(function() {
 		},
 
 		eventResize: function(event, delta, revertFunc) {
+			$('.qtip').remove();
 			console.log("event has been resized");
 			qTipArray[event.id].hide();
 			var params = "&id=" + event.id;
@@ -203,6 +203,7 @@ $(document).ready(function() {
 			dragging = 0;
 		},
 		eventResizeStart: function( event, jsEvent, ui, view ) {
+			$('.qtip').remove();
 			dragging = 1;
 			console.log("starting drag");
 			qTipArray[event.id].hide();
@@ -211,6 +212,7 @@ $(document).ready(function() {
 			dragging = 0;
 		},
 		eventDrop: function(event, delta, revertFunc) {
+			$('.qtip').remove();
 			console.log("event has been moved");
 			qTipArray[event.id].hide();
 			qTipArray[event.id].qtip('destroy', true);
@@ -245,7 +247,8 @@ $(document).ready(function() {
 		},
 		events: glfusionSiteUrl + '/agenda/includes/json-events.php',
 		editable: false, // overriden in the event object
-		defaultView: 'month',
+		defaultView:  defaultview,
+		defaultDate:  defaultdate,
 		allDayDefault: false,
 	});
 // end of full calendar initialization
