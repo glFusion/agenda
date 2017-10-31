@@ -49,6 +49,7 @@ $LANG_AC = array (
 // block strings
     'site_events'       => 'Site Events',
     'no_upcoming'       => 'No Upcoming Events',
+    'today'             => 'Today',
 );
 
 $LANG_AC_ERRORS = array(

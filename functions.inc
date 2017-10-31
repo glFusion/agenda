@@ -802,35 +802,17 @@ function phpblock_agenda( $help='', $title='' )
                 $headline = true;
             }
 
-            // Start Date strings...
-            $startDate = $theEvent['start'];
-            $theTime1 = strtotime( $startDate );
-            $dayName1 = strftime( '%A', $theTime1 );
-            if ( $_SYSTEM['swedish_date_hack'] == true && function_exists('iconv') ) {
-                $dayName1 = iconv('ISO-8859-1','UTF-8',$dayName1);
-            }
-            $dt->setTimestamp($theEvent['start']);
-            $abbrDate1 = $dt->format($dateonly,true);
-            // End Date strings...
-            $endDate = $theEvent['end'];
-            $theTime2 = strtotime( $endDate );
-            $dayName2 = strftime( '%A', $theTime2 );
-            if ( $_SYSTEM['swedish_date_hack'] == true && function_exists('iconv') ) {
-                $dayName2 = iconv('ISO-8859-1','UTF-8',$dayName2);
-            }
-            $dt->setTimestamp($theEvent['end']);
-            $abbrDate2 = $dt->format($dateonly,true);
-            if ( COM_getCharset() == 'utf-8' ) {
-                if ( !MBYTE_is_utf8($dayName1) ) {
-                    $dayName1 = utf8_encode($dayName1);
-                }
-                if ( !MBYTE_is_utf8($dayName2) ) {
-                    $dayName2 = utf8_encode($dayName2);
-                }
-            }
+            $dtStart = new Date($theEvent['start'],$_USER['tzid']);
+            $dtEnd   = new Date($theEvent['end'],$_USER['tzid']);
 
+            // Start Date strings...
+            $dayName1 = $dtStart->format('l',true);
+            $abbrDate1 = $dtStart->format($dateonly,true);
+            // End Date strings...
+            $dayName2 = $dtEnd->format('l',true);
+            $abbrDate2 = $dtEnd->format($dateonly,true);
             $todaysEvent = false;
-            if( date( 'Ymd', $theTime1 ) == date( 'Ymd', time())) {
+            if( $dtStart->format('Ymd',true) == date( 'Ymd', time())) {
                 $todaysEvent = true;
                 $todaysClassName = 'site-event-today';
             }
@@ -855,17 +837,14 @@ function phpblock_agenda( $help='', $title='' )
                         $skipFirstBreak = false;
                     }
                     if( $todaysEvent ) {
-                        $retval .= '<span class="' . $todaysClassName . '">';
+                        $retval .= '<b>'.$LANG_AC['today'].'</b>';
+                    } else {
+                        $retval .= '<b>' . $dayName1 . '</b>&nbsp;<small>'
+                                . $abbrDate1 . '</small>';
                     }
-                    $retval .= '<b>' . $dayName1 . '</b>&nbsp;<small>'
-                            . $abbrDate1 . '</small>';
-
                     // If different start and end dates, then display end date:
                     if( $abbrDate1 != $abbrDate2 ) {
                         $retval .= ' - <b>' . $dayName2 . '</b>&nbsp;<small>' . $abbrDate2 . '</small>';
-                    }
-                    if( $todaysEvent ) {
-                        $retval .= '</span>';
                     }
                 }
                 $newevents = array();
