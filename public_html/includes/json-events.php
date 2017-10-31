@@ -30,11 +30,14 @@ if ( strstr($start,'T') === false ) {
     $endDisplayUnix   = strtotime($end);
 }
 
+//COM_errorLog($start);
+//COM_errorLog($end);
+
 $events = array();
 
 $dt = new Date('now',$_USER['tzid']);
 
-$sql = "SELECT * FROM {$_TABLES['ac_events']}  WHERE start BETWEEN '{$startDisplayUnix}' AND '{$endDisplayUnix}'";
+$sql = "SELECT * FROM {$_TABLES['ac_events']}  WHERE start BETWEEN '{$startDisplayUnix}' AND '{$endDisplayUnix}' ";
 
 $result = DB_query($sql);
 while ( $row = DB_fetchArray($result) ) {
