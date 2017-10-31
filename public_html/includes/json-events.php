@@ -22,8 +22,13 @@ $start = DB_escapeString($_GET['start']);
 $end   = DB_escapeString($_GET['end']);
 
 // dates to use for our query
-$startDisplayUnix   = strtotime($start . ' 00:00:00');
-$endDisplayUnix     = strtotime($end   . ' 24:00:00');
+if ( strstr($start,'T') === false ) {
+    $startDisplayUnix   = strtotime($start . ' 00:00:00');
+    $endDisplayUnix     = strtotime($end   . ' 24:00:00');
+} else {
+    $startDisplayUnix = strtotime($start);
+    $endDisplayUnix   = strtotime($end);
+}
 
 $events = array();
 
