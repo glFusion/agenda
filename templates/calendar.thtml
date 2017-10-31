@@ -8,12 +8,7 @@
   var defaultdate = '{defaultdate}';
 </script>
 
-<style>
-.ui-dialog { z-index: 1001 !important ;}
-.ui-dialog {background:#f5f5f5 !important; }​
-.ui-dialog-titlebar, .ui-widget-header {background: #339CDA !important; color:#fff !important; }
-.qtip-titlebar {font-weight:700 !important; }
-</style>
+
 <div id="calendar-area" class="uk-height-1-1 uk-width-1-1">
 	<div id="calendar" class="uk-height-1-1">
 	</div>
