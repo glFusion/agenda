@@ -411,6 +411,8 @@ COM_errorLog("end date failed validation");
         }
     }
 
+    PLG_itemSaved($parent_id, 'agenda');
+
     return $errorCode;
 }
 
@@ -548,6 +550,9 @@ function saveEditEvent()
             $errorCode = 2;
         }
     }
+
+    PLG_itemSaved($parent_id, 'agenda');
+
     return $errorCode;
 }
 
@@ -606,6 +611,9 @@ COM_errorLog($sql);
             $errorCode = 2;
         }
     }
+
+    PLG_itemSaved($parent_id, 'agenda');
+
     return $errorCode;
 }
 
@@ -623,6 +631,8 @@ function deleteEvent()
     $sql = "DELETE FROM {$_TABLES['ac_event']} WHERE parent_id=".(int) $parent_id;
     DB_query($sql);
 
+    PLG_itemDeleted($parent_id,'agenda');
+
     return 0;
 }
 
@@ -638,6 +648,8 @@ function deleteEventSeries()
     DB_query($sql);
     $sql = "DELETE FROM {$_TABLES['ac_event']} WHERE parent_id=".(int) $parent_id;
     DB_query($sql);
+
+    PLG_itemDeleted($parent_id,'agenda');
 
     return 0;
 }
