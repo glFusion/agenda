@@ -64,8 +64,13 @@ $(document).ready(function() {
 			if ( agendaConfig['allow_new'] ) {
 				var clickDate = date.format();
 				$('#dialog-form-full').dialog('option', 'title', 'Add Event');
-				$('#dialog-form-full').dialog('option', 'height', window.innerHeight * .85 );
-				$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .8 );
+				if ( window.innerWidth < 600 ) {
+					$('#dialog-form-full').dialog('option', 'height', window.innerHeight);
+					$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .95);
+				} else {
+					$('#dialog-form-full').dialog('option', 'height', window.innerHeight * .85 );
+					$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .8 );
+				}
 				$("#dialog-form-full").html('');
 				url = glfusionSiteUrl + '/agenda/includes/ajax-form-manager.php';
 				$.ajax({
@@ -260,6 +265,7 @@ $(document).ready(function() {
 	dialog = $( "#dialog-form-full" ).dialog({
 		autoOpen: false,
 		modal: true,
+		resizable: true,
 		classes: { "ui-dialog": "tm-agenda-dialog" },
 		height: window.innerHeight * .85,
 		width: window.innerWidth * .8,
