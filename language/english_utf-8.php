@@ -46,6 +46,9 @@ $LANG_AC = array (
     'delete_checked'    => 'Delete Checked',
     'delete_confirm'    => 'Are you sure',
     'published'         => 'Published',
+// block strings
+    'site_events'       => 'Site Events',
+    'no_upcoming'       => 'No Upcoming Events',
 );
 
 $LANG_AC_ERRORS = array(

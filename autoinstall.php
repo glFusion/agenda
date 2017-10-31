@@ -48,6 +48,9 @@ $INSTALL_plugin['agenda'] = array(
     array('type' => 'mapping', 'group' => 'admin_group_id', 'feature' => 'admin_feature_id',
             'log' => 'Adding agenda.admin feature to the agenda admin group'),
 
+    array('type' => 'block', 'name' => 'block_agenda', 'title' => 'Upcoming Events',
+          'phpblockfn' => 'phpblock_agenda', 'block_type' => 'phpblock',
+          'group_id' => 'admin_group_id' , 'onleft' => true),
 );
 
 
@@ -111,7 +114,7 @@ function plugin_autouninstall_agenda ()
         /* give the full name of the feature, as in the db */
         'features' => array('agenda.admin'),
         /* give the full name of the block, including 'phpblock_', etc */
-        'php_blocks' => array(),
+        'php_blocks' => array('phpblock_agenda'),
         /* give all vars with their name */
         'vars'=> array()
     );

@@ -41,6 +41,8 @@ if (file_exists ($langfile)) {
 require_once $_CONF['path'] . 'plugins/agenda/agenda.php';
 
 if ( !isset($_AC_CONF['displayblocks'])) $_AC_CONF['displayblocks'] = 'none';
+if ( !isset($_AC_CONF['showupcomingevents']) ) $_AC_CONF['showupcomingevents'] = 1;
+if ( !isset($_AC_CONF['upcomingeventsrange'] ) ) $_AC_CONF['upcomingeventsrange'] = 14;
 
 switch( $_AC_CONF['displayblocks'] ) {
     case 0 : // left only
@@ -711,16 +713,202 @@ function plugin_ismoderator_agenda()
 function plugin_enablestatechange_agenda( $enable )
 {
     global $_TABLES;
-/*
+
     if ( $enable == FALSE ) {
-        DB_query("UPDATE {$_TABLES['blocks']} SET is_enabled=0 WHERE name='block_agenda'",1);
+        DB_query("UPDATE {$_TABLES['blocks']} SET is_enabled=0 WHERE phpblockfn='phpblock_agenda'",1);
     } else {
-        DB_query("UPDATE {$_TABLES['blocks']} SET is_enabled=1 WHERE name='block_agenda'",1);
+        DB_query("UPDATE {$_TABLES['blocks']} SET is_enabled=1 WHERE phpblockfn='phpblock_agenda'",1);
     }
-*/
+
     return 1;
 
 }
+
+
+/**
+* Returns the upcoming events block
+*
+* Returns the HTML for any upcoming events in the agenda
+*
+* @param        string      $help       Help file for block
+* @param        string      $title      Title to be used in block header
+* @return   string  HTML formatted block containing events.
+*/
+function phpblock_agenda( $help='', $title='' )
+{
+    global $_CONF, $_SYSTEM, $_TABLES, $_USER, $_AC_CONF, $LANG_AC;
+
+    $retval = '';
+
+    if ( COM_isAnonUser() && $_AC_CONF['allow_anonymous_view'] == false )  {
+        return $retval;
+    }
+
+    if ( !$_USER['noboxes'] && $_AC_CONF['showupcomingevents'] ) {
+        $range = $_AC_CONF['upcomingeventsrange'];
+        if( $range == 0 ) {
+            $range = 14; // fallback: 14 days
+        }
+
+        $dt = new Date(time(),$_USER['tzid']);
+        $dateonly = $_CONF['dateonly'];
+        if( empty( $dateonly )) {
+            $dateonly = 'd-M'; // fallback: day - abbrev. month name
+        }
+
+        if( empty( $title )) {
+            $title = DB_getItem( $_TABLES['blocks'], 'title',"name = 'block_agenda'" );
+        }
+
+        $filterStartDate = $range * 86400;
+        $dtNow = new Date('now',$_USER['tzid']);
+        $todayOnly = $dtNow->format('Y-m-d',true);
+        $todayOnly = $todayOnly .'T' . '00:00:00';
+        $unixNow = strtotime($todayOnly);
+        $unixEnd = (int) $unixNow + (int) $filterStartDate;
+
+        $sql  = "SELECT * FROM {$_TABLES['ac_events']} ";
+        $sql .= " WHERE start >= ".$unixNow." AND start < ". $unixEnd;
+        $sql .= " ORDER by start";
+
+        $allEvents  = DB_query( $sql );
+        $numRows    = DB_numRows( $allEvents );
+        $totalrows  = $numRows;
+
+        $numDays = 0;          // Without limits, I'll force them.
+        $theRow = 1;           // Start with today!
+        $oldDate1 = 'no_day';  // Invalid Date!
+        $oldDate2 = 'last_d';  // Invalid Date!
+
+        $eventsFound = 0;
+        $skipFirstBreak = false;
+
+        $classname = 'agenda-upcoming';
+        $headline = false;
+
+        $headline = true; // no headline needed
+        $skipFirstBreak = true;
+
+        while( $theRow <= $numRows AND $numDays < $range ) {
+            // Retreive the next event, and format the start date.
+            $theEvent = DB_fetchArray( $allEvents );
+
+            $eventsFound++;
+
+            if( !$headline ) {
+               if( $totalrows > 0 ) {
+                   $retval .= '<b>' . $LANG_AC['site_events'] . '</b>';
+                }
+                $headline = true;
+            }
+
+            // Start Date strings...
+            $startDate = $theEvent['start'];
+            $theTime1 = strtotime( $startDate );
+            $dayName1 = strftime( '%A', $theTime1 );
+            if ( $_SYSTEM['swedish_date_hack'] == true && function_exists('iconv') ) {
+                $dayName1 = iconv('ISO-8859-1','UTF-8',$dayName1);
+            }
+            $dt->setTimestamp($theEvent['start']);
+            $abbrDate1 = $dt->format($dateonly,true);
+            // End Date strings...
+            $endDate = $theEvent['end'];
+            $theTime2 = strtotime( $endDate );
+            $dayName2 = strftime( '%A', $theTime2 );
+            if ( $_SYSTEM['swedish_date_hack'] == true && function_exists('iconv') ) {
+                $dayName2 = iconv('ISO-8859-1','UTF-8',$dayName2);
+            }
+            $dt->setTimestamp($theEvent['end']);
+            $abbrDate2 = $dt->format($dateonly,true);
+            if ( COM_getCharset() == 'utf-8' ) {
+                if ( !MBYTE_is_utf8($dayName1) ) {
+                    $dayName1 = utf8_encode($dayName1);
+                }
+                if ( !MBYTE_is_utf8($dayName2) ) {
+                    $dayName2 = utf8_encode($dayName2);
+                }
+            }
+
+            $todaysEvent = false;
+            if( date( 'Ymd', $theTime1 ) == date( 'Ymd', time())) {
+                $todaysEvent = true;
+                $todaysClassName = 'site-event-today';
+            }
+
+            // If either of the dates [start/end] change, then display a new header.
+            if( $oldDate1 != $abbrDate1 || $oldDate2 != $abbrDate2 ) {
+
+                if( !empty( $newevents )) {
+                    $retval .= COM_makeList( $newevents, $classname );
+                    $newevents = array();
+                }
+
+                $oldDate1 = $abbrDate1;
+                $oldDate2 = $abbrDate2;
+                $numDays ++;
+
+                if( $numDays < $range ) {
+                    if( !empty( $newevents )) {
+                         $retval .= COM_makeList( $newevents, $classname );
+                    }
+                    if( $skipFirstBreak ) {
+                        $skipFirstBreak = false;
+                    }
+                    if( $todaysEvent ) {
+                        $retval .= '<span class="' . $todaysClassName . '">';
+                    }
+                    $retval .= '<b>' . $dayName1 . '</b>&nbsp;<small>'
+                            . $abbrDate1 . '</small>';
+
+                    // If different start and end dates, then display end date:
+                    if( $abbrDate1 != $abbrDate2 ) {
+                        $retval .= ' - <b>' . $dayName2 . '</b>&nbsp;<small>' . $abbrDate2 . '</small>';
+                    }
+                    if( $todaysEvent ) {
+                        $retval .= '</span>';
+                    }
+                }
+                $newevents = array();
+            }
+
+            // Now display this event record.
+            if( $numDays < $range ) {
+                $dt->setTimeStamp($theEvent['start']);
+                $newevent_url = $_CONF['site_url'].'/agenda/index.php?v=agendaDay';
+                $newevent_url .= '&y='.$dt->format('Y',true);
+                $newevent_url .= '&m='.$dt->format('m',true);
+                $newevent_url .= '&d='.$dt->format('d',true);
+                $newevent_url = COM_buildURL( $newevent_url );
+
+                $attr = array();
+                if( $todaysEvent ) {
+                    $attr = array('class' => $todaysClassName);
+                }
+
+                $newevent = COM_createLink(
+                    $theEvent['title'],
+                    $newevent_url,
+                    $attr
+                );
+                $newevents[] = $newevent;
+            }
+            $theRow++;
+        } // end of while
+
+            if( !empty( $newevents )) {
+                $retval .= COM_makeList( $newevents, $classname );
+                $newevents = array();
+            }
+
+        if( $eventsFound == 0 ) {
+            // There aren't any upcoming events, show a nice message
+            $retval .= $LANG_AC['no_upcoming'];
+        }
+    }
+
+    return $retval;
+}
+
 
 /*
 	Truncated text to the nearest word based on a character count - substr()
