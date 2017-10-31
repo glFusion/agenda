@@ -33,6 +33,19 @@ $LANG_AC = array (
     'save'				=> 'Save',
     'create'            => 'New Event',
     'header'            => 'Agenda',
+// submission queue items
+    'submissions'       => 'Agenda Submissions',
+// admin list fields
+    'edit'              => 'Edit',
+    'title'             => 'Title',
+    'owner'             => 'Owner',
+    'start_date'        => 'Start Date',
+    'end_date'          => 'End Date',
+    'allday'            => 'All Day',
+    'no_events'         => 'No Events Found',
+    'delete_checked'    => 'Delete Checked',
+    'delete_confirm'    => 'Are you sure',
+    'published'         => 'Published',
 );
 
 $LANG_AC_ERRORS = array(
