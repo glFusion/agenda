@@ -564,10 +564,10 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
                     $props['author'] = $A['owner_id'];
                     break;
                 case 'author_name' :
-                    $props['author_name'] = $A['owner_id'];
+                    $props['author_name'] = COM_getDisplayName($A['owner_id']);
                     break;
                 case 'hits' :
-                    $props['hits'] = 0;
+ //                   $props['hits'] = 0;
                     break;
                 case 'perms' :
                     $p_anon = 0;
