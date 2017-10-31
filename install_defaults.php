@@ -38,6 +38,8 @@ $_AC_DEFAULTS = array(
 // display items fieldset
 
     'displayblocks'         => 3,       // 'Left Blocks' => 0, 'Right Blocks' => 1, 'All Blocks' => 2, 'No Blocks' => 3
+    'showupcomingevents'    => 1,       // 0 = no 1 = yes
+    'upcomingeventsrange'   => 14,
 );
 
 /**
@@ -64,7 +66,8 @@ function plugin_initconfig_agenda()
 // display fieldset
         $c->add('fs_display', NULL, 'fieldset', 0, 1, NULL, 0, true,'agenda');
         $c->add('displayblocks', $_AC_DEFAULTS['displayblocks'],'select', 0, 1, 4, 10, true, 'agenda');
-
+        $c->add('showupcomingevents', $_AC_DEFAULTS['showupcomingevents'],'select', 0, 1, 0, 20, true, 'agenda');
+        $c->add('upcomingeventsrange', $_AC_DEFAULTS['upcomingeventsrange'],'text', 0, 1, NULL, 30, true, 'agenda');
      }
      return true;
 }

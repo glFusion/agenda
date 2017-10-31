@@ -66,6 +66,8 @@ $LANG_confignames['agenda'] = array(
     'allow_entry'           => 'Who Can Submit Events',
     'submission_queue'      => 'Submission Queue',
     'displayblocks'         => 'Display Blocks',
+    'showupcomingevents'    => 'Show Upcoming Events Block',
+    'upcomingeventsrange'   => 'Days to include in Upcoming Event Block',
 );
 
 $LANG_configsubgroups['agenda'] = array(
