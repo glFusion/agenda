@@ -21,9 +21,6 @@ if (!defined ('GVERSION')) {
 $ac_config = \config::get_instance();
 $_AC_CONF = $ac_config->get_config('agenda');
 
-
-if ( !isset($_AC_CONF['centerblock_where'] ) ) $_AC_CONF['centerblock_where'] = -1;
-
 /**
 * Language file Include
 */
@@ -724,9 +721,11 @@ function plugin_enablestatechange_agenda( $enable )
 *
 * Returns the HTML for any upcoming events in the agenda
 *
+  Code adapted from the Calendar Plugin by Tony Bibbs - tony AT tonybibbs DOT com
+*
 * @param        string      $help       Help file for block
 * @param        string      $title      Title to be used in block header
-* @return   string  HTML formatted block containing events.
+* @return       string  HTML formatted block containing events.
 */
 function phpblock_agenda( $help='', $title='' )
 {
@@ -739,7 +738,11 @@ function phpblock_agenda( $help='', $title='' )
     }
 
     if ( !$_USER['noboxes'] && $_AC_CONF['showupcomingevents'] ) {
-        $cacheInstance = 'agenda__'.$_USER['theme'];
+
+        $dt = new Date('now',$_USER['tzid']);
+        $tzabbr = strtolower($dt->format('T',true));
+
+        $cacheInstance = 'agenda__'.$tzabbr.'__'.$_USER['theme'];
         $retval = '';
         $retval = CACHE_check_instance($cacheInstance, 0);
 
@@ -755,7 +758,6 @@ function phpblock_agenda( $help='', $title='' )
             $range = 14; // fallback: 14 days
         }
 
-        $dt = new Date(time(),$_USER['tzid']);
         $dateonly = $_CONF['dateonly'];
         if( empty( $dateonly )) {
             $dateonly = 'd-M'; // fallback: day - abbrev. month name
@@ -774,7 +776,7 @@ function phpblock_agenda( $help='', $title='' )
 
         $sql  = "SELECT * FROM {$_TABLES['ac_events']} ";
         $sql .= " WHERE start >= ".$unixNow." AND start < ". $unixEnd;
-        $sql .= " ORDER by start";
+        $sql .= " ORDER by start, parent_id DESC";
 
         $allEvents  = DB_query( $sql );
         $numRows    = DB_numRows( $allEvents );
@@ -788,7 +790,7 @@ function phpblock_agenda( $help='', $title='' )
         $eventsFound = 0;
         $skipFirstBreak = false;
 
-        $classname = 'agenda-upcoming';
+        $classname = 'agenda-upcoming uk-text-truncate';
 
         $skipFirstBreak = true;
 
@@ -798,9 +800,13 @@ function phpblock_agenda( $help='', $title='' )
 
             $eventsFound++;
 
-            $dtStart = new Date($theEvent['start'],$_USER['tzid']);
-            $dtEnd   = new Date($theEvent['end'],$_USER['tzid']);
-
+            if ( $theEvent['allday'] == 1 ) {
+                $dtStart = new Date( $theEvent['start_date'].' 00:00:00',$_USER['tzid'] );
+                $dtEnd   = new Date( $theEvent['end_date'].' 23:59:00',$_USER['tzid'] );
+            } else {
+                $dtStart = new Date($theEvent['start'],$_USER['tzid']);
+                $dtEnd   = new Date($theEvent['end'],$_USER['tzid']);
+            }
             // Start Date strings...
             $dayName1 = $dtStart->format('l',true);
             $abbrDate1 = $dtStart->format($dateonly,true);
@@ -808,7 +814,7 @@ function phpblock_agenda( $help='', $title='' )
             $dayName2 = $dtEnd->format('l',true);
             $abbrDate2 = $dtEnd->format($dateonly,true);
             $todaysEvent = false;
-            if( $dtStart->format('Ymd',true) == date( 'Ymd', time())) {
+            if( $dtStart->format('Ymd',true) == $dtNow->format('Ymd',true)) {
                 $todaysEvent = true;
                 $todaysClassName = 'site-event-today';
             }
@@ -857,9 +863,8 @@ function phpblock_agenda( $help='', $title='' )
 
                 $attr = array();
                 if( $todaysEvent ) {
-                    $attr = array('class' => $todaysClassName);
+                    $attr = array('class' => $todaysClassName, 'title' => $theEvent['title']);
                 }
-
                 $newevent = COM_createLink(
                     $theEvent['title'],
                     $newevent_url,
