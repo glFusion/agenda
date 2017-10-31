@@ -323,6 +323,21 @@ function plugin_itemlist_agenda($token)
     return $retval;
 }
 
+function plugin_getheadercss_agenda() {
+    global $_CONF;
+
+    $styles = array();
+
+    if ( @file_exists($_CONF['path_layout'].'plugins/agenda/style.css') ) {
+        $styles[] = $_CONF['path_layout'].'plugins/agenda/style.css';
+    } else if ( @file_exists($_CONF['path'] . 'plugins/agenda/custom/style.css') ) {
+        $styles[] = $_CONF['path'] . 'plugins/agenda/css/custom/style.css';
+    } else {
+        $styles[] = $_CONF['path'] . 'plugins/agenda/css/style.css';
+    }
+    return($styles);
+}
+
 function plugin_getheadercode_agenda()
 {
     global $_CONF;
@@ -625,23 +640,6 @@ function _ac_getListField($fieldname, $fieldvalue, $A, $icon_arr, $token = "")
             $url = $_CONF['site_admin_url'].'/plugins/agenda/index.php?edit=x&src=mod&parent_id='.$A['parent_id'];
             $retval = '<a href="'.$url.'"><i class="uk-icon uk-icon-pencil"></i></a>';
 
-            break;
-        case 'text_full' :
-            $retval = '
-            <a href="#tstid'.$A['testid'].'" rel="modal:open">'.$LANG_ADMIN['preview'].'</a>
-            <div id="tstid'.$A['testid'].'" style="display:none;">
-                <div class=" testimonial" style="padding-top:10px;">
-                    <blockquote>
-                    '.nl2br($A['text_full']).'
-                    </blockquote>
-                    <footer>
-                    <cite>
-                    '.$A['clientname'].'<br>'.$A['company'].'<br>'.$A['homepage'].'
-                    </cite>
-                    </footer>
-                </div>
-            </div>
-            ';
             break;
 
         case 'approve':
