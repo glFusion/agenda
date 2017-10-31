@@ -125,7 +125,7 @@ $(document).ready(function() {
 			if ( dragging == 0 ) { // don't render tooltip if dragging in progress
 				var mouseTarget = false;
 				if ( view.name == 'listMonth') {
-					mouseTarget = 'mouse';
+					mouseTarget = 'event';
 				}
 				eval("var qtip_" + event.id + '=1');
 				qTipArray[event.id] = element.qtip({
