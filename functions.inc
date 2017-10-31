@@ -21,17 +21,8 @@ if (!defined ('GVERSION')) {
 $ac_config = \config::get_instance();
 $_AC_CONF = $ac_config->get_config('agenda');
 
-/*
-$_AC_CONF['allow_anonymous_view'] = true;
-$_AC_CONF['security_exit'] = 0; // 0 = not found - 1 = login screen
-$_AC_CONF['allow_entry'] = 0; // 0 = none, 1 = logged in, 2 = anyone
-$_AC_CONF['submission_queue'] = 0; // 0 none - 1 anonymous only 2 = anyone
 
-if ( !isset($_AC_CONF['disable_submissions'] ) ) $_AC_CONF['disable_submissions'] = false;
-*/
 if ( !isset($_AC_CONF['centerblock_where'] ) ) $_AC_CONF['centerblock_where'] = -1;
-
-
 
 /**
 * Language file Include
@@ -165,9 +156,7 @@ function plugin_submissioncount_agenda()
 {
     global $_TABLES;
 
-    $retval = 0;
-
-    $retval = 0;
+    $retval = DB_count($_TABLES['ac_event'],'queued',1);
 
     return $retval;
 }
@@ -187,9 +176,9 @@ function plugin_moderationvalues_agenda()
     global $_TABLES;
 
     return array (
-        'testid',
-        $_TABLES['fc_event'],
-        "id,queued",
+        'parent_id',
+        $_TABLES['ac_event'],
+        "parent_id,queued",
         ''
     );
 }
@@ -211,15 +200,16 @@ function plugin_moderationapprove_agenda($id)
 
     if ( (int) $id <= 0 ) return '';
 
-    $sql = "UPDATE {$_TABLES['fc_event']} SET queued=0 WHERE testid=".(int) $id;
+    $sql = "UPDATE {$_TABLES['ac_event']} SET queued=0 WHERE parent_id=".(int) $id;
     DB_query($sql);
 
     PLG_itemSaved($id,'agenda');
     CACHE_remove_instance('menu');
     COM_setMsg($LANG_AC['submission_mod_approved'],'warning');
 
-	$email = DB_getItem($_TABLES['fc_event'],'email','testid='.(int) $id);
-	FC_notifyUser($email);
+// no email support at this time.
+//	$email = DB_getItem($_TABLES['ac_event'],'email','parent_id='.(int) $id);
+//	FC_notifyUser($email);
 
     return '';
 }
@@ -241,7 +231,7 @@ function plugin_moderationdelete_agenda($id)
 
     if ( (int) $id <= 0 ) return '';
 
-    $sql = "DELETE FROM {$_TABLES['fc_event']} WHERE testid=".(int) $id . " AND queued=1";
+    $sql = "DELETE FROM {$_TABLES['ac_event']} WHERE parent_id=".(int) $id . " AND queued=1";
     DB_query($sql);
     PLG_itemDeleted($id, 'agenda');
     CACHE_remove_instance('menu');
@@ -273,7 +263,7 @@ function plugin_itemlist_agenda($token)
         $uid = $_USER['uid'];
     }
 
-    $sql = "SELECT * FROM {$_TABLES['fc_event']} WHERE queued = 1";
+    $sql = "SELECT * FROM {$_TABLES['ac_event']} WHERE queued = 1";
 
     $result = DB_query($sql);
     $nrows = DB_numRows($result);
@@ -285,16 +275,14 @@ function plugin_itemlist_agenda($token)
         $A = DB_fetchArray($result);
         $A['edit'] = 'edit';
         $A['_type_']  = 'agenda';
-        $A['_key_']   = 'testid';      // name of key/id field
+        $A['_key_']   = 'parent_id';      // name of key/id field
         $data_arr[$i] = $A;     // push row data into array
     }
 
     $header_arr = array(      // display 'text' and use table field 'field'
-        array('text' => $LANG_ADMIN['edit'], 'field' => 'testid', 'align' => 'center', 'width' => '25px'),
-        array('text' => $LANG_AC['client'], 'field' => 'clientname'),
-        array('text' => $LANG_AC['company'], 'field' => 'company'),
-        array('text' => $LANG_AC['tstdate'], 'field' => 'tst_date', 'align' => 'center', 'width' => '15%'),
-        array('text' => $LANG_AC['testimonial'],'field'=>'text_full','align' => 'center'),
+        array('text' => $LANG_ADMIN['edit'], 'field' => 'parent_id', 'align' => 'center', 'width' => '25px'),
+        array('text' => 'Title', 'field' => 'title'),
+        array('text' => 'Start Date', 'field' => 'start_date'),
         array('text' => $LANG29[1], 'field' => 'approve', 'align' => 'center', 'width' => '35px'),
         array('text' => $LANG_ADMIN['delete'], 'field' => 'delete', 'align' => 'center', 'width' => '35px')
     );
@@ -319,7 +307,7 @@ function plugin_itemlist_agenda($token)
         . '/>&nbsp;' . $LANG_ADMIN['delete'];
 
     $options = array('chkselect' => true,
-                     'chkfield' => 'testid',
+                     'chkfield' => 'parent_id',
                      'chkname' => 'selitem',
                      'chkminimum' => 0,
                      'chkall' => true,
@@ -331,7 +319,7 @@ function plugin_itemlist_agenda($token)
             . '<input type="hidden" name="moderation" value="x"/>' . LB
             . '<input type="hidden" name="count" value="' . $nrows . '"/>';
 
-    $retval .= ADMIN_simpleList('_fc_getListField', $header_arr,
+    $retval .= ADMIN_simpleList('_ac_getListField', $header_arr,
                               $text_arr, $data_arr, $options, $form_arr, $token);
     return $retval;
 }
@@ -340,6 +328,12 @@ function plugin_getheadercss_agenda() {
     global $_CONF;
 
     $styles = array();
+
+    if ( strstr(COM_getCurrentURL(), $_CONF['site_url'].'/agenda/index.php') !== false ) {
+        $styles[] = "https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.css";
+        $styles[] = "https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.css";
+    }
+
 
 return ( $styles );
 
@@ -408,13 +402,13 @@ function plugin_dopluginsearch_agenda($query, $datestart, $dateend, $topic, $typ
 
     $query = trim(DB_escapeString(htmlspecialchars($query)));
 
-    $sql = " SELECT testid AS id, text_full AS description,text_full,UNIX_TIMESTAMP(tst_date) AS date, views AS hits, CONCAT(clientname,' ',company) AS title, CONCAT('/agenda/index.php?id=',testid) AS url ";
-    $sql .= "FROM {$_TABLES['fc_event']} ";
+    $sql = " SELECT parent_id AS id, description,start AS date, title, CONCAT('/agenda/index.php/agendaDay/',DATE_FORMAT(start_date, '%Y'),'/',DATE_FORMAT(start_date, '%m'),'/',DATE_FORMAT(start_date, '%d')) AS url ";
+    $sql .= "FROM {$_TABLES['ac_event']} ";
     $sql .= "WHERE queued = 0 ";
 
     $search = new SearchCriteria('agenda', 'agenda');
-    $columns = array('text_full');
-    $sql .= $search->getDateRangeSQL('AND', '(UNIX_TIMESTAMP(tst_date))', $datestart, $dateend);
+    $columns = array('title','description');
+    $sql .= $search->getDateRangeSQL('AND', 'start_date', $datestart, $dateend);
     list($sql,$ftsql) = $search->buildSearchSQL($keyType, $query, $columns, $sql);
     $search->setSQL($sql);
     $search->setFTSQL($ftsql);
@@ -425,7 +419,7 @@ function plugin_dopluginsearch_agenda($query, $datestart, $dateend, $topic, $typ
 
 
 /**
-* Return information for a testimonial
+* Return information for an event
 *
 * @param    string  $id         file ID or '*'
 * @param    string  $what       comma-separated list of properties
@@ -445,41 +439,39 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
             case 'date' :
             case 'date-modified':
             case 'date-created' :
-                $fields[] = 'UNIX_TIMESTAMP(tst_date) AS unixdate';
+                $fields[] = 'start_date AS unixdate';
                 break;
             case 'description':
-                $fields[] = 'text_full';
+                $fields[] = 'description';
                 break;
             case 'excerpt':
-                $fields[] = 'text_full';
+                $fields[] = 'description';
                 break;
             case 'searchidx' :
-                $fields[] = 'text_full';
-                $fields[] = "company";
-                $fields[] = "clientname";
+                $fields[] = 'description';
+                $fields[] = "title";
                 break;
             case 'raw-description' :
-                $fields[] = 'text_full';
+                $fields[] = 'description';
                 break;
             case 'id':
-                $fields[] = 'testid';
+                $fields[] = 'parent_id';
                 break;
             case 'title':
-                $fields[] = 'clientname';
-                $fields[] = 'company';
+                $fields[] = 'title';
                 break;
             case 'label':
             case 'url':
             case 'status' :
-                $fields[] = 'testid';
+                $fields[] = 'parent_id';
                 $fields[] = 'queued';
                 break;
             case 'author' :
             case 'author_name' :
-                $fields[] = 'clientname';
+                $fields[] = 'owner_id';
                 break;
             case 'hits' :
-                $fields[] = 'views';
+//                $fields[] = 'views';
                 break;
             case 'perms' :
 
@@ -501,12 +493,12 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
         $where = '';
         $permOp = 'WHERE queued=0 ';
     } else {
-        $where = " WHERE testid = '" . DB_escapeString($id) . "' ";
+        $where = " WHERE parent_id = '" . DB_escapeString($id) . "' ";
         $permOp = 'AND';
     }
 
     $sql = "SELECT " . implode(',', $fields)
-            . " FROM {$_TABLES['fc_event']} "
+            . " FROM {$_TABLES['ac_event']} "
             . " " . $where;
     if ($id != '*') {
         $sql .= ' LIMIT 1';
@@ -528,31 +520,32 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
                     $props[$p] = $A['unixdate'];
                     break;
                 case 'description':
-                    $props[$p] = nl2br($A['text_full']);
+                    $props[$p] = nl2br($A['description']);
                     break;
                 case 'excerpt':
-                    $props[$p] = nl2br(FC_truncate($A['text_full'],300,'...'));
+                    $props[$p] = nl2br(FC_truncate($A['description'],300,'...'));
                     break;
                 case 'searchidx' :
-                    $props[$p] = $A['text_full'].' '.$A['company'].' '.$A['clientname'];
+                    $props[$p] = $A['title'].' '.$A['description'];
                     break;
                 case 'raw-description':
-                    $props[$p] = $A['text_full'];
+                    $props[$p] = $A['description'];
                     break;
                 case 'id':
-                    $props['id'] = $A['testid'];
+                    $props['id'] = $A['parent_id'];
                     break;
                 case 'title':
-                    $props['title'] = $A['clientname'];
-                    if ( $A['company'] != "" ) {
-                        $props['title'] .= ' - ' . $A['company'];
-                    }
+                    $props['title'];
                     break;
                 case 'url':
-                    if (empty($A['testid'])) {
+// need to return URL of /view/year/month/day/
+//    $sql = " SELECT parent_id AS id, description,start AS date, title, CONCAT('/agenda/index.php/agendaDay/',DATE_FORMAT(start_date, '%Y'),'/',DATE_FORMAT(start_date, '%m'),'/',DATE_FORMAT(start_date, '%d')) AS url ";
+
+
+                    if (empty($A['parent_id'])) {
                         $props['url'] = COM_buildURL($_CONF['site_url'].'/agenda/index.php?id=' . $id);
                     } else {
-                        $props['url'] = COM_buildURL($_CONF['site_url'].'/agenda/index.php?id=' . $A['testid']);
+                        $props['url'] = COM_buildURL($_CONF['site_url'].'/agenda/index.php?id=' . $A['parent_id']);
                     }
                     break;
                 case 'label':
@@ -562,13 +555,13 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
                     $props['status'] = $A['queued'];
                     break;
                 case 'author' :
-                    $props['author'] = $A['clientname'];
+                    $props['author'] = $A['owner_id'];
                     break;
                 case 'author_name' :
-                    $props['author_name'] = $A['clientname'];
+                    $props['author_name'] = $A['owner_id'];
                     break;
                 case 'hits' :
-                    $props['hits'] = $A['views'];
+                    $props['hits'] = 0;
                     break;
                 case 'perms' :
                     $p_anon = 0;
@@ -628,92 +621,17 @@ function plugin_upgrade_agenda() {
 }
 
 
-/**
-* Display agenda Center block
-*
-* @param   where   int      where the block will be displayed (0..2)
-* @param   page    int      page number
-* @param   topic   string   topic ID
-* @return          string   HTML for the center blcok (can be empty)
-*/
-function plugin_centerblock_agenda ($where = 1, $page = 1, $topic = '')
-{
-    global $_CONF, $_USER, $_TABLES, $_AC_CONF, $LANG_AC;
-
-    if ( $_AC_CONF['centerblock_where'] != $where && $where != CENTERBLOCK_FORCE) {
-        return;
-    }
-    if ( $page > 1 OR !empty ($topic) ) return;
-
-    $limit = 1;
-    $template = 'centerblock.thtml';
-
-    if ( isset($_AC_CONF['centerblock_rotate']) AND $_AC_CONF['centerblock_rotate'] == true ) {
-        $limit = 20;
-    }
-
-    $retval = '';
-
-    $sql = "SELECT testid,clientname,company,homepage,text_full,tst_date
-					FROM {$_TABLES['fc_event']} WHERE queued=0
-					ORDER BY RAND(NOW()) LIMIT " . $limit;
-
-	$result = DB_query ($sql);
-	$num = DB_numRows ($result);
-
-	if ( $num === 0 ) return;
-
-    $T = new Template ($_CONF['path'] . 'plugins/agenda/templates');
-    $T->set_file ('page',$template);
-
-	$T->set_block('page','agenda','tm');
-
-	for ($i = 0; $i < $num; $i++) {
-        $A = DB_fetchArray($result);
-
-        $T->unset_var(array(
-            'testimonial_text',
-            'client_name',
-            'submit_date',
-            'testimonial_link',
-            'lang_read_full',
-            'truncated',
-            'company_name',
-            'company_website'
-        ));
-
-        $testimonialText = FC_truncate($A['text_full'],300,'');
-        $remaining       = trim(utf8_substr($A['text_full'],utf8_strlen($testimonialText)));
-
-        $T->set_var(array(
-            'testimonial_text'  => nl2br(FC_truncate($A['text_full'],500,'...')),
-            'client_name'       => $A['clientname'],
-            'submit_date'       => $A['tst_date'],
-            'testimonial_link'  => COM_buildURL($_CONF['site_url'].'/agenda/index.php?id='.$A['testid']),
-            'lang_read_full'    => $LANG_AC['read_full_testimonial'],
-            'lang_customers_saying' => $LANG_AC['customers_saying'],
-        ));
-        if ( $A['company'] != '' ) $T->set_var('company_name',$A['company']);
-        if ( $A['homepage'] != '' ) $T->set_var('company_website',$A['homepage']);
-        if ( utf8_strlen($remaining) > 0 ) $T->set_var('truncated',true);
-        $T->parse('tm','agenda',true);
-	}
-    $T->parse('output', 'page');
-    $retval .= $T->finish($T->get_var('output'));
-
-    return $retval;
-}
 
 
-function _fc_getListField($fieldname, $fieldvalue, $A, $icon_arr, $token = "")
+function _ac_getListField($fieldname, $fieldvalue, $A, $icon_arr, $token = "")
 {
     global $_CONF, $LANG_AC, $LANG_ADMIN, $LANG29;
 
     $retval = '';
 
     switch ( $fieldname ) {
-        case 'testid' :
-            $url = $_CONF['site_admin_url'].'/plugins/agenda/index.php?edit=x&src=mod&testid='.$A['testid'];
+        case 'parent_id' :
+            $url = $_CONF['site_admin_url'].'/plugins/agenda/index.php?edit=x&src=mod&parent_id='.$A['parent_id'];
             $retval = '<a href="'.$url.'"><i class="uk-icon uk-icon-pencil"></i></a>';
 
             break;
@@ -791,81 +709,18 @@ function plugin_ismoderator_agenda()
     return false;
 }
 
-/**
-* Returns data for the random
-*
-* block for the agenda plugin
-*
-*/
-function phpblock_agenda($attributes = array(), $rotate = 0)
-{
-    global $_CONF, $_AC_CONF, $_TABLES, $LANG_AC;
 
-    $retval = '';
-
-    $limit = 1;
-
-    if ( $rotate != 0 ) $limit = 20;
-
-    $sql = "SELECT testid,clientname,company,homepage,text_full,tst_date
-					FROM {$_TABLES['fc_event']} WHERE queued=0
-					ORDER BY RAND(NOW()) LIMIT " . (int) $limit;
-
-    $T = new Template ($_CONF['path'] . 'plugins/agenda/templates');
-    $T->set_file ('form','random_block.thtml');
-
-    $T->set_block('form','agenda','tm');
-
-    $result = DB_query($sql);
-    $numRows = DB_numRows($result);
-    if ( $numRows == 0 ) return '';
-
-    while ( $A = DB_fetchArray($result) ) {
-        $T->unset_var(array(
-            'testimonial_text',
-            'client_name',
-            'submit_date',
-            'testimonial_link',
-            'lang_read_full',
-            'truncated',
-            'company_name',
-            'company_website'
-        ));
-
-        $testimonialText = FC_truncate($A['text_full'],300,'');
-        $remaining       = trim(utf8_substr($A['text_full'],utf8_strlen($testimonialText)));
-
-        $T->set_var(array(
-            'testimonial_text'  => nl2br(FC_truncate($A['text_full'],300,'...')),
-            'client_name'       => $A['clientname'],
-            'submit_date'       => $A['tst_date'],
-            'testimonial_link'  => COM_buildURL($_CONF['site_url'].'/agenda/index.php?id='.$A['testid']),
-            'lang_read_full'    => $LANG_AC['read_full_testimonial'],
-        ));
-        if ( $A['company'] != '' ) $T->set_var('company_name',$A['company']);
-        if ( $A['homepage'] != '' ) $T->set_var('company_website',$A['homepage']);
-        if ( utf8_strlen($remaining) > 0 ) $T->set_var('truncated',true);
-
-        $T->parse('tm','agenda',true);
-	}
-
-    $T->parse('output', 'form');
-    $retval .= $T->finish($T->get_var('output'));
-
-
-    return $retval;
-}
 
 function plugin_enablestatechange_agenda( $enable )
 {
     global $_TABLES;
-
+/*
     if ( $enable == FALSE ) {
         DB_query("UPDATE {$_TABLES['blocks']} SET is_enabled=0 WHERE name='block_agenda'",1);
     } else {
         DB_query("UPDATE {$_TABLES['blocks']} SET is_enabled=1 WHERE name='block_agenda'",1);
     }
-
+*/
     return 1;
 
 }
@@ -906,58 +761,7 @@ function FC_notifyUser($email)
 	return;
 }
 
-function agenda_slider()
-{
-	global $_CONF, $_AC_CONF, $_TABLES;
 
-	$slideCounter = 0;
-
-	$T = new Template ($_CONF['path'] . 'plugins/agenda/templates');
-
-	$T->set_file (array (
-		'page' => 'testimonial_slider.thtml',
-	));
-
-	$sql = "SELECT testid,clientname,company,text_full,homepage "
-		   ."FROM {$_TABLES['fc_event']} WHERE queued=0 "
-		   ."ORDER BY tst_date, testid DESC "
-		   ."LIMIT 20";
-
-	$result = DB_query ($sql);
-	$num = DB_numRows ($result);
-
-	if ( $num === 0 ) return;
-
-	$T->set_block('page','agenda','tm');
-	$T->set_block('page','dotnav','dn');
-
-	for ($i = 0; $i < $num; $i++) {
-		$A = DB_fetchArray ($result);
-
-		$truncated = FC_truncate($A['text_full'], 700,'...');
-
-		$T->set_var(array(
-			'testid'            => $A['testid'],
-			'client'            => $A['clientname'],
-			'text_truncated'    => nl2br($truncated),
-			'company_name'      => $A['company'],
-		));
-		if ( $A['homepage'] != '' ) {
-			$T->set_var('company_url',$A['homepage']);
-		} else {
-			$T->unset_var('company_url');
-		}
-		$T->set_var('slidecounter',$slideCounter);
-		$T->parse('tm','agenda',true);
-		$T->parse('dn','dotnav',true);
-		$slideCounter++;
-	}
-
-	$T->parse('output', 'page');
-	$page = $T->finish($T->get_var('output'));
-
-	return $page;
-}
 
 function agenda_validateDate($date, $format = 'Y-m-d H:i:s')
 {
