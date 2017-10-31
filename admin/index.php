@@ -41,13 +41,12 @@ function listEvents()
     $header_arr = array(      # display 'text' and use table field 'field'
             array('text' => $LANG_AC['edit'],   'field' => 'parent_id', 'sort' => false, 'align' => 'center'),
             array('text' => $LANG_AC['title'], 'field' => 'title', 'sort' => true, 'align' => 'left'),
-            array('text' => $LANG_AC['owner'], 'field' => 'owner', 'sort' => true, 'align' => 'left'),
-            array('text' => $LANG_AC['access'], 'field' => 'title', 'sort' => true, 'align' => 'left'),
+            array('text' => $LANG_AC['owner'], 'field' => 'owner_id', 'sort' => true, 'align' => 'left'),
             array('text' => $LANG_AC['start_date'], 'field' => 'start_date', 'sort' => true, 'align' => 'left'),
-            array('text' => $LANG_AC['end_date'], 'field' => 'title', 'sort' => true, 'align' => 'left'),
-            array('text' => $LANG_AC['allday'], 'field' => 'title', 'sort' => true, 'align' => 'left'),
-            array('text' => $LANG_AC['delete'], 'field' => 'title', 'sort' => true, 'align' => 'left'),
-            array('text' => $LANG_AC['enabed'], 'field' => 'title', 'sort' => true, 'align' => 'left'),
+            array('text' => $LANG_AC['end_date'], 'field' => 'end_date', 'sort' => true, 'align' => 'left'),
+            array('text' => $LANG_AC['allday'], 'field' => 'allday', 'sort' => true, 'align' => 'center'),
+            array('text' => $LANG_AC['published'], 'field' => 'queued', 'sort' => true, 'align' => 'center'),
+            array('text' => $LANG_AC['delete'], 'field' => 'id1', 'sort' => true, 'align' => 'center'),
     );
     $defsort_arr = array('field'     => 'start_date',
                          'direction' => 'DESC');
@@ -60,7 +59,7 @@ function listEvents()
             'no_data'       => $LANG_AC['no_events'],
     );
 
-    $sql = "SELECT parent_id AS id1,title,weekday,start_date,start_time,end_time,repeats,repeat_freq "
+    $sql = "SELECT *,parent_id AS id1 "
             . "FROM {$_TABLES['ac_event']} ";
 
     $query_arr = array('table' => 'ac_event',
@@ -114,8 +113,20 @@ function AC_getListField($fieldname, $fieldvalue, $A, $icon_arr, $token = "")
             $retval = $fieldvalue;
             break;
 
-        case 'testid' :
-            $url = $_CONF['site_admin_url'].'/plugins/testimonials/index.php?edit=x&testid='.$A['testid'];
+        case 'owner_id' :
+            $retval = COM_getDisplayName($fieldvalue);
+            break;
+
+        case 'allday' :
+            if ( $fieldvalue == 1 ) {
+                $retval = '<i class="uk-icon uk-icon-check"></i>';
+            } else {
+                $retval = '';
+            }
+            break;
+
+        case 'parent_id' :
+            $url = $_CONF['site_admin_url'].'/plugins/agenda/index.php?edit=x&id='.$A['parent_id'];
             $retval = '<a href="'.$url.'"><i class="uk-icon uk-icon-pencil"></i></a>';
             break;
 
@@ -136,6 +147,30 @@ function AC_getListField($fieldname, $fieldvalue, $A, $icon_arr, $token = "")
     }
 
     return $retval;
+}
+
+function agenda_edit_event( $id = 0 )
+{
+    global $_CONF, $_AC_CONF, $_TABLES, $LANG_ADMIN, $LANG_AC;
+
+    $T = new Template ($_CONF['path'] . 'plugins/agenda/templates');
+    $T->set_file('page','admin-edit-event-form.thtml');
+
+    if ( $id != 0 ) { // existing event
+        $result = DB_query("SELECT * FROM {$_TABLES['ac_event']} WHERE parent_id=".(int) $id);
+        if ( DB_numRows($result ) > 0 ) {
+            $row = DB_fetchArray($result,true);
+            foreach ( $row AS $item => $value ) {
+                $T->set_var($item,$value);
+            }
+        }
+    }
+
+    $T->parse('output', 'page');
+    $page = $T->finish($T->get_var('output'));
+
+    return $page;
+
 }
 
 
@@ -185,9 +220,9 @@ if ( isset($_POST['cancel'])) {
 switch ( $cmd ) {
     case 'edit' :
         if (empty ($_GET['id'])) {
-            $page = editEntry ($cmd);
+            $page = agenda_edit_event();
         } else {
-            $page = editEntry ($cmd, (int) COM_applyFilter ($_GET['id']));
+            $page = agenda_edit_event((int) COM_applyFilter ($_GET['id']));
             $cmd = 'edit_existing';
         }
         break;
@@ -212,7 +247,7 @@ switch ( $cmd ) {
 
     case 'list' :
     default :
-        $page = ''; // listEvents();
+        $page = listEvents();
         break;
 }
 
