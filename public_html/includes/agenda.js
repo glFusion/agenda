@@ -256,6 +256,7 @@ $(document).ready(function() {
 // dialog for event edits
 	dialog = $( "#dialog-form-full" ).dialog({
 		autoOpen: false,
+		classes: { "ui-dialog": "tm-agenda-dialog" },
 		height: window.innerHeight * .75,
 		width: window.innerWidth * .7,
 		modal: true,
@@ -294,6 +295,7 @@ $(document).ready(function() {
 // or the series
 	dialog_series = $( "#dialog-series" ).dialog({
 		autoOpen: false,
+		classes: { "ui-dialog": "tm-agenda-dialog" },
 		buttons: [
 		{
 			text: "OK",
