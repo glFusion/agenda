@@ -326,27 +326,22 @@ function plugin_itemlist_agenda($token)
     return $retval;
 }
 
-function plugin_getheadercss_agenda() {
+function plugin_getheadercode_agenda()
+{
     global $_CONF;
 
-    $styles = array();
+    $retval = '';
 
     if ( strstr(COM_getCurrentURL(), $_CONF['site_url'].'/agenda/index.php') !== false ) {
-        $styles[] = "https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.css";
-        $styles[] = "https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.css";
+        $retval .= '<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.css">' . LB;
+        $retval .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>' . LB;
+        $retval .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.js"></script>' . LB;
+        $retval .= '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.css" />' . LB;
+        $retval .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.js"></script>' . LB;
+        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/includes/agenda.js"></script>' . LB;
     }
+    return $retval;
 
-
-return ( $styles );
-
-    if ( @file_exists($_CONF['path_layout'].'plugins/agenda/style.css') ) {
-        $styles[] = $_CONF['path_layout'].'plugins/agenda/style.css';
-    } else if ( @file_exists($_CONF['path'] . 'plugins/agenda/custom/style.css') ) {
-        $styles[] = $_CONF['path'] . 'plugins/agenda/css/custom/style.css';
-    } else {
-        $styles[] = $_CONF['path'] . 'plugins/agenda/style.css';
-    }
-    return($styles);
 }
 
 
@@ -751,11 +746,9 @@ function phpblock_agenda( $help='', $title='' )
         if ( $retval ) {
             // cache for up to 1 hour
             if ( CACHE_get_instance_update($cacheInstance, 0) > time() - 3600 ) {
-COM_errorLog("using the cached version of agenda block");
                 return $retval;
             }
         }
-COM_errorLog("Regenerating cache");
 
         $range = $_AC_CONF['upcomingeventsrange'];
         if( $range == 0 ) {
@@ -888,9 +881,6 @@ COM_errorLog("Regenerating cache");
         }
         CACHE_create_instance($cacheInstance, $retval, 0);
     }
-
-
-
     return $retval;
 }
 
@@ -930,8 +920,6 @@ function FC_notifyUser($email)
 
 	return;
 }
-
-
 
 function agenda_validateDate($date, $format = 'Y-m-d H:i:s')
 {
