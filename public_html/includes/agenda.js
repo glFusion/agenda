@@ -81,39 +81,37 @@ $(document).ready(function() {
 					}
 				});
 
-			// override the dialog buttons
-			var editButtons = [
-			{
-				text: "Save Event",
-				"class" : 'uk-button uk-button-success',
-				click: function() {
-					saveevent();
+				// override the dialog buttons
+				var editButtons = [
+				{
+					text: "Save Event",
+					"class" : 'uk-button uk-button-success',
+					click: function() {
+						saveevent();
+					}
+				},
+				{
+					text: "Cancel",
+					"class": 'uk-button uk-button',
+					click : function () {
+						dialog.dialog('close');
+					}
 				}
-			},
-			{
-				text: "Cancel",
-				"class": 'uk-button uk-button',
-				click : function () {
-					dialog.dialog('close');
-				}
+				];
+				dialog.dialog("option", "buttons", editButtons);
+				var buttons = $('.ui-dialog-buttonset').children('button');
+				buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
+				dialog.dialog("open");
 			}
-			];
-
-			dialog.dialog("option", "buttons", editButtons);
-			var buttons = $('.ui-dialog-buttonset').children('button');
-			buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
-
-			dialog.dialog("open");
-		}
 		},
 
 // click on event - make this edit
 		eventClick: function(event, element) {
+
 			if ( agendaConfig['allow_edit'] ) {
 				qTipArray[event.id].hide();
-			qTipArray[event.id].qtip('destroy', true);
+				qTipArray[event.id].qtip('destroy', true);
 
-//				dragging = 1;
 				if ( event.repeats == 1 ) {
 					$("#dialog-series").data('event-data', event).dialog('open');
 				} else {
