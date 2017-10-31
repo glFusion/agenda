@@ -103,8 +103,8 @@
 
 	$('#start-time').change(function() {
 		var evt_start_time = $("#start-time").val();
-		var evt_start_time_int = parseInt($("#start-time").val().substr(0, 2));
+//		var evt_start_time_int = parseInt($("#start-time").val().substr(0, 2));
 		$('#end-time').val(evt_start_time);
-		$("#end-time").attr('data-uk-timepicker', "{format:'12h',start:" + evt_start_time_int +"}");
+//		$("#end-time").attr('data-uk-timepicker', "{format:'12h'}");
 	});
 </script>
