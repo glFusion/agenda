@@ -724,7 +724,6 @@ function plugin_enablestatechange_agenda( $enable )
 
 }
 
-
 /**
 * Returns the upcoming events block
 *
@@ -745,6 +744,19 @@ function phpblock_agenda( $help='', $title='' )
     }
 
     if ( !$_USER['noboxes'] && $_AC_CONF['showupcomingevents'] ) {
+        $cacheInstance = 'agenda__'.$_USER['theme'];
+        $retval = '';
+        $retval = CACHE_check_instance($cacheInstance, 0);
+
+        if ( $retval ) {
+            // cache for up to 1 hour
+            if ( CACHE_get_instance_update($cacheInstance, 0) > time() - 3600 ) {
+COM_errorLog("using the cached version of agenda block");
+                return $retval;
+            }
+        }
+COM_errorLog("Regenerating cache");
+
         $range = $_AC_CONF['upcomingeventsrange'];
         if( $range == 0 ) {
             $range = 14; // fallback: 14 days
@@ -784,9 +796,7 @@ function phpblock_agenda( $help='', $title='' )
         $skipFirstBreak = false;
 
         $classname = 'agenda-upcoming';
-        $headline = false;
 
-        $headline = true; // no headline needed
         $skipFirstBreak = true;
 
         while( $theRow <= $numRows AND $numDays < $range ) {
@@ -794,13 +804,6 @@ function phpblock_agenda( $help='', $title='' )
             $theEvent = DB_fetchArray( $allEvents );
 
             $eventsFound++;
-
-            if( !$headline ) {
-               if( $totalrows > 0 ) {
-                   $retval .= '<b>' . $LANG_AC['site_events'] . '</b>';
-                }
-                $headline = true;
-            }
 
             $dtStart = new Date($theEvent['start'],$_USER['tzid']);
             $dtEnd   = new Date($theEvent['end'],$_USER['tzid']);
@@ -883,7 +886,10 @@ function phpblock_agenda( $help='', $title='' )
             // There aren't any upcoming events, show a nice message
             $retval .= $LANG_AC['no_upcoming'];
         }
+        CACHE_create_instance($cacheInstance, $retval, 0);
     }
+
+
 
     return $retval;
 }

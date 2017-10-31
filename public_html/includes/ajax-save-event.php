@@ -410,8 +410,8 @@ COM_errorLog("end date failed validation");
             DB_query($sql,1);
         }
     }
-
     PLG_itemSaved($parent_id, 'agenda');
+    CACHE_remove_instance('agenda');
 
     return $errorCode;
 }
@@ -552,6 +552,7 @@ function saveEditEvent()
     }
 
     PLG_itemSaved($parent_id, 'agenda');
+    CACHE_remove_instance('agenda');
 
     return $errorCode;
 }
@@ -606,13 +607,14 @@ COM_errorLog($sql);
                 description = '{$db_description}'";
         $sql .= " WHERE parent_id=".(int) $parent_id . " AND exception = 0";
         DB_query($sql,1);
-COM_errorLog($sql);
+
         if ( DB_error() ) {
             $errorCode = 2;
         }
     }
 
     PLG_itemSaved($parent_id, 'agenda');
+    CACHE_remove_instance('agenda');
 
     return $errorCode;
 }
