@@ -156,15 +156,39 @@ switch ($action) {
         $result = DB_query("SELECT * FROM {$_TABLES['ac_events']} WHERE event_id=" . (int) $event_id);
         if ( DB_numRows($result) > 0 ) {
             $row = DB_fetchArray($result,false);
+            $dt = new Date('now',$_USER['tzid']);
+            if ( $row['allday'] ) {
+                $acStartDate = $row['start_date'];
+                $acStartTime = '00:00:00';
+                $acEndDate = $row['end_date'];
+                $acEndTime = '24:00:00';
+                $dt->setTimestamp(strtotime($acStartDate.' '.$acStartTime));
+                $when =  $dt->format('l d-M-Y', false);
+                $dt->setTimestamp(strtotime($acEndDate. ' ' . '23:00:00'));
+                $when .= ' to ' . $dt->format('l d-M-Y', false);
+            } else {
+                $dt->setTimestamp($row['start']);
+                $tStartDate = $dt->format("l   d-M-Y", true);
+                $tStartTime = $dt->format("h:i a", true);
+                $dt->setTimestamp($row['end']);
+                $tEndDate = $dt->format("h:i a", true);
+                $when = $tStartDate .'<br>' . $tStartTime . ' to ' . $tEndDate;
+            }
+
             $T = new Template ($_CONF['path'] . 'plugins/agenda/templates');
             $T->set_file ('page','view-event.thtml');
             foreach ($row AS $name => $value) {
                 $T->set_var($name,$value);
             }
+            $T->set_var('when',$when);
             $T->parse('output', 'page');
             $page = $T->finish($T->get_var('output'));
         }
         break;
+
+        default :
+            $page = '';
+            break;
 
 }
 
