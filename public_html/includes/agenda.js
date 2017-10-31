@@ -64,6 +64,8 @@ $(document).ready(function() {
 			if ( agendaConfig['allow_new'] ) {
 				var clickDate = date.format();
 				$('#dialog-form-full').dialog('option', 'title', 'Add Event');
+				$('#dialog-form-full').dialog('option', 'height', window.innerHeight * .85 );
+				$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .8 );
 				$("#dialog-form-full").html('');
 				url = glfusionSiteUrl + '/agenda/includes/ajax-form-manager.php';
 				$.ajax({
@@ -250,16 +252,17 @@ $(document).ready(function() {
 		defaultView:  defaultview,
 		defaultDate:  defaultdate,
 		allDayDefault: false,
+		height: 'auto',
 	});
 // end of full calendar initialization
 
 // dialog for event edits
 	dialog = $( "#dialog-form-full" ).dialog({
 		autoOpen: false,
-		classes: { "ui-dialog": "tm-agenda-dialog" },
-		height: window.innerHeight * .75,
-		width: window.innerWidth * .7,
 		modal: true,
+		classes: { "ui-dialog": "tm-agenda-dialog" },
+		height: window.innerHeight * .85,
+		width: window.innerWidth * .8,
 		buttons: [
 		{
 			text: "Save Event",
@@ -506,6 +509,9 @@ function edit_single_event( event )
 	];
 
 	dialog.dialog("option", "buttons", editButtons); // setter
+	dialog.dialog('option', 'height', window.innerHeight * .85 );
+	dialog.dialog('option', 'width', window.innerWidth * .8 );
+
 	var buttons = $('.ui-dialog-buttonset').children('button');
 	buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
 	dialog.dialog("open");
@@ -559,6 +565,9 @@ function edit_series_event(event)
 	];
 
 	dialog.dialog("option", "buttons", editButtons); // setter
+	dialog.dialog('option', 'height', window.innerHeight * .85 );
+	dialog.dialog('option', 'width', window.innerWidth * .8 );
+
 	var buttons = $('.ui-dialog-buttonset').children('button');
 	buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
 	dialog.dialog("open");
