@@ -75,8 +75,8 @@ function saveNewEvent()
     $title          = $_POST['title'];
     $start_date     = $_POST['event-date'];
     $end_date       = $_POST['event-end-date'];
-    $start_time     = $_POST['start-time'];
-    $end_time       = $_POST['end-time'];
+    $start_time     = isset($_POST['start-time']) ? $_POST['start-time'] : '';
+    $end_time       = isset($_POST['end-time'])   ? $_POST['end-time'] : '';
     $location       = $_POST['location'];
     $description    = $_POST['description'];
     if (isset($_POST['repeats'])) {
@@ -107,13 +107,13 @@ function saveNewEvent()
     // validation checks
 
     if ( !agenda_validateDate($start_date, 'Y-m-d') ) {
-COM_errorLog("start date failed validation");
+
         $errorCode = 1;
         $errors++;
     }
 
     if ( !agenda_validateDate($end_date, 'Y-m-d') ) {
-COM_errorLog("end date failed validation");
+
         $errorCode = 1;
         $errors++;
     }
@@ -444,22 +444,21 @@ function saveEditEvent()
     // we can change any other attribute about the event - even the allday or not flags
 
     $recurring = DB_getItem($_TABLES['ac_events'],'repeats','event_id='.(int) $event_id);
-    COM_errorLog("Recurring Flag is " . $recurring);
 
     $exception = 0;
     if ( $recurring == 1 ) {
         $exception = 1;
     }
 
-
 // parse submitted data
     $title          = $_POST['title'];
     $start_date     = $_POST['event-date'];
     $end_date       = $_POST['event-end-date'];
-    $start_time     = $_POST['start-time'];
-    $end_time       = $_POST['end-time'];
+    $start_time     = isset($_POST['start-time']) ? $_POST['start-time'] : '';
+    $end_time       = isset($_POST['end-time'])   ? $_POST['end-time'] : '';
     $location       = $_POST['location'];
     $description    = $_POST['description'];
+
     if ( isset($_POST['event-allday'] ) ) {
         $allday = 1;
         $end_time = '24:00:00';
@@ -527,6 +526,7 @@ function saveEditEvent()
             end = '{$db_end}'";
 
     $sql .= " WHERE parent_id=".(int) $parent_id;
+
     DB_query($sql,1);
 
     if ( DB_error() ) {
@@ -544,6 +544,7 @@ function saveEditEvent()
                 end = '{$db_end}',
                 exception = {$exception} ";
         $sql .= " WHERE event_id=".(int) $event_id;
+
         DB_query($sql,1);
 
         if ( DB_error() ) {
@@ -560,8 +561,6 @@ function saveEditEvent()
 function saveEditEventSeries()
 {
     global $_CONF, $_AC_CONF, $_USER, $_TABLES;
-
-COM_errorLog("in saveEditEventSeries");
 
     $errorCode = 0;
     $errors = 0;
@@ -586,7 +585,7 @@ COM_errorLog("in saveEditEventSeries");
     $db_title           = DB_escapeString($title);
     $db_location        = DB_escapeString($location);
     $db_description     = DB_escapeString($description);
-COM_errorLog("preparing to update parent");
+
    // update parent record
     $sql = "UPDATE {$_TABLES['ac_event']} SET
             title = '{$db_title}',
@@ -594,7 +593,7 @@ COM_errorLog("preparing to update parent");
             description = '{$db_description}'";
 
     $sql .= " WHERE parent_id=".(int) $parent_id;
-COM_errorLog($sql);
+
     DB_query($sql,1);
 
     if ( DB_error() ) {
