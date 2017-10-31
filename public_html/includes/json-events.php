@@ -16,7 +16,7 @@
 
 require_once '../../lib-common.php';
 
-//if ( !COM_isAjax() ) die;
+if ( !COM_isAjax() ) die;
 
 $start = DB_escapeString($_GET['start']);
 $end   = DB_escapeString($_GET['end']);
