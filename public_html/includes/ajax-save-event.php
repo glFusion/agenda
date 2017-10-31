@@ -4,7 +4,7 @@
 *
 * Agenda - Agenda Plugin for glFusion
 *
-* Add Event
+* Event save / edit / delete controller
 *
 * @license GNU General Public License version 2 or later
 *     http://www.opensource.org/licenses/gpl-license.php
