@@ -96,7 +96,7 @@ $T->set_var('defaultdate',$defaultDate);
 $T->parse('output', 'page');
 $page = $T->finish($T->get_var('output'));
 
-$display = COM_siteHeader('none',$LANG_AC['plugin_name']);
+$display = COM_siteHeader($_AC_CONF['menu'],$LANG_AC['plugin_name']);
 $display .= $page;
 $display .= COM_siteFooter();
 
