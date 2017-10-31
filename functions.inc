@@ -465,6 +465,9 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
             case 'status' :
                 $fields[] = 'parent_id';
                 $fields[] = 'queued';
+                $fields[] = 'DATE_FORMAT(start_date,"%Y") as year';
+                $fields[] = 'DATE_FORMAT(start_date,"%m") as month';
+                $fields[] = 'DATE_FORMAT(start_date,"%d") as day';
                 break;
             case 'author' :
             case 'author_name' :
@@ -535,18 +538,12 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
                     $props['id'] = $A['parent_id'];
                     break;
                 case 'title':
-                    $props['title'];
+                    $props['title'] = $A['title'];
                     break;
                 case 'url':
-// need to return URL of /view/year/month/day/
-//    $sql = " SELECT parent_id AS id, description,start AS date, title, CONCAT('/agenda/index.php/agendaDay/',DATE_FORMAT(start_date, '%Y'),'/',DATE_FORMAT(start_date, '%m'),'/',DATE_FORMAT(start_date, '%d')) AS url ";
-
-
-                    if (empty($A['parent_id'])) {
-                        $props['url'] = COM_buildURL($_CONF['site_url'].'/agenda/index.php?id=' . $id);
-                    } else {
-                        $props['url'] = COM_buildURL($_CONF['site_url'].'/agenda/index.php?id=' . $A['parent_id']);
-                    }
+                    $view = 'agendaDay';
+                    $year =
+                    $props['url'] = COM_buildURL($_CONF['site_url'].'/agenda/index.php/agendaDay/' . sprintf("%02d/%02d/%02d",$A['year'],$A['month'],$A['day']));
                     break;
                 case 'label':
                     $props['label'] = $LANG_AC['plugin_name'];
