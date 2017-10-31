@@ -633,6 +633,7 @@ function deleteEvent()
     DB_query($sql);
 
     PLG_itemDeleted($parent_id,'agenda');
+    CACHE_remove_instance('agenda');
 
     return 0;
 }
@@ -651,6 +652,7 @@ function deleteEventSeries()
     DB_query($sql);
 
     PLG_itemDeleted($parent_id,'agenda');
+    CACHE_remove_instance('agenda');
 
     return 0;
 }
