@@ -16,179 +16,49 @@
 
 require_once '../../lib-common.php';
 
-$action = COM_applyFilter($_POST['action']);
+if ( !COM_isAjax() ) die('invalid request');
+
+$action = '';
+if ( isset($_POST['action'])) {
+    $action = COM_applyFilter($_POST['action']);
+}
+
+$page = '';
 
 switch ($action) {
 
     case 'edit-event' :
+        if ( !isset($_POST['parent_id']) || !isset($_POST['event_id'] ) ) {
+            return $page;
+        }
         $parent_id = COM_applyFilter($_POST['parent_id'],true);
         $event_id  = COM_applyFilter($_POST['event_id'],true);
-
-        $result = DB_query("SELECT * FROM {$_TABLES['ac_events']} AS events  WHERE event_id=" . (int) $event_id);
-
-        if ( DB_numRows($result) > 0 ) {
-            $row = DB_fetchArray($result);
-
-            $T = new Template ($_CONF['path'] . 'plugins/agenda/templates');
-            $T->set_file ('page','edit-event-form.thtml');
-
-            if ( $row['allday'] == 0 ) {
-                $dt = new Date($row['start'],$_USER['tzid']);
-                $row['start_date'] = $dt->format('Y-m-d',true);
-                $row['start_time'] = $dt->format('H:i',true);
-
-                $dt = new Date($row['end'],$_USER['tzid']);
-                $row['end_date'] = $dt->format('Y-m-d',true);
-                $row['end_time'] = $dt->format('H:i',true);
-            } else {
-                $row['start_date'] = $row['start_date'];
-                $row['end_date'] = $row['end_date'];
-                $row['start_time'] = '00:00';
-                $row['end_time'] = '23:59';
-            }
-
-            $T->set_var(array(
-                'event_title'       => $row['title'],
-                'start_date'        => $row['start_date'],
-                'end_date'          => $row['end_date'],
-                'start_time'        => date('h:i A',strtotime($row['start_time'])),
-                'end_time'          => date('h:i A',strtotime($row['end_time'])),
-                'location'          => $row['location'],
-                'description'       => $row['description'],
-                'parent_id'         => $row['parent_id'],
-                'event_id'          => $event_id,
-
-             ));
-             if ( $row['repeats'] == 1 ) {
-                $T->set_var('repeats_checked',' checked="checked" ');
-                switch ( $row['repeat_freq'] ) {
-                    case 1 :
-                        $T->set_var('daily_checked',' checked="checked" ');
-                        break;
-                    case 7 :
-                        $T->set_var('weekly_checked',' checked="checked" ');
-                        break;
-                    case 14 :
-                        $T->set_var('biweekly_checked',' checked="checked" ');
-                        break;
-                    case 30 :
-                        $T->set_var('monthly_checked', ' checked="checked" ');
-                        break;
-                    case 365 :
-                        $T->set_var('yearly_checked',' checked="checked" ');
-                        break;
-                }
-            } else {
-                $T->set_var('repeats_checked','');
-            }
-
-            if ( $row['allday'] == 1 ) {
-                $T->set_var('allday_checked',' checked="checked" ');
-            }
-
-            $T->set_var('parent_id',$parent_id);
-            $T->parse('output', 'page');
-            $page = $T->finish($T->get_var('output'));
-        }
+        $form = new Agenda\eventForms();
+        $page = $form->editEvent($parent_id, $event_id);
         break;
 
     case 'edit-event-series' :
+        if ( !isset($_POST['parent_id']) || !isset($_POST['event_id'] ) ) {
+            return $page;
+        }
         $parent_id = COM_applyFilter($_POST['parent_id'],true);
         $event_id  = COM_applyFilter($_POST['event_id'],true);
-
-        $result = DB_query("SELECT * FROM {$_TABLES['ac_events']} AS events  WHERE event_id=" . (int) $event_id);
-
-        if ( DB_numRows($result) > 0 ) {
-            $row = DB_fetchArray($result);
-
-            $T = new Template ($_CONF['path'] . 'plugins/agenda/templates');
-            $T->set_file ('page','edit-event-series-form.thtml');
-
-            $T->set_var(array(
-                'event_title'       => $row['title'],
-                'location'          => $row['location'],
-                'description'       => $row['description'],
-                'parent_id'         => $row['parent_id'],
-                'event_id'          => $event_id,
-             ));
-
-            $T->set_var('parent_id',$parent_id);
-            $T->parse('output', 'page');
-            $page = $T->finish($T->get_var('output'));
-        }
+        $form = new Agenda\eventForms();
+        $page = $form->editSeries($event_id);
         break;
 
     case 'new-event' :
-
+        if ( !isset($_POST['clickdate']) ) {
+            return $page;
+        }
         $clickDate = COM_applyFilter($_POST['clickdate']);
-
-        if ( strstr($clickDate,"T") !== false ) {
-            $allday = 0;
-        } else {
-            $allday = 1;
-        }
-
-        $time = strtotime($clickDate);
-        $start_date = date('Y-m-d', $time);
-        $start_time = date('h:i:A', $time);
-        $end_date = $start_date;
-        $end_time = $start_time;
-
-        $T = new Template ($_CONF['path'] . 'plugins/agenda/templates');
-        $T->set_file ('page','new-event-form.thtml');
-
-        $T->set_var(array(
-            'allday_checked' => $allday ? ' checked="checked" ' : '',
-            'start-date' => trim($start_date),
-            'end-date' => trim($end_date),
-            'start-time' => trim($start_time),
-            'end-time' => trim($end_time),
-        ));
-
-
-        $T->parse('output', 'page');
-        $page = $T->finish($T->get_var('output'));
+        $form = new Agenda\eventForms();
+        $page = $form->newEvent($clickDate);
         break;
 
-    case 'view-event' : // not used at the moment
-        $event_id  = COM_applyFilter($_POST['id'],true);
-
-        $result = DB_query("SELECT * FROM {$_TABLES['ac_events']} WHERE event_id=" . (int) $event_id);
-        if ( DB_numRows($result) > 0 ) {
-            $row = DB_fetchArray($result,false);
-            $dt = new Date('now',$_USER['tzid']);
-            if ( $row['allday'] ) {
-                $acStartDate = $row['start_date'];
-                $acStartTime = '00:00:00';
-                $acEndDate = $row['end_date'];
-                $acEndTime = '24:00:00';
-                $dt->setTimestamp(strtotime($acStartDate.' '.$acStartTime));
-                $when =  $dt->format('l d-M-Y', false);
-                $dt->setTimestamp(strtotime($acEndDate. ' ' . '23:00:00'));
-                $when .= ' to ' . $dt->format('l d-M-Y', false);
-            } else {
-                $dt->setTimestamp($row['start']);
-                $tStartDate = $dt->format("l   d-M-Y", true);
-                $tStartTime = $dt->format("h:i a", true);
-                $dt->setTimestamp($row['end']);
-                $tEndDate = $dt->format("h:i a", true);
-                $when = $tStartDate .'<br>' . $tStartTime . ' to ' . $tEndDate;
-            }
-
-            $T = new Template ($_CONF['path'] . 'plugins/agenda/templates');
-            $T->set_file ('page','view-event.thtml');
-            foreach ($row AS $name => $value) {
-                $T->set_var($name,$value);
-            }
-            $T->set_var('when',$when);
-            $T->parse('output', 'page');
-            $page = $T->finish($T->get_var('output'));
-        }
+    default :
+        $page = '';
         break;
-
-        default :
-            $page = '';
-            break;
 
 }
 

@@ -16,6 +16,8 @@
 
 require_once '../../lib-common.php';
 
+if ( !COM_isAjax() ) die('invalid request');
+
 $errorCode = 0;
 $errors    = 0;
 $retval = array();
