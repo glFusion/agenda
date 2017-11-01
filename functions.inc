@@ -55,6 +55,20 @@ switch( $_AC_CONF['displayblocks'] ) {
         break;
 }
 
+spl_autoload_register('agenda_autoloader');
+
+function agenda_autoloader($class) {
+    global $_CONF;
+    if (strpos($class, 'Agenda\\') === 0) {
+        $class = str_replace('Agenda\\', '', $class);
+        $class = ucfirst($class);
+        $path = $_CONF['path'].'plugins/agenda/classes/' . $class . '.class.php';
+        if (file_exists($path)) {
+            include $path;
+        }
+    }
+}
+
 /**
 * Returns the items for this plugin that should appear on the main menu
 *
