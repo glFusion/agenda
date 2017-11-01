@@ -177,7 +177,7 @@ $(document).ready(function() {
 			$('.qtip').remove();
 			console.log("event has been resized");
 			qTipArray[event.id].hide();
-			var params = "&id=" + event.id;
+			var params = "&action=move-event&id=" + event.id;
 			if ( event.start != null ) {
 				params = params + "&date=" + event.start.format();
 			}
@@ -187,7 +187,7 @@ $(document).ready(function() {
 			params = params + "&allday=" + event.allDay;
 			$.ajax({
 				type: "POST",
-				url: glfusionSiteUrl + '/agenda/includes/move_event.php',
+				url: glfusionSiteUrl + '/agenda/includes/ajax-event-handler.php',
 				data: params,
 				success: function (data) {
 					console.log("resize event successful");
@@ -223,7 +223,7 @@ $(document).ready(function() {
 			console.log("event has been moved");
 			qTipArray[event.id].hide();
 			qTipArray[event.id].qtip('destroy', true);
-			var params = "&id=" + event.id;
+			var params = "&action=move-event&id=" + event.id;
 			if ( event.start != null ) {
 				params = params + "&date=" + event.start.format();
 			}
@@ -233,7 +233,7 @@ $(document).ready(function() {
 			params = params + "&allday=" + event.allDay;
 			$.ajax({
 				type: "POST",
-				url: glfusionSiteUrl + '/agenda/includes/move_event.php',
+				url: glfusionSiteUrl + '/agenda/includes/ajax-event-handler.php',
 				data: params,
 				success: function (data) {
 					console.log("move event successful");
@@ -386,7 +386,7 @@ function saveevent() {
 	// need to know if we are editing or adding or deleting
 
 	//  url = $( '#dbbackupform' ).attr( 'action' );
-	url = '/agenda/includes/ajax-save-event.php';
+	url = '/agenda/includes/ajax-event-handler.php';
 	$.ajax({
 		type: "POST",
 		dataType: "json",
@@ -415,7 +415,7 @@ function deleteevent ( event ) {
 
 	// validate we want to do this...
 	UIkit.modal.confirm("Are you sure you want to delete this event?", function(){
-		url = '/agenda/includes/ajax-save-event.php';
+		url = '/agenda/includes/ajax-event-handler.php';
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -445,7 +445,7 @@ function deleteeventseries( event ) {
 
 	// validate we want to do this...
 	UIkit.modal.confirm("Are you sure you want to delete THE ENTIRE SERIES?", function(){
-		url = '/agenda/includes/ajax-save-event.php';
+		url = '/agenda/includes/ajax-event-handler.php';
 		$.ajax({
 			type: "POST",
 			dataType: "json",
