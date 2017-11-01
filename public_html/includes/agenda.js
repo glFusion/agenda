@@ -68,7 +68,7 @@ $(document).ready(function() {
 					$('#dialog-form-full').dialog('option', 'height', window.innerHeight);
 					$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .95);
 				} else {
-					$('#dialog-form-full').dialog('option', 'height', window.innerHeight * .85 );
+					$('#dialog-form-full').dialog('option', 'height', window.innerHeight *.85 );
 					$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .8 );
 				}
 				$("#dialog-form-full").html('');
