@@ -4,27 +4,39 @@
 	<input type="hidden" name="event_id" value="{event_id}">
 
 	<div class="uk-form-row">
-		<input class="required uk-form-width-large" type="text" name="title" id="title" placeholder="Event Title" value="{event_title}">
+		<label class="uk-form-label uk-hidden-small">Event Title</label>
+		<div class="uk-form-controls">
+			<input class="required uk-form-width-large" type="text" name="title" id="title" placeholder="Event Title" value="{event_title}">
+		</div>
 	</div>
 
 	<div class="uk-form-row">
-		<input type="text" class="uk-form-width-large" name="location" id="location" value="{location}" placeholder="Event Location">
+		<label class="uk-form-label uk-hidden-small">Location</label>
+		<div class="uk-form-controls">
+			<input type="text" class="uk-form-width-large" name="location" id="location" value="{location}" placeholder="Event Location">
+		</div>
 	</div>
 
 	<div class="uk-form-row">
-		<input class="uk-form-width-small" type="text" id="event-date" name="event-date" value="{start_date}" placeholder="Start Date" data-uk-datepicker="{format:'YYYY-MM-DD'}">
-		<i class="uk-icon uk-icon-calendar"></i>
-		<input class="uk-form-width-small" type="text" name="start-time" id="start-time" value="{start_time}" placeholder="Start Time" data-uk-timepicker="{format:'12h'}">
-		<input type="checkbox" id="event-allday" name="event-allday" tabindex="-1"  {allday_checked}><span class="uk-form-help-inline">All Day Event</span>
+		<label class="uk-form-label uk-hidden-small">Event Start</label>
+		<div class="uk-form-controls">
+			<input class="uk-form-width-small" type="text" id="event-date" name="event-date" value="{start_date}" placeholder="Start Date" data-uk-datepicker="{format:'YYYY-MM-DD'}">
+			<i class="uk-icon uk-icon-calendar"></i>
+			<input class="uk-form-width-small" type="text" name="start-time" id="start-time" value="{start_time}" placeholder="Start Time" data-uk-timepicker="{format:'12h'}">
+			<input type="checkbox" id="event-allday" name="event-allday" tabindex="-1"  {allday_checked}><span class="uk-form-help-inline">All Day Event</span>
+		</div>
 	</div>
 
 	<div class="uk-form-row">
-		<input class="uk-form-width-small" type="text" id="event-end-date" name="event-end-date" tabindex="-1" value="{end_date}" placeholder="End Date" data-uk-datepicker="{format:'YYYY-MM-DD'}">
-		<i class="uk-icon uk-icon-calendar"></i>
-		<input class="uk-form-width-small" type="text" name="end-time" id="end-time" value="{end_time}" placeholder="End Time" data-uk-timepicker="{format:'12h'}">
-		{!if repeats}
-		<input type="checkbox" name="repeats" id="repeats" value="1" {repeats_checked}><span class="uk-form-help-inline">Repeats</span>
-		{!endif}
+		<label class="uk-form-label uk-hidden-small">Event End</label>
+		<div class="uk-form-controls">
+			<input class="uk-form-width-small" type="text" id="event-end-date" name="event-end-date" tabindex="-1" value="{end_date}" placeholder="End Date" data-uk-datepicker="{format:'YYYY-MM-DD'}">
+			<i class="uk-icon uk-icon-calendar"></i>
+			<input class="uk-form-width-small" type="text" name="end-time" id="end-time" value="{end_time}" placeholder="End Time" data-uk-timepicker="{format:'12h'}">
+			{!if repeats}
+			<input type="checkbox" name="repeats" id="repeats" value="1" {repeats_checked}><span class="uk-form-help-inline">Repeats</span>
+			{!endif}
+		</div>
 	</div>
 
 	{!if repeats}
