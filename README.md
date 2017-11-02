@@ -45,6 +45,33 @@ Agenda supports the following recurrence patterns:
 
 If a recurring event is created on a day that does not appear in all months - for example, October 31 and is set to repeat each month - it will repeat on the last day of each month.
 
+### Recurring Event Rules
+
+When editing a specific event that is part of a series, you have the option to do the following:
+
+* Edit the Individual Event
+* Edit the entire series
+
+#### Editing an Individual Event
+
+When editing a single event in a series, you can change any attribute about the event, including dates and times. The event will marked as an exception, meaning any series edits will not apply this single event in the series.
+
+Dragging a single event in a series to a new date or resizing the time window will mark the event as an exception, making it exempt from series edits.
+
+If you delete the entire series, this event **will** be deleted as well.
+
+##### Editing a Series
+
+When editing the entire series, you can only change the following data items:
+
+* Location
+* Description
+* Category
+
+You cannot change the date / times or the recurring data. If you need to edit any of these, you should delete the current series and create a new one.
+
+Note that any individually edited events in the series will not be updated.
+
 
 ### Permissions
 
