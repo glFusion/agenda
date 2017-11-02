@@ -65,6 +65,8 @@ $LANG_AC_JS = array(
     'location'          => 'Location',
     'details'           => 'Details',
     'err_select_option' => 'Please select an option',
+    'err_enter_title'   => 'Please enter an event title',
+    'err_end_before_start' => 'End date/time must be greater than start date/time',
 
 );
 
