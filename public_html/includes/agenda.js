@@ -35,7 +35,7 @@ var lang;
 url = glfusionSiteUrl + '/agenda/includes/ajax-controller.php';
 $.ajax({
 	type: "POST",
-	async:false,
+	async:true,
  	cache: false,
 	dataType: "json",
 	data: {"action" : "setup-agenda" },
@@ -46,6 +46,7 @@ $.ajax({
 		var agendaConfig = result.config;
 		$(document).ready(function () {
 			initializeCalendar(agendaConfig);
+			initializeAgenda();
 		});
 	},
 	error: function (e) {
@@ -54,10 +55,7 @@ $.ajax({
 	}
 });
 
-//
-// document ready function
-//
-$(document).ready(function() {
+function initializeAgenda() {
 	$.validator.addMethod("enddate", function(value, element) {
 		var from_time = $("#start-time").val();
 		var to_time = $("#end-time").val();
@@ -199,8 +197,7 @@ $(document).ready(function() {
 		}
 	});
 	// end of dialog series
-
-}); // end of document ready
+}
 
 
 /*
@@ -424,14 +421,13 @@ function initializeCalendar( config )
 	var m = date.getMonth();
 	var y = date.getFullYear();
 
-	$(".loader").fadeOut("slow");
+//	$(".loader").fadeOut("slow");
 
 	form = $( "#event-form" );
 	whattoeditform = $("#what-to-edit");
-	// initialize FullCalendar
 
+	// initialize full calendar
 	calendar = $('#calendar').fullCalendar({
-
 		dayClick: function(date, jsEvent, view) {
 			if ( config['allow_new'] ) {
 				var clickDate = date.format();
