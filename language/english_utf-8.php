@@ -50,6 +50,25 @@ $LANG_AC = array (
     'site_events'       => 'Site Events',
     'no_upcoming'       => 'No Upcoming Events',
     'today'             => 'Today',
+
+// event forms
+    'event_title'       => 'Event Title',
+    'location'          => 'Event Location',
+    'event_start'       => 'Event Start',
+    'start_date'        => 'Start Date',
+    'start_time'        => 'Start Time',
+    'all_day_event'     => 'All Day Event',
+    'event_end'         => 'Event End',
+    'end_date'          => 'End Date',
+    'repeats'           => 'Repeats',
+    'repeat_options'    => 'Repeat Options',
+    'daily'             => 'Daily',
+    'weekly'            => 'Weekly',
+    'biweekly'          => 'Every 2 Weeks',
+    'monthly'           => 'Monthly',
+    'yearly'            => 'Yearly',
+    'description'       => 'Description',
+
 );
 
 // JavaScript specific translations

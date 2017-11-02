@@ -69,13 +69,27 @@ class eventForms {
         $T->set_file ('page','new-event-form.thtml');
 
         $T->set_var(array(
-            'allday_checked' => $allday ? ' checked="checked" ' : '',
-            'start-date' => trim($start_date),
-            'end-date' => trim($end_date),
-            'start-time' => trim($start_time),
-            'end-time' => trim($end_time),
+            'allday_checked'    => $allday ? ' checked="checked" ' : '',
+            'start-date'        => trim($start_date),
+            'end-date'          => trim($end_date),
+            'start-time'        => trim($start_time),
+            'end-time'          => trim($end_time),
+            'lang_event_title'  => $LANG_AC['event_title'],
+            'lang_location'     => $LANG_AC['location'],
+            'lang_event_start'  => $LANG_AC['event_start'],
+            'lang_start_date'   => $LANG_AC['start_date'],
+            'lang_all_day_event'=> $LANG_AC['all_day_event'],
+            'lang_event_end'    => $LANG_AC['event_end'],
+            'lang_end_date'     => $LANG_AC['end_date'],
+            'lang_repeats'      => $LANG_AC['repeats'],
+            'lang_repeat_options'=> $LANG_AC['repeat_options'],
+            'lang_daily'        => $LANG_AC['daily'],
+            'lang_weekly'       => $LANG_AC['weekly'],
+            'lang_biweekly'     => $LANG_AC['biweekly'],
+            'lang_monthly'      => $LANG_AC['monthly'],
+            'lang_yearly'       => $LANG_AC['yearly'],
+            'lang_description'  => $LANG_AC['description'],
         ));
-
 
         $T->parse('output', 'page');
         $page = $T->finish($T->get_var('output'));
