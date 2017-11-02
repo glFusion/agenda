@@ -106,7 +106,7 @@ class eventHandler {
     // check / validate submitted data
 
         if ( $start_time == '' ) {
-            $start_time = '00:00';
+            $start_time = '00:00:00';
         }
         if ( $end_time == '' ) {
             $end_time = '24:00:00';
@@ -395,7 +395,7 @@ class eventHandler {
             $end_time = '24:00:00';
         }
         if ( $start_time == '' ) {
-            $start_time = '00:00';
+            $start_time = '00:00:00';
         }
         if ( $end_time == '' ) {
             $end_time = '24:00:00';
