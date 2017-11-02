@@ -149,25 +149,23 @@ function AC_getListField($fieldname, $fieldvalue, $A, $icon_arr, $token = "")
     return $retval;
 }
 
-function agenda_edit_event( $id = 0 )
+function agenda_edit_event( $event_id = 0 )
 {
     global $_CONF, $_AC_CONF, $_TABLES, $LANG_ADMIN, $LANG_AC;
 
-    $T = new Template ($_CONF['path'] . 'plugins/agenda/templates');
-    $T->set_file('page','admin-edit-event-form.thtml');
+    $page = '';
 
-    if ( $id != 0 ) { // existing event
-        $result = DB_query("SELECT * FROM {$_TABLES['ac_event']} WHERE parent_id=".(int) $id);
-        if ( DB_numRows($result ) > 0 ) {
-            $row = DB_fetchArray($result,true);
-            foreach ( $row AS $item => $value ) {
-                $T->set_var($item,$value);
-            }
+    $form = new Agenda\eventForms(true);
+
+    if ( $event_id != 0 ) {
+        $parent_id = DB_getItem($_TABLES['ac_events'],'parent_id','event_id='.(int) $event_id);
+        if ( $parent_id == null ) {
+            return 'Invalid Event ID';
         }
+    } else {
+        return 'Invalid Event ID';
     }
-
-    $T->parse('output', 'page');
-    $page = $T->finish($T->get_var('output'));
+    $page = $form->editEvent($parent_id,$event_id);
 
     return $page;
 
@@ -202,6 +200,14 @@ function agenda_admin_menu($action)
 $page = '';
 $display = '';
 $cmd ='list';
+
+// actions:
+// list, edit-event, edit-series, new-event, del-event, del-series,delsel_x,save-event,save-edit,save-edit-series,
+
+// list
+// edit - edit a single event
+// edit-series
+
 
 $expectedActions = array('list','edit','delete','save','delsel_x');
 foreach ( $expectedActions AS $action ) {
