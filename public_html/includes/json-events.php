@@ -50,22 +50,27 @@ while ( $row = DB_fetchArray($result) ) {
 // send start at 0 - end at 24:00 to ensure it spans the full days on calendar
         $eventArray['start'] = $acStartDate.'T'.$acStartTime;
         $eventArray['end']   = $acEndDate.'T'.$acEndTime;
-
 // set the pop-up when info - NO TIMEZONE support needed for this.
         $dt->setTimestamp(strtotime($acStartDate.' '.$acStartTime));
         $eventArray['when'] =  $dt->format('l d-M-Y', false);
-
         $dt->setTimestamp(strtotime($acEndDate. ' ' . '23:00:00'));
-        $eventArray['when'] .= ' to ' . $dt->format('l d-M-Y', false);
+        if ( $row['start_date'] != $row['end_date']) {
+            $eventArray['when'] .= ' to ' . $dt->format('l d-M-Y', false);
+        }
     } else {
         $dt->setTimestamp($row['start']);
+        $cmpStart = $dt->format('Ymd',true);
         $tStartDate = $dt->format("l   d-M-Y", true);
         $tStartTime = $dt->format("h:i a", true);
         $eventArray['start'] = $dt->toISO8601(true);
         $dt->setTimestamp($row['end']);
-        $tEndDate = $dt->format("h:i a", true);
-        $eventArray['when'] = $tStartDate .'<br>' . $tStartTime . ' to ' . $tEndDate;
-
+        $cmpEnd = $dt->format('Ymd',true);
+        $tEndDateFormat = "h:i a";
+        if ( $cmpStart != $cmpEnd ) {
+            $tEndDateFormat = "l d-M-Y h:i a";
+        }
+        $tEndDate = $dt->format($tEndDateFormat, true);
+        $eventArray['when'] = $tStartDate .'<br>' . $tStartTime .' to ' . $tEndDate;
         $eventArray['end'] = $dt->toISO8601(true);
     }
 
