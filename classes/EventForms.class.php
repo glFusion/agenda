@@ -26,6 +26,18 @@ define('AC_ERR_NO_ACCESS',4);
 */
 class eventForms {
 
+    /*
+     * Calendar form or admin form
+     *
+    */
+
+    protected $adminForm = 0;
+
+    public function __construct( $type = 0 )
+    {
+        $this->adminForm = $type;
+    }
+
     /**
     *   New Event Entry Form
     *
@@ -145,8 +157,15 @@ class eventForms {
             if ( $row['allday'] == 1 ) {
                 $T->set_var('allday_checked',' checked="checked" ');
             }
-
             $T->set_var('parent_id',$parent_id);
+
+            if ( $this->adminForm) {
+                $T->set_var(array(
+                    'admin_form' => true,
+                    'form_action' => $_CONF['site_admin_url'].'/plugins/agenda/index.php',
+                ));
+            }
+
             $T->parse('output', 'page');
             $page = $T->finish($T->get_var('output'));
         }
