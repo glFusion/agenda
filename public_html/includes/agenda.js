@@ -26,22 +26,27 @@ var calwidth;
 var qTipArray=new Array();
 var qTipAPI = new Array();
 var dragging = 0;
+var lang;
 
 var agendaConfig = { "allow_new":false, "allow_edit":false };
 
-// pull configuration data
-url = glfusionSiteUrl + '/agenda/includes/agenda_config.php';
+// pull setup data
+url = glfusionSiteUrl + '/agenda/includes/ajax-controller.php';
 $.ajax({
 	type: "POST",
+	async:false,
+ 	cache: false,
 	dataType: "json",
+	data: {"action" : "setup-agenda" },
 	url: url,
 	success: function (data) {
-		agendaConfig = data;
-		if ( agendaConfig['allow_edit'] ) $allowEdit = true;
-		console.log(agendaConfig);
+		var result = $.parseJSON(data["js"]);
+		lang = result.lang;
+		agendaConfig = result.config;
 	},
 	error: function (e) {
-		console.log("error retrieving configuration");
+		alert('Error Retrieving Agenda Configuration');
+		console.log("error retrieving setup information");
 	}
 });
 
@@ -63,7 +68,7 @@ $(document).ready(function() {
 		dayClick: function(date, jsEvent, view) {
 			if ( agendaConfig['allow_new'] ) {
 				var clickDate = date.format();
-				$('#dialog-form-full').dialog('option', 'title', 'Add Event');
+				$('#dialog-form-full').dialog('option', 'title', lang['add_event']);
 				if ( window.innerWidth < 600 ) {
 					$('#dialog-form-full').dialog('option', 'height', window.innerHeight);
 					$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .95);
@@ -91,14 +96,14 @@ $(document).ready(function() {
 				// override the dialog buttons
 				var editButtons = [
 				{
-					text: "Save Event",
+					text: lang['save_event'],
 					"class" : 'uk-button uk-button-success',
 					click: function() {
 						saveevent();
 					}
 				},
 				{
-					text: "Cancel",
+					text: lang['cancel'],
 					"class": 'uk-button uk-button',
 					click : function () {
 						dialog.dialog('close');
@@ -138,9 +143,9 @@ $(document).ready(function() {
 				qTipArray[event.id] = element.qtip({
 					content:{
 						title : event.title,
-						text : '<p><b>When</b><br>'+ event.when +
-						(event.location && '<p><b>Location</b><br>'+event.location+'</p>' || '') +
-						(event.description && '<p><b>Details</b><br>'+event.description+'</p>' || '')
+						text : '<p><b>'+lang['when']+'</b><br>'+ event.when +
+						(event.location && '<p><b>'+lang['location']+'</b><br>'+event.location+'</p>' || '') +
+						(event.description && '<p><b>'+lang['details']+'</b><br>'+event.description+'</p>' || '')
 					},
 					show: {
 						delay: 500
@@ -190,7 +195,10 @@ $(document).ready(function() {
 				url: glfusionSiteUrl + '/agenda/includes/ajax-event-handler.php',
 				data: params,
 				success: function (data) {
-					console.log("resize event successful");
+					var result = $.parseJSON(data["js"]);
+					if ( result.errorCode == 0 ) {
+						console.log("resize event successful");
+					}
 					$('#calendar').fullCalendar('refetchEvents');
 					$('#calendar').fullCalendar( 'rerenderEvents' );
 				},
@@ -204,7 +212,6 @@ $(document).ready(function() {
 // moved an event
 		eventDragStart: function( event, jsEvent, ui, view ) {
 			dragging = 1;
-			console.log("starting drag");
 		},
 		eventDragStop: function( event, jsEvent, ui, view ) {
 			dragging = 0;
@@ -212,7 +219,6 @@ $(document).ready(function() {
 		eventResizeStart: function( event, jsEvent, ui, view ) {
 			$('.qtip').remove();
 			dragging = 1;
-			console.log("starting drag");
 			qTipArray[event.id].hide();
 		},
 		eventResizeStop: function( event, jsEvent, ui, view ) {
@@ -220,7 +226,6 @@ $(document).ready(function() {
 		},
 		eventDrop: function(event, delta, revertFunc) {
 			$('.qtip').remove();
-			console.log("event has been moved");
 			qTipArray[event.id].hide();
 			qTipArray[event.id].qtip('destroy', true);
 			var params = "&action=move-event&id=" + event.id;
@@ -235,8 +240,12 @@ $(document).ready(function() {
 				type: "POST",
 				url: glfusionSiteUrl + '/agenda/includes/ajax-event-handler.php',
 				data: params,
+				dataType: "json",
 				success: function (data) {
-					console.log("move event successful");
+					var result = $.parseJSON(data["js"]);
+					if ( result.errorCode == 0 ) {
+						console.log("move event successful");
+					}
 					$('#calendar').fullCalendar('refetchEvents');
 				},
 				error: function (e) {
@@ -271,14 +280,14 @@ $(document).ready(function() {
 		width: window.innerWidth * .8,
 		buttons: [
 		{
-			text: "Save Event",
+			text: lang['save_event'],
 			"class" : 'uk-button uk-button-primary',
 			click: function() {
 				saveevent();
 			}
 		},
 		{
-			text: "Cancel",
+			text: lang['cancel'],
 			"class": 'uk-button uk-button-danger',
 			click : function () {
 				dialog.dialog('close');
@@ -327,7 +336,7 @@ $(document).ready(function() {
 			}
 		},
 		{
-			text: "Cancel",
+			text: lang['cancel'],
 			"class": 'uk-button uk-button-danger',
 			click : function () {
 				dialog_series.dialog('close');
@@ -350,7 +359,7 @@ $(document).ready(function() {
 				{
 					"edit-series":
 					{
-						required:"Please select an option<br/>"
+						required: lang['err_select_option']+"<br/>"
 					}
 				},
 				errorPlacement: function(error, element)
@@ -371,6 +380,7 @@ $(document).ready(function() {
 		}
 	});
 	// end of dialog series
+
 }); // end of document ready
 
 
@@ -393,7 +403,10 @@ function saveevent() {
 		url: url,
 		data: $('#event-form').serialize(),
 		success: function (data) {
-			console.log('save event ajax returned successfully');
+			var result = $.parseJSON(data["js"]);
+			if ( result.errorCode == 0 ) {
+				console.log('save event ajax returned successfully');
+			}
 			$('#calendar').fullCalendar('refetchEvents');
 		},
 		error: function (e) {
@@ -414,7 +427,7 @@ function deleteevent ( event ) {
 	if ( form.valid() == false ) return false;
 
 	// validate we want to do this...
-	UIkit.modal.confirm("Are you sure you want to delete this event?", function(){
+	UIkit.modal.confirm(lang['delete_event_confirm'], function(){
 		url = '/agenda/includes/ajax-event-handler.php';
 		$.ajax({
 			type: "POST",
@@ -422,7 +435,10 @@ function deleteevent ( event ) {
 			url: url,
 			data: {"action" : "delete-event", "parent_id" : event.parent_id, "event_id" : event.id },
 			success: function (data) {
-				console.log('Deleting an event returned successfully');
+				var result = $.parseJSON(data["js"]);
+				if ( result.errorcode == 0 ) {
+					console.log('success');
+				}
 				$('#calendar').fullCalendar('refetchEvents');
 			},
 			error: function (e) {
@@ -444,7 +460,7 @@ function deleteeventseries( event ) {
 	if ( form.valid() == false ) return false;
 
 	// validate we want to do this...
-	UIkit.modal.confirm("Are you sure you want to delete THE ENTIRE SERIES?", function(){
+	UIkit.modal.confirm(lang['delete_series_confirm'], function(){
 		url = '/agenda/includes/ajax-event-handler.php';
 		$.ajax({
 			type: "POST",
@@ -492,21 +508,21 @@ function edit_single_event( event )
 	// override the dialog buttons
 	var editButtons = [
 	{
-		text: "Save Event",
+		text: lang['save_event'],
 		"class" : 'uk-button uk-button-success',
 		click: function() {
 			saveevent();
 		}
 	},
 	{
-		text: "Delete Event",
+		text: lang['delete_event'],
 		"class" : 'uk-button uk-button-danger',
 		click: function() {
 			deleteevent(event);
 		}
 	},
 	{
-		text: "Cancel",
+		text: lang['cancel'],
 		"class": 'uk-button uk-button',
 		click : function () {
 			dialog.dialog('close');
@@ -548,21 +564,21 @@ function edit_series_event(event)
 	// override the dialog buttons
 	var editButtons = [
 	{
-		text: "Save Event",
+		text: lang['save_event'],
 		"class" : 'uk-button uk-button-success',
 		click: function() {
 			saveevent();
 		}
 	},
 	{
-		text: "Delete Series",
+		text: lang['delete_series'],
 		"class" : 'uk-button uk-button-danger',
 		click: function() {
 			deleteeventseries(event);
 		}
 	},
 	{
-		text: "Cancel",
+		text: lang['cancel'],
 		"class": 'uk-button uk-button',
 		click : function () {
 			dialog.dialog('close');
