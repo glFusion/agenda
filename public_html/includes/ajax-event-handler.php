@@ -16,7 +16,7 @@
 
 require_once '../../lib-common.php';
 
-if ( !COM_isAjax() ) die('invalid request');
+$ajaxHandler = new \ajaxHandler();
 
 $errorCode = 0;
 $errors    = 0;
@@ -66,9 +66,7 @@ switch ($action) {
         $rc = -1;
         break;
 }
+$ajaxHandler->setErrorCode( $rc );
+$ajaxHandler->sendResponse();
 
-$retval['errorCode'] = $rc;
-$return["json"] = json_encode($retval);
-echo json_encode($return);
-exit;
 ?>
