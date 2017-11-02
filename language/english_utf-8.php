@@ -52,6 +52,22 @@ $LANG_AC = array (
     'today'             => 'Today',
 );
 
+// JavaScript specific translations
+$LANG_AC_JS = array(
+    'add_event'         => 'Add Event',
+    'save_event'        => 'Save Event',
+    'delete_event'      => 'Delete Event',
+    'delete_series'     => 'Delete Series',
+    'delete_event_confirm' => 'Are you positive you want to delete this event?',
+    'delete_series_confirm' => 'Are you positive you want to DELETE THE ENTIRE SERIES OF EVENTS?',
+    'cancel'            => 'Cancel',
+    'when'              => 'When',
+    'location'          => 'Location',
+    'details'           => 'Details',
+    'err_select_option' => 'Please select an option',
+
+);
+
 $LANG_AC_ERRORS = array(
     'invalid_title'     => 'You must enter an event title',
 );
