@@ -19,20 +19,19 @@ var modal;
 var calendar;
 var dialog;
 var dialog_series;
-var form;	// entry form
 var whattoeditform;
 var calheight;
 var calwidth;
 var qTipArray=new Array();
 var qTipAPI = new Array();
 var dragging = 0;
-var lang;
+var lang = new Array();
 //var defaultView = 'month';
 
 //var agendaConfig = { "allow_new":false, "allow_edit":false };
 
 // pull setup data
-url = glfusionSiteUrl + '/agenda/includes/ajax-controller.php';
+url = glfusionSiteUrl + '/agenda/ajax/ajax-controller.php';
 $.ajax({
 	type: "POST",
 	async:true,
@@ -56,36 +55,6 @@ $.ajax({
 });
 
 function initializeAgenda() {
-	$.validator.addMethod("enddate", function(value, element) {
-		var from_time = $("#start-time").val();
-		var to_time = $("#end-time").val();
-		var start_date = $("#event-date").val();
-		var end_date = $("#event-end-date").val();
-		var from = Date.parse(start_date +' '+ from_time);
-		var to = Date.parse(end_date + ' '+ to_time);
-		if (from > to){
-			return false;
-		} else {
-			return true;
-		}
-	}, " * " + lang['err_end_before_start']);
-
-	$.validator.addMethod("allday", function(value, element) {
-		if ($('#event-allday').is(':checked') == false) {
-			return true;
-		}
-		var from_time = '12:00 AM';
-		var to_time = '11:59 PM';
-		var start_date = $("#event-date").val();
-		var end_date = $("#event-end-date").val();
-		var from = Date.parse(start_date +' '+ from_time);
-		var to = Date.parse(end_date + ' '+ to_time);
-		if (from > to){
-			return false;
-		} else {
-			return true;
-		}
-	}, " * " + lang['err_end_before_start']);
 
 	// dialog for event edits
 	dialog = $( "#dialog-form-full" ).dialog({
@@ -207,12 +176,11 @@ function initializeAgenda() {
 // save an event
 function saveevent() {
 	// ensure the form is valid
-	if ( form.valid() == false ) return false;
+	if ( $('#event-form').valid() == false ) return false;
 
 	// need to know if we are editing or adding or deleting
 
-	//  url = $( '#dbbackupform' ).attr( 'action' );
-	url = '/agenda/includes/ajax-event-handler.php';
+	url = glfusionSiteUrl + '/agenda/ajax/ajax-event-handler.php';
 	$.ajax({
 		type: "POST",
 		dataType: "json",
@@ -241,7 +209,7 @@ function saveevent() {
 function deleteevent ( event ) {
 	// validate we want to do this...
 	UIkit.modal.confirm(lang['delete_event_confirm'], function(){
-		url = '/agenda/includes/ajax-event-handler.php';
+		url = glfusionSiteUrl + '/agenda/ajax/ajax-event-handler.php';
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -271,7 +239,7 @@ function deleteevent ( event ) {
 function deleteeventseries( event ) {
 	// validate we want to do this...
 	UIkit.modal.confirm(lang['delete_series_confirm'], function(){
-		url = '/agenda/includes/ajax-event-handler.php';
+		url = glfusionSiteUrl + '/agenda/ajax/ajax-event-handler.php';
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -300,7 +268,7 @@ function edit_single_event( event )
 	$('#dialog-form-full').dialog('option', 'title', 'Edit Event');
 	$("#dialog-form-full").html('');
 
-	url = '/agenda/includes/ajax-form-manager.php';
+	url = glfusionSiteUrl + '/agenda/ajax/ajax-form-manager.php';
 	$.ajax({
 		type: "POST",
 		dataType: "html",
@@ -308,27 +276,8 @@ function edit_single_event( event )
 		data: {"action" : "edit-event", "parent_id" : event.parent_id, "event_id" : event.id },
 		success: function (data) {
 			$("#dialog-form-full").html(data);
-			form = $( "#event-form" );
-			form.validate({
-				errorElement: 'span',
-				errorClass: 'uk-text-danger uk-text-bold',
-				rules: {
-					"title": { required:true },
-					"end-time": { enddate: true },
-					"event-allday": { allday: true },
-				},
-				messages: {
-					"title":{	required: ' * ' + lang['err_enter_title']	},
-				},
-				errorPlacement: function(error, element) {
-					if (element.attr("name") == "end-time" || element.attr("name") == "event-allday" ) {
-						error.insertAfter('#date-errors');
-					} else {
-						error.insertAfter( element );
-					}
-				},
-			});
 		},
+
 		error: function (e) {
 			console.log("Error retrieving form");
 		}
@@ -374,7 +323,7 @@ function edit_series_event(event)
 	$('#dialog-form-full').dialog('option', 'title', 'Edit Event Series');
 	$("#dialog-form-full").html('');
 
-	url = '/agenda/includes/ajax-form-manager.php';
+	url = glfusionSiteUrl + '/agenda/ajax/ajax-form-manager.php';
 	$.ajax({
 		type: "POST",
 		dataType: "html",
@@ -435,7 +384,6 @@ function initializeCalendar( config )
 	var m = date.getMonth();
 	var y = date.getFullYear();
 
-	form = $( "#event-form" );
 	whattoeditform = $("#what-to-edit");
 
 	// initialize full calendar
@@ -452,7 +400,7 @@ function initializeCalendar( config )
 					$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .8 );
 				}
 				$("#dialog-form-full").html('');
-				url = glfusionSiteUrl + '/agenda/includes/ajax-form-manager.php';
+				url = glfusionSiteUrl + '/agenda/ajax/ajax-form-manager.php';
 				$.ajax({
 					type: "POST",
 					dataType: "html",
@@ -460,26 +408,6 @@ function initializeCalendar( config )
 					data: {"action" : "new-event", "clickdate" : clickDate },
 					success: function (data) {
 						$("#dialog-form-full").html(data);
-						form = $( "#event-form" );
-						form.validate({
-							errorElement: 'span',
-							errorClass: 'uk-text-danger uk-text-bold',
-							rules: {
-								"title": { required:true },
-								"end-time": { enddate: true },
-								"event-allday": { allday: true },
-							},
-							messages: {
-								"title":{	required: ' * ' + lang['err_enter_title']	},
-							},
-							errorPlacement: function(error, element) {
-								if (element.attr("name") == "end-time" || element.attr("name") == "event-allday" ) {
-									error.insertAfter('#date-errors');
-								} else {
-									error.insertAfter( element );
-								}
-							},
-						});
 					},
 					error: function (e) {
 						console.log("error retrieving new-event form");
@@ -587,7 +515,7 @@ function initializeCalendar( config )
 			params = params + "&allday=" + event.allDay;
 			$.ajax({
 				type: "POST",
-				url: glfusionSiteUrl + '/agenda/includes/ajax-event-handler.php',
+				url: glfusionSiteUrl + '/agenda/ajax/ajax-event-handler.php',
 				data: params,
 				success: function (data) {
 					var result = $.parseJSON(data["js"]);
@@ -633,7 +561,7 @@ function initializeCalendar( config )
 			params = params + "&allday=" + event.allDay;
 			$.ajax({
 				type: "POST",
-				url: glfusionSiteUrl + '/agenda/includes/ajax-event-handler.php',
+				url: glfusionSiteUrl + '/agenda/ajax/ajax-event-handler.php',
 				data: params,
 				dataType: "json",
 				success: function (data) {
@@ -656,7 +584,7 @@ function initializeCalendar( config )
 			center: 'title',
 			right: 'month,agendaWeek,agendaDay,listMonth'
 		},
-		events: glfusionSiteUrl + '/agenda/includes/json-events.php',
+		events: glfusionSiteUrl + '/agenda/ajax/json-events.php',
 		editable: false, // overriden in the event object
 		defaultView:  defaultview,
 		defaultDate:  defaultdate,
@@ -664,5 +592,4 @@ function initializeCalendar( config )
 		height: 'auto',
 	});
 	// end of full calendar initialization
-
 }
