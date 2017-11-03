@@ -36,7 +36,7 @@ url = glfusionSiteUrl + '/agenda/includes/ajax-controller.php';
 $.ajax({
 	type: "POST",
 	async:true,
- 	cache: false,
+	cache: false,
 	dataType: "json",
 	data: {"action" : "setup-agenda" },
 	url: url,
@@ -64,9 +64,9 @@ function initializeAgenda() {
 		var from = Date.parse(start_date +' '+ from_time);
 		var to = Date.parse(end_date + ' '+ to_time);
 		if (from > to){
-	  	 return false;
+			return false;
 		} else {
-	  	 return true;
+			return true;
 		}
 	}, " * " + lang['err_end_before_start']);
 
@@ -81,13 +81,13 @@ function initializeAgenda() {
 		var from = Date.parse(start_date +' '+ from_time);
 		var to = Date.parse(end_date + ' '+ to_time);
 		if (from > to){
-	  	 return false;
+			return false;
 		} else {
-	  	 return true;
+			return true;
 		}
 	}, " * " + lang['err_end_before_start']);
 
-// dialog for event edits
+	// dialog for event edits
 	dialog = $( "#dialog-form-full" ).dialog({
 		autoOpen: false,
 		modal: true,
@@ -122,12 +122,12 @@ function initializeAgenda() {
 			}
 		}
 	});
-// end of dialog
+	// end of dialog
 
-//
-// recurring event edit dialog to
-// determine if editing the event
-// or the series
+	//
+	// recurring event edit dialog to
+	// determine if editing the event
+	// or the series
 	dialog_series = $( "#dialog-series" ).dialog({
 		autoOpen: false,
 		classes: { "ui-dialog": "tm-agenda-dialog" },
@@ -310,8 +310,8 @@ function edit_single_event( event )
 			$("#dialog-form-full").html(data);
 			form = $( "#event-form" );
 			form.validate({
-			  errorElement: 'span',
-			  errorClass: 'uk-text-danger uk-text-bold',
+				errorElement: 'span',
+				errorClass: 'uk-text-danger uk-text-bold',
 				rules: {
 					"title": { required:true },
 					"end-time": { enddate: true },
@@ -335,11 +335,13 @@ function edit_single_event( event )
 	});
 	// override the dialog buttons
 	var editButtons = [
-	{ text: lang['save_event'],
-	  "class" : 'uk-button uk-button-success',
-	  click: function() {
-		saveevent();
-	  }},
+	{
+		text: lang['save_event'],
+		"class" : 'uk-button uk-button-success',
+		click: function() {
+			saveevent();
+		}
+	},
 	{
 		text: lang['delete_event'],
 		"class" : 'uk-button uk-button-danger',
@@ -362,7 +364,7 @@ function edit_single_event( event )
 
 	var buttons = $('.ui-dialog-buttonset').children('button');
 	buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
-//	$(".uk-button-danger").attr("formnovalidate");
+	//	$(".uk-button-danger").attr("formnovalidate");
 
 	dialog.dialog("open");
 }
@@ -422,18 +424,16 @@ function edit_series_event(event)
 }
 
 /*
- * Initializes the full calendar widget
- *
- * params - config - configuration data
- */
+* Initializes the full calendar widget
+*
+* params - config - configuration data
+*/
 function initializeCalendar( config )
 {
 	var date = new Date();
 	var d = date.getDate();
 	var m = date.getMonth();
 	var y = date.getFullYear();
-
-//	$(".loader").fadeOut("slow");
 
 	form = $( "#event-form" );
 	whattoeditform = $("#what-to-edit");
@@ -462,8 +462,8 @@ function initializeCalendar( config )
 						$("#dialog-form-full").html(data);
 						form = $( "#event-form" );
 						form.validate({
-						  errorElement: 'span',
-						  errorClass: 'uk-text-danger uk-text-bold',
+							errorElement: 'span',
+							errorClass: 'uk-text-danger uk-text-bold',
 							rules: {
 								"title": { required:true },
 								"end-time": { enddate: true },
@@ -510,7 +510,7 @@ function initializeCalendar( config )
 			}
 		},
 
-// click on event - make this edit
+		// click on event - make this edit
 		eventClick: function(event, element) {
 			if ( config['allow_edit'] ) {
 				$('.qtip').remove();
@@ -527,7 +527,7 @@ function initializeCalendar( config )
 			}
 		},
 
-// apply during the event display / render
+		// apply during the event display / render
 		eventRender: function(event, element, view) {
 			if ( dragging == 0 ) { // don't render tooltip if dragging in progress
 				var mouseTarget = false;
@@ -604,7 +604,7 @@ function initializeCalendar( config )
 			});
 		},
 
-// moved an event
+		// moved an event
 		eventDragStart: function( event, jsEvent, ui, view ) {
 			dragging = 1;
 		},
@@ -650,7 +650,7 @@ function initializeCalendar( config )
 			});
 
 		},
-// config options
+		// config options
 		header: {
 			left: 'prev,next today',
 			center: 'title',
@@ -663,8 +663,6 @@ function initializeCalendar( config )
 		allDayDefault: false,
 		height: 'auto',
 	});
-// end of full calendar initialization
+	// end of full calendar initialization
 
 }
-
-// end of file
