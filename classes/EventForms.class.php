@@ -81,6 +81,7 @@ class eventForms {
             'lang_all_day_event'=> $LANG_AC['all_day_event'],
             'lang_event_end'    => $LANG_AC['event_end'],
             'lang_end_date'     => $LANG_AC['end_date'],
+            'lang_end_time'     => $LANG_AC['end_time'],
             'lang_repeats'      => $LANG_AC['repeats'],
             'lang_repeat_options'=> $LANG_AC['repeat_options'],
             'lang_daily'        => $LANG_AC['daily'],
@@ -134,15 +135,36 @@ class eventForms {
             }
 
             $T->set_var(array(
-                'event_title'       => $row['title'],
-                'start_date'        => $row['start_date'],
-                'end_date'          => $row['end_date'],
-                'start_time'        => date('h:i A',strtotime($row['start_time'])),
-                'end_time'          => date('h:i A',strtotime($row['end_time'])),
+                'title'       => $row['title'],
+                'start-date'        => $row['start_date'],
+                'end-date'          => $row['end_date'],
+                'start-time'        => date('h:i A',strtotime($row['start_time'])),
+                'end-time'          => date('h:i A',strtotime($row['end_time'])),
                 'location'          => $row['location'],
                 'description'       => $row['description'],
                 'parent_id'         => $row['parent_id'],
                 'event_id'          => $event_id,
+
+                'lang_event_title'  => $LANG_AC['event_title'],
+                'lang_location'     => $LANG_AC['location'],
+                'lang_event_start'  => $LANG_AC['event_start'],
+                'lang_start_date'   => $LANG_AC['start_date'],
+                'lang_all_day_event'=> $LANG_AC['all_day_event'],
+                'lang_event_end'    => $LANG_AC['event_end'],
+                'lang_end_date'     => $LANG_AC['end_date'],
+                'lang_end_time'     => $LANG_AC['end_time'],
+                'lang_repeats'      => $LANG_AC['repeats'],
+                'lang_repeat_options'=> $LANG_AC['repeat_options'],
+                'lang_daily'        => $LANG_AC['daily'],
+                'lang_weekly'       => $LANG_AC['weekly'],
+                'lang_biweekly'     => $LANG_AC['biweekly'],
+                'lang_monthly'      => $LANG_AC['monthly'],
+                'lang_yearly'       => $LANG_AC['yearly'],
+                'lang_description'  => $LANG_AC['description'],
+                'lang_save'         => $LANG_AC['save'],
+                'lang_delete'       => $LANG_AC['delete'],
+                'lang_cancel'       => $LANG_AC['cancel'],
+
 
              ));
              if ( $row['repeats'] == 1 ) {
