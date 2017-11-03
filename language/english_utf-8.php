@@ -60,6 +60,7 @@ $LANG_AC = array (
     'all_day_event'     => 'All Day Event',
     'event_end'         => 'Event End',
     'end_date'          => 'End Date',
+    'end_time'          => 'End Time',
     'repeats'           => 'Repeats',
     'repeat_options'    => 'Repeat Options',
     'daily'             => 'Daily',
