@@ -42,7 +42,7 @@
 				<div class="uk-grid uk-margin-remove">
 					<div class="uk-width-medium-1-3">
 						<input type="radio" value="1" name="repeat-freq" align="bottom" {daily_checked}><span class="uk-form-help-inline">{lang_daily}</span><br>
-						<input type="radio" value="7" name="repeat-freq" align="bottom" {weekly_checked}><span class="uk-form-help-inline">{lang_yearly}</span><br>
+						<input type="radio" value="7" name="repeat-freq" align="bottom" {weekly_checked}><span class="uk-form-help-inline">{lang_weekly}</span><br>
 						<input type="radio" value="14" name="repeat-freq" align="bottom" {biweekly_checked}><span class="uk-form-help-inline">{lang_biweekly}</span><br>
 					</div>
 					<div class="uk-width-medium-1-3">
