@@ -40,9 +40,7 @@ $LANG_AC = array (
     'bgcolor'           => 'Background Color',
     'fgcolor'           => 'Text Color',
     'color_preview'     => 'Color Preview',
-// submission queue items
     'submissions'       => 'Agenda Submissions',
-// admin list fields
     'edit'              => 'Edit',
     'title'             => 'Title',
     'owner'             => 'Owner',
@@ -57,13 +55,10 @@ $LANG_AC = array (
     'more'              => 'more',
     'less'              => 'less',
     'sample_category'   => 'Sample Category',
-
-
 // block strings
     'site_events'       => 'Site Events',
     'no_upcoming'       => 'No Upcoming Events',
     'today'             => 'Today',
-
 // event forms
     'event_title'       => 'Event Title',
     'location'          => 'Event Location',
@@ -89,7 +84,6 @@ $LANG_AC = array (
     'what_to_edit'       => 'This is one event in a series. What do you want to edit?',
     'just_this_one'     => 'Just this one',
     'entire_series'     => 'The entire series',
-
 );
 
 // JavaScript specific translations
@@ -140,8 +134,8 @@ $LANG_configsubgroups['agenda'] = array(
 );
 
 $LANG_fs['agenda'] = array(
-    'fs_main' => 'Main Settings',
-    'fs_permissions' => 'Permission Settings',
+    'fs_main'       => 'Main Settings',
+    'fs_permissions'=> 'Permission Settings',
     'fs_display'    => 'Display Settings',
     'fs_advanced'   => 'Advanced Settings',
 );
