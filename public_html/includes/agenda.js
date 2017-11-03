@@ -239,9 +239,6 @@ function saveevent() {
 };
 
 function deleteevent ( event ) {
-	// ensure the form is valid
-	if ( form.valid() == false ) return false;
-
 	// validate we want to do this...
 	UIkit.modal.confirm(lang['delete_event_confirm'], function(){
 		url = '/agenda/includes/ajax-event-handler.php';
@@ -272,9 +269,6 @@ function deleteevent ( event ) {
 };
 
 function deleteeventseries( event ) {
-	// ensure the form is valid
-	if ( form.valid() == false ) return false;
-
 	// validate we want to do this...
 	UIkit.modal.confirm(lang['delete_series_confirm'], function(){
 		url = '/agenda/includes/ajax-event-handler.php';
@@ -315,7 +309,25 @@ function edit_single_event( event )
 		success: function (data) {
 			$("#dialog-form-full").html(data);
 			form = $( "#event-form" );
-			form.validate();
+			form.validate({
+			  errorElement: 'span',
+			  errorClass: 'uk-text-danger uk-text-bold',
+				rules: {
+					"title": { required:true },
+					"end-time": { enddate: true },
+					"event-allday": { allday: true },
+				},
+				messages: {
+					"title":{	required: ' * ' + lang['err_enter_title']	},
+				},
+				errorPlacement: function(error, element) {
+					if (element.attr("name") == "end-time" || element.attr("name") == "event-allday" ) {
+						error.insertAfter('#date-errors');
+					} else {
+						error.insertAfter( element );
+					}
+				},
+			});
 		},
 		error: function (e) {
 			console.log("Error retrieving form");
@@ -323,13 +335,11 @@ function edit_single_event( event )
 	});
 	// override the dialog buttons
 	var editButtons = [
-	{
-		text: lang['save_event'],
-		"class" : 'uk-button uk-button-success',
-		click: function() {
-			saveevent();
-		}
-	},
+	{ text: lang['save_event'],
+	  "class" : 'uk-button uk-button-success',
+	  click: function() {
+		saveevent();
+	  }},
 	{
 		text: lang['delete_event'],
 		"class" : 'uk-button uk-button-danger',
@@ -352,6 +362,8 @@ function edit_single_event( event )
 
 	var buttons = $('.ui-dialog-buttonset').children('button');
 	buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
+//	$(".uk-button-danger").attr("formnovalidate");
+
 	dialog.dialog("open");
 }
 
