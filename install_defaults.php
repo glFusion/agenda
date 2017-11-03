@@ -40,6 +40,15 @@ $_AC_DEFAULTS = array(
     'displayblocks'         => 3,       // 'Left Blocks' => 0, 'Right Blocks' => 1, 'All Blocks' => 2, 'No Blocks' => 3
     'showupcomingevents'    => 1,       // 0 = no 1 = yes
     'upcomingeventsrange'   => 14,
+
+// advanced settings
+
+    'defaultview'           => 'month',
+    'autoheight'            => 'fit',
+    'header_left'           => 'today prev,next',
+    'header_center'         => 'title',
+    'header_right'          => 'month,agendaWeek,agendaDay,listMonth',
+    'first_day'             => 0,
 );
 
 /**
@@ -68,6 +77,17 @@ function plugin_initconfig_agenda()
         $c->add('displayblocks', $_AC_DEFAULTS['displayblocks'],'select', 0, 1, 4, 10, true, 'agenda');
         $c->add('showupcomingevents', $_AC_DEFAULTS['showupcomingevents'],'select', 0, 1, 0, 20, true, 'agenda');
         $c->add('upcomingeventsrange', $_AC_DEFAULTS['upcomingeventsrange'],'text', 0, 1, NULL, 30, true, 'agenda');
+
+// advanced settings fieldset
+        $c->add('fs_advanced', NULL, 'fieldset', 0, 2, NULL, 0, true,'agenda');
+        $c->add('defaultview', $_AC_DEFAULTS['defaultview'],'select', 0, 2, 5, 10, true, 'agenda');
+        $c->add('autoheight', $_AC_DEFAULTS['autoheight'],'select', 0, 2, 6, 20, true, 'agenda');
+
+        $c->add('header_left', $_AC_DEFAULTS['header_left'],'select', 0, 2, 7, 30, true, 'agenda');
+        $c->add('header_center', $_AC_DEFAULTS['header_center'],'select', 0, 2, 7, 40, true, 'agenda');
+        $c->add('header_right', $_AC_DEFAULTS['header_right'],'select', 0, 2, 7, 50, true, 'agenda');
+
+        $c->add('first_day', $_AC_DEFAULTS['first_day'],'select', 0, 2, 8, 60, true, 'agenda');
      }
      return true;
 }

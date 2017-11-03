@@ -107,6 +107,12 @@ $LANG_confignames['agenda'] = array(
     'displayblocks'         => 'Display Blocks',
     'showupcomingevents'    => 'Show Upcoming Events Block',
     'upcomingeventsrange'   => 'Days to include in Upcoming Event Block',
+    'defaultview'           => 'Default View',
+    'autoheight'            => 'Auto Height',
+    'header_left'           => 'Header Left',
+    'header_center'         => 'Header Center',
+    'header_right'          => 'Header Right',
+    'first_day'             => 'First Day of Week',
 );
 
 $LANG_configsubgroups['agenda'] = array(
@@ -117,6 +123,7 @@ $LANG_fs['agenda'] = array(
     'fs_main' => 'Main Settings',
     'fs_permissions' => 'Permission Settings',
     'fs_display'    => 'Display Settings',
+    'fs_advanced'   => 'Advanced Settings',
 );
 
 $LANG_configselects['agenda'] = array(
@@ -125,6 +132,24 @@ $LANG_configselects['agenda'] = array(
     2  => array('Admin Only' => 0,'Logged-In-Users' => 1, 'All Users' => 2),
     3  => array('Disabled' => 0, 'Anonymous Only' => 1, 'All Users' => 2),
     4  => array('Left Blocks' => 0, 'Right Blocks' => 1, 'All Blocks' => 2, 'No Blocks' => 3),
+    5  => array('Month' => 'month','Week' => 'agendaWeek', 'Day' => 'agendaDay', 'List' => 'listMonth'),
+    6  => array('Auto' => 'auto', 'Fit' => 'fit'),
+    7  => array(
+        'Title' => 'title',
+        'None'  => '',
+        'Today Prev,Next' => 'today prev,next',
+        'Today PrevYear,NextYear Prev,Next' => 'today prevYear,nextYear prev,next',
+        'Views' => 'month,agendaWeek,agendaDay,listMonth',
+    ),
+    8  => array(
+        'Sunday'    => 0,
+        'Monday'    => 1,
+        'Tuesday'   => 2,
+        'Wednesday' => 3,
+        'Thursday'  => 4,
+        'Friday'    => 5,
+        'Saturday'  => 6
+        ),
 );
 
 ?>

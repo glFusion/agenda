@@ -580,16 +580,19 @@ function initializeCalendar( config )
 		},
 		// config options
 		header: {
-			left: 'prev,next today',
-			center: 'title',
-			right: 'month,agendaWeek,agendaDay,listMonth'
+			left: config['header_left'],
+			center: config['header_center'],
+			right: config['header_right']
 		},
+		locale: config['locale'],
+		isRTL: config['isrtl'],
 		events: glfusionSiteUrl + '/agenda/ajax/json-events.php',
 		editable: false, // overriden in the event object
-		defaultView:  defaultview,
+		defaultView: config['defaultview'],
 		defaultDate:  defaultdate,
 		allDayDefault: false,
-		height: 'auto',
+		height: config['autoheight'],
+		firstDay: config['first_day'],
 	});
 	// end of full calendar initialization
 }

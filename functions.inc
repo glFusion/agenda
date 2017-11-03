@@ -360,12 +360,13 @@ function plugin_getheadercode_agenda()
 
     $retval = '';
 
-    if ( strstr(COM_getCurrentURL(), $_CONF['site_url'].'/agenda/index.php') !== false ) {
-        $retval .= '<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.css">' . LB;
-        $retval .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>' . LB;
-        $retval .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.js"></script>' . LB;
-        $retval .= '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.css" />' . LB;
-        $retval .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.js"></script>' . LB;
+    if ( strstr(COM_getCurrentURL(), $_CONF['site_url'].'/agenda') !== false ) {
+        $retval .= '<link rel="stylesheet" type="text/css" href="'.$_CONF['site_url'].'/agenda/fc/fullcalendar.min.css">' . LB;
+        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/fc/moment.min.js"></script>' . LB;
+        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/fc/fullcalendar.min.js"></script>' . LB;
+        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/fc/locale-all.js"></script>' . LB;
+        $retval .= '<link rel="stylesheet" type="text/css" href="'.$_CONF['site_url'].'/agenda/fc/jquery.qtip.min.css" />' . LB;
+        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/fc/jquery.qtip.min.js"></script>' . LB;
         $retval .= '<script src="'.$_CONF['site_url'].'/agenda/js/agenda.js"></script>' . LB;
     }
     return $retval;
