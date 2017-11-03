@@ -1,3 +1,4 @@
 Agenda Plugin ChangeLog
 
-## v0.0.1 (unreleased)
+## v0.1.0 (unreleased)
+ - Initial Alpha Release

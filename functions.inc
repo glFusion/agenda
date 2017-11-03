@@ -18,7 +18,7 @@ if (!defined ('GVERSION')) {
     die ('This file can not be used on its own.');
 }
 
-define('AGENDA_SNAPSHOT','201711022109');
+define('AGENDA_SNAPSHOT','201711031600');
 
 $ac_config = \config::get_instance();
 $_AC_CONF = $ac_config->get_config('agenda');
