@@ -1,0 +1,107 @@
+<script src="{site_admin_url}/plugins/agenda/js/spectrum.js"></script>
+<link rel="stylesheet" href="{site_admin_url}/plugins/agenda/js/spectrum.css" />
+<form class="uk-form uk-form-horizontal" action="{form_action}" method="post" id="category-form" name="category-form">
+	<input type="hidden" name="{action}" value="x">
+	<input type="hidden" name="category_id" value="{category_id}">
+	<input type="hidden" name="sectoken" value="sectoken">
+
+	<div class="uk-form-row">
+		<label class="uk-form-label" for=cat_name>{lang_category_name}</label>
+		<div class="uk-form-controls">
+			<input type="text" class="uk-form-width-large required" name="cat_name" id="cat_name" value="{cat_name}" {name_disabled}>
+		</div>
+	</div>
+
+	<div class="uk-form-row">
+		<label class="uk-form-label" for=cat_desc>{lang_category_desc}</label>
+		<div class="uk-form-controls">
+			<input type="text" class="uk-form-width-large required" name="cat_desc" id="cat_desc" value="{cat_desc}" {desc_disabled}>
+		</div>
+	</div>
+
+	<div class="uk-form-row">
+		<label class="uk-form-label">{lang_color_preview}</label>
+		<div class="uk-form-controls">
+			<span id="sample" style="padding:5px;background-color:{bgcolor};color:{fgcolor};">
+				{lang_sample_category}
+			</span>
+		</div>
+	</div>
+
+	<div class="uk-form-row">
+		<label class="uk-form-label" for=bgcolor>{lang_bg_color}</label>
+		<div class="uk-form-controls">
+			<input type="text" id="bgcolor" name="bgcolor" value="{bgcolor}">
+		</div>
+	</div>
+
+	<div class="uk-form-row">
+		<label class="uk-form-label" for=fgcolor>{lang_text_color}</label>
+		<div class="uk-form-controls">
+			<input type="text" id="fgcolor" name="fgcolor" value="{fgcolor}">
+		</div>
+	</div>
+
+	<div class="uk-form-row">
+		<button type="submit" name="submit" class="uk-button uk-button-primary">{lang_save}</button>
+{!if lang_delete}
+		<button type="submit" name="delcat" class="uk-button uk-button-danger" onclick="return confirm('{lang_delete_confirm}');">{lang_delete}</button>
+{!endif}
+		<button type="submit" name="cancel" class="uk-button cancel">{lang_cancel}</button>
+	</div>
+
+</form>
+
+<script>
+	$("#fgcolor").spectrum({
+		color: "{fgcolor}",
+		preferredFormat: "hex",
+		change: function(color) {
+			$('#sample').css('color',color.toHexString())
+		},
+    showPaletteOnly: true,
+    togglePaletteOnly: true,
+    togglePaletteMoreText: '{lang_more}',
+    togglePaletteLessText: '{lang_less}',
+    cancelText: '{lang_cancel}',
+    chooseText: '{lang_choose}',
+    showInput: true,
+    palette: [
+        ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
+        ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
+        ["#f4cccc","#fce5cd","#fff2cc","#d9ead3","#d0e0e3","#cfe2f3","#d9d2e9","#ead1dc"],
+        ["#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#9fc5e8","#b4a7d6","#d5a6bd"],
+        ["#e06666","#f6b26b","#ffd966","#93c47d","#76a5af","#6fa8dc","#8e7cc3","#c27ba0"],
+        ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79"],
+        ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47"],
+        ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
+    ]
+	});
+	$("#bgcolor").spectrum({
+		color: "{bgcolor}",
+		preferredFormat: "hex",
+		preferredFormat: "hex",
+		change: function(color) {
+			$('#sample').css('background',color.toHexString())
+		},
+    showPaletteOnly: true,
+    togglePaletteOnly: true,
+    togglePaletteMoreText: '{lang_more}',
+    togglePaletteLessText: '{lang_less}',
+    cancelText: '{lang_cancel}',
+    chooseText: '{lang_choose}',
+    showInput: true,
+    palette: [
+        ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
+        ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
+        ["#f4cccc","#fce5cd","#fff2cc","#d9ead3","#d0e0e3","#cfe2f3","#d9d2e9","#ead1dc"],
+        ["#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#9fc5e8","#b4a7d6","#d5a6bd"],
+        ["#e06666","#f6b26b","#ffd966","#93c47d","#76a5af","#6fa8dc","#8e7cc3","#c27ba0"],
+        ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79"],
+        ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47"],
+        ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
+    ]
+	});
+
+$('#category-form').validate();
+</script>

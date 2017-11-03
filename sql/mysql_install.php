@@ -30,6 +30,7 @@ $_SQL['ac_event'] = "CREATE TABLE {$_TABLES['ac_event']} (
     description text default NULL,
     repeats     tinyint(1)  default '0',
     repeat_freq	int(30) default NULL,
+    category    int(30) default '1',
     queued      tinyint(1) unsigned default 0,
     owner_id mediumint(8) unsigned NOT NULL default '1',
     PRIMARY KEY  (parent_id)
@@ -49,10 +50,25 @@ $_SQL['ac_events'] = "CREATE TABLE {$_TABLES['ac_events']} (
     description text default NULL,
     repeats     tinyint(1)  default '0',
     repeat_freq	int(30) default NULL,
+    category    int(30) default '1',
     exception   tinyint(1) unsigned default '0',
     owner_id mediumint(8) unsigned NOT NULL default '1',
     PRIMARY KEY  (event_id)
 ) ENGINE=MyISAM
 ";
+
+$_SQL['ac_category'] = "CREATE TABLE {$_TABLES['ac_category']} (
+    category_id int(30) unsigned auto_increment,
+    cat_name    varchar(120) default NULL,
+    cat_desc    varchar(120) default NULL,
+    fgcolor     varchar(28) default '#fff',
+    bgcolor     varchar(28) default '#3a87ad',
+    PRIMARY KEY  (category_id)
+) ENGINE=MyISAM
+";
+
+$_DATA['default_category'] = "
+    INSERT INTO {$_TABLES['ac_category']} (category_id,cat_name,cat_desc) VALUES (1,'No category','Default Category')
+    ";
 
 ?>
