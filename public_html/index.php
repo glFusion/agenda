@@ -93,6 +93,8 @@ $T->set_var ('header', $LANG_AC['header']);
 $T->set_var('view',$view);
 $T->set_var('defaultdate',$defaultDate);
 
+$T->set_var('version',$_AC_CONF['pi_version'].'.'.AGENDA_SNAPSHOT);
+
 $T->parse('output', 'page');
 $page = $T->finish($T->get_var('output'));
 
