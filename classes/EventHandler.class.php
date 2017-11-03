@@ -55,6 +55,7 @@ class eventHandler {
         $end_time       = isset($args['end-time'])   ? $args['end-time'] : '';
         $location       = $args['location'];
         $description    = $args['description'];
+        $category       = $args['category'];
         if (isset($args['repeats'])) {
             $repeats     = 1;
             $repeat_freq = COM_applyFilter($args['repeat-freq'],true);
@@ -164,6 +165,7 @@ class eventHandler {
             'description'   => $description,
             'repeats'       => $repeats,
             'repeat_freq'   => $repeat_freq,
+            'category'      => (int) $category,
             'queued'        => $queued,
             'owner_id'      => $owner_id
         );
@@ -389,6 +391,7 @@ class eventHandler {
         $end_time       = isset($args['end-time'])   ? $args['end-time'] : '';
         $location       = $args['location'];
         $description    = $args['description'];
+        $category       = (int) $args['category'];
 
         if ( isset($args['event-allday'] ) ) {
             $allday = 1;
@@ -446,30 +449,33 @@ class eventHandler {
         $db_location        = DB_escapeString($location);
         $db_description     = DB_escapeString($description);
 
-        // update parent record
-        $sql = "UPDATE {$_TABLES['ac_event']} SET
-                title = '{$db_title}',
-                location = '{$db_location}',
-                description = '{$db_description}',
-                allday = {$allday},
-                start_date = '{$db_start_date}',
-                end_date = '{$db_end_date}',
-                start = '{$db_start}',
-                end = '{$db_end}'";
+        if ( $exception == 0 ) {
+            // update parent record
+            $sql = "UPDATE {$_TABLES['ac_event']} SET
+                    title = '{$db_title}',
+                    location = '{$db_location}',
+                    description = '{$db_description}',
+                    allday = {$allday},
+                    category = {$category},
+                    start_date = '{$db_start_date}',
+                    end_date = '{$db_end_date}',
+                    start = '{$db_start}',
+                    end = '{$db_end}'";
 
-        $sql .= " WHERE parent_id=".(int) $parent_id;
+            $sql .= " WHERE parent_id=".(int) $parent_id;
 
-        DB_query($sql,1);
-
-        if ( DB_error() ) {
-            $errorCode = 1;
-        } else {
+            DB_query($sql,1);
+            if ( DB_error() ) {
+                $errorCode = 1;
+            }
+        } else if ( $errorCode == 0 ) {
             // updat events record
             $sql = "UPDATE {$_TABLES['ac_events']} SET
                     title = '{$db_title}',
                     location = '{$db_location}',
                     description = '{$db_description}',
                     allday = {$allday},
+                    category = {$category},
                     start_date = '{$db_start_date}',
                     end_date = '{$db_end_date}',
                     start = '{$db_start}',
@@ -504,10 +510,10 @@ class eventHandler {
 
         // parsed user input
         $parent_id      = (int) COM_applyFilter($args['parent_id'],true);
-        $event_id       = (int) COM_applyFilter($args['event_id'],true);
         $title          = $args['title'];
         $location       = $args['location'];
         $description    = $args['description'];
+        $category       = $args['category'];
 
         // sanitize input
         $filter = new \sanitizer();
@@ -521,11 +527,13 @@ class eventHandler {
         $db_title           = DB_escapeString($title);
         $db_location        = DB_escapeString($location);
         $db_description     = DB_escapeString($description);
+        $category           = (int) $category;
 
        // update parent record
         $sql = "UPDATE {$_TABLES['ac_event']} SET
                 title = '{$db_title}',
                 location = '{$db_location}',
+                category = {$category},
                 description = '{$db_description}'";
         $sql .= " WHERE parent_id=".(int) $parent_id;
 
@@ -538,6 +546,7 @@ class eventHandler {
             $sql = "UPDATE {$_TABLES['ac_events']} SET
                     title = '{$db_title}',
                     location = '{$db_location}',
+                    category = {$category},
                     description = '{$db_description}'";
             $sql .= " WHERE parent_id=".(int) $parent_id . " AND exception = 0";
             DB_query($sql,1);

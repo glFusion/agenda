@@ -30,4 +30,5 @@ $_AC_CONF['pi_url']             = 'https://www.glfusion.org/';
 
 $_TABLES['ac_event']        = $_DB_table_prefix . 'ac_event';
 $_TABLES['ac_events']       = $_DB_table_prefix . 'ac_events';
+$_TABLES['ac_category']     = $_DB_table_prefix . 'ac_category';
 ?>

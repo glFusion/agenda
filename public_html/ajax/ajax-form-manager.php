@@ -44,7 +44,7 @@ switch ($action) {
         $parent_id = COM_applyFilter($_POST['parent_id'],true);
         $event_id  = COM_applyFilter($_POST['event_id'],true);
         $form = new Agenda\eventForms();
-        $page = $form->editSeries($event_id);
+        $page = $form->editSeries($parent_id);
         break;
 
     case 'new-event' :

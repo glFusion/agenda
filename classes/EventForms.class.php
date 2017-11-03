@@ -65,6 +65,17 @@ class eventForms {
         $end_date = $start_date;
         $end_time = $start_time;
 
+        $catSelList = '';
+        $catList = $this->getCategories();
+        foreach ( $catList AS $id => $name ) {
+            if ( $id == 1 ) {
+                $selected = ' selected="selected" ';
+            } else {
+                $selected = '';
+            }
+            $catSelList .= '<option value="'.$id.'" '.$selected.'>'.$name.'</option>';
+        }
+
         $T = new \Template ($_CONF['path'] . 'plugins/agenda/templates');
         $T->set_file ('page','new-event-form.thtml');
 
@@ -74,6 +85,8 @@ class eventForms {
             'end-date'          => trim($end_date),
             'start-time'        => trim($start_time),
             'end-time'          => trim($end_time),
+            'category_select'   => $catSelList,
+            'lang_category'     => $LANG_AC['category'],
             'lang_event_title'  => $LANG_AC['event_title'],
             'lang_location'     => $LANG_AC['location'],
             'lang_event_start'  => $LANG_AC['event_start'],
@@ -136,6 +149,17 @@ class eventForms {
                 $row['end_time'] = '23:59';
             }
 
+            $catSelList = '';
+            $catList = $this->getCategories();
+            foreach ( $catList AS $id => $name ) {
+                if ( $id == $row['category'] ) {
+                    $selected = ' selected="selected" ';
+                } else {
+                    $selected = '';
+                }
+                $catSelList .= '<option value="'.$id.'" '.$selected.'>'.$name.'</option>';
+            }
+
             $T->set_var(array(
                 'title'       => $row['title'],
                 'start-date'        => $row['start_date'],
@@ -146,7 +170,8 @@ class eventForms {
                 'description'       => $row['description'],
                 'parent_id'         => $row['parent_id'],
                 'event_id'          => $event_id,
-
+                'category_select'   => $catSelList,
+                'lang_category'     => $LANG_AC['category'],
                 'lang_event_title'  => $LANG_AC['event_title'],
                 'lang_location'     => $LANG_AC['location'],
                 'lang_event_start'  => $LANG_AC['event_start'],
@@ -220,29 +245,61 @@ class eventForms {
     *   @param  int   $event_id     event id of event
     *   @return string     HTML of the new event form
     */
-    public function editSeries($event_id)
+    public function editSeries($parent_id)
     {
         global $_CONF, $_AC_CONF, $_TABLES, $_USER, $LANG_AC;
 
-        $result = DB_query("SELECT * FROM {$_TABLES['ac_events']} AS events  WHERE event_id=" . (int) $event_id);
+        $result = DB_query("SELECT * FROM {$_TABLES['ac_event']} AS event WHERE parent_id=" . (int) $parent_id);
 
         if ( DB_numRows($result) > 0 ) {
             $row = DB_fetchArray($result);
+
+            $catSelList = '';
+            $catList = $this->getCategories();
+            foreach ( $catList AS $id => $name ) {
+                if ( $id == $row['category'] ) {
+                    $selected = ' selected="selected" ';
+                } else {
+                    $selected = '';
+                }
+                $catSelList .= '<option value="'.$id.'" '.$selected.'>'.$name.'</option>';
+            }
 
             $T = new \Template ($_CONF['path'] . 'plugins/agenda/templates');
             $T->set_file ('page','edit-event-series-form.thtml');
 
             $T->set_var(array(
-                'event_title'       => $row['title'],
+                'title'             => $row['title'],
                 'location'          => $row['location'],
                 'description'       => $row['description'],
-                'parent_id'         => $row['parent_id'],
-                'event_id'          => $event_id,
+                'parent_id'         => $parent_id,
+                'category_select'   => $catSelList,
+                'lang_category'     => $LANG_AC['category'],
+                'lang_event_title'  => $LANG_AC['event_title'],
+                'lang_location'     => $LANG_AC['location'],
+                'lang_description'  => $LANG_AC['description'],
+                'lang_save'         => $LANG_AC['save'],
+                'lang_delete'       => $LANG_AC['delete'],
+                'lang_cancel'       => $LANG_AC['cancel'],
              ));
 
             $T->parse('output', 'page');
             $page = $T->finish($T->get_var('output'));
         }
         return $page;
+    }
+
+    private function getCategories()
+    {
+        global $_CONF, $_AC_CONF, $_TABLES, $LANG_AC;
+
+        $retval = array();
+
+        $result = DB_query("SELECT * FROM {$_TABLES['ac_category']} WHERE category_id > 1 ORDER BY cat_name ASC");
+        $retval[1] = $LANG_AC['no_category'];
+        while ( ( $row = DB_fetchArray($result)) != null  ) {
+            $retval[$row['category_id']] = $row['cat_name'];
+        }
+        return $retval;
     }
 }

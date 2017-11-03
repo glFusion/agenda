@@ -23,16 +23,23 @@ $LANG_AC = array (
     'plugin_name'       => 'Agenda',
     'plugin_admin'		=> 'Agenda Admin',
     'event_list'        => 'Agenda Events',
-    'admin_help'        => 'Administer events',
+    'admin_help'        => 'Create, Edit and Delete Agenda Categories which can be used highlight events on the Agenda Calendar.<br><br>Event Administration is done in the Agenda Calendar Interface.',
     'access_denied'     => 'Access Denied',
-    'access_denied_msg' => 'You are not authorized to view this Page.  Your user name and IP have been recorded.',
+    'access_denied_msg' => 'You are not authorized to view this Page. Your user name and IP have been recorded.',
     'category_list'     => 'Categories',
     'admin'		        => 'Agenda Admin',
     'cancel'			=> 'Cancel',
     'delete'			=> 'Delete',
     'save'				=> 'Save',
     'create'            => 'New Event',
+    'category_new'      => 'New Category',
     'header'            => 'Agenda',
+    'category_name'     => 'Category Name',
+    'category_desc'     => 'Category Description',
+    'no_categories'     => 'No categories',
+    'bgcolor'           => 'Background Color',
+    'fgcolor'           => 'Text Color',
+    'color_preview'     => 'Color Preview',
 // submission queue items
     'submissions'       => 'Agenda Submissions',
 // admin list fields
@@ -44,8 +51,14 @@ $LANG_AC = array (
     'allday'            => 'All Day',
     'no_events'         => 'No Events Found',
     'delete_checked'    => 'Delete Checked',
-    'delete_confirm'    => 'Are you sure',
+    'delete_confirm'    => 'Are you sure you want to delete the selected category?',
     'published'         => 'Published',
+    'choose'            => 'Choose',
+    'more'              => 'more',
+    'less'              => 'less',
+    'sample_category'   => 'Sample Category',
+
+
 // block strings
     'site_events'       => 'Site Events',
     'no_upcoming'       => 'No Upcoming Events',
@@ -69,6 +82,13 @@ $LANG_AC = array (
     'monthly'           => 'Monthly',
     'yearly'            => 'Yearly',
     'description'       => 'Description',
+    'category'          => 'Category',
+    'no_category'       => 'No Category Selected',
+    'no_category_desc'  => 'Default category used when no category is selected',
+    'edit_single_or_series' => 'Edit Event or Series',
+    'what_to_edit'       => 'This is one event in a series. What do you want to edit?',
+    'just_this_one'     => 'Just this one',
+    'entire_series'     => 'The entire series',
 
 );
 

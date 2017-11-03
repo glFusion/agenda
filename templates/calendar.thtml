@@ -1,29 +1,21 @@
 <script>
-{!if write_access}
-	var ac_conf_write_access = true;
-{!else}
-	var ac_conf_write_access = false;
-{!endif}
-  var defaultview = '{view}';
-  var defaultdate = '{defaultdate}';
+var defaultview = '{view}';
+var defaultdate = '{defaultdate}';
 </script>
-
 <div id="calendar-area" class="uk-height-1-1 uk-width-1-1">
 	<div id="calendar" class="uk-height-1-1"></div>
 	<div class="uk-text-primary">Version: {version}</div>
-
-	<div id="dialog-form-full" title="Agenda" style="display:none;">
+	<div id="dialog-form-full" title="{lang_agenda}" style="display:none;">
 	</div>
 </div>
-
-<div id="dialog-series" title="Edit Event or Series" style="display:none;">
+<div id="dialog-series" title="{lang_edit_single_or_series}" style="display:none;">
 	<p>
-		This is one event in a series. What do you want to edit?
+		{lang_what_to_edit}
 	</p>
 	<div class="container">
 		<form id="what-to-edit">
-		<input class="required" type="radio" id="edit-series" name="edit-series" value="0">&nbsp;Just this one<br>
-		<input type="radio" id="edit-series" name="edit-series" value="1">&nbsp;The entire series<br>
+			<input class="required" type="radio" id="edit-series" name="edit-series" value="0">&nbsp;{lang_just_this_one}<br>
+			<input type="radio" id="edit-series" name="edit-series" value="1">&nbsp;{lang_entire_series}<br>
 		</form>
 		<div id="validate-error"></div>
 	</div>

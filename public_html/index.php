@@ -39,15 +39,13 @@ if ( COM_isAnonUser() && $_AC_CONF['allow_anonymous_view'] == false )  {
 */
 
 $query  = '';
-$eid    = 0;
-$page   = 1;
 
 $allowedViews = array('month','agendaWeek','agendaDay','listMonth');
 
 COM_setArgNames( array('v','y','m','d') );
 $view = COM_applyFilter(COM_getArgument('v'));
 if ( !in_array($view,$allowedViews)) {
-    $view = 'month';
+    $view = $_AC_CONF['defaultview'];
 }
 
 $year   = COM_getArgument('y');
@@ -79,28 +77,21 @@ $T->set_file (array (
     'page' => 'calendar.thtml',
 ));
 
-if ( SEC_hasRights('agenda.admin') ) {
-    $T->set_var('write_access',true);
-} else {
-
-// $_AC_CONF['allow_entry'] // 0 = none, 1 = logged in, 2 = anyone
-    $T->unset_var('write_access');
-}
-
-$T->set_var ('header', $LANG_AC['header']);
-
-
-$T->set_var('view',$view);
-$T->set_var('defaultdate',$defaultDate);
-
-$T->set_var('version',$_AC_CONF['pi_version'].'.'.AGENDA_SNAPSHOT);
+$T->set_var(array(
+    'lang_edit_single_or_series'    => $LANG_AC['edit_single_or_series'],
+    'lang_what_to_edit'             => $LANG_AC['what_to_edit'],
+    'lang_just_this_one'            => $LANG_AC['just_this_one'],
+    'lang_entire_series'            => $LANG_AC['entire_series'],
+    'lang_agenda'                   => $LANG_AC['plugin_name'],
+    'view'                          => $view,
+    'defaultdate'                   => $defaultDate,
+    'version'                       => $_AC_CONF['pi_version'].'.'.AGENDA_SNAPSHOT,
+));
 
 $T->parse('output', 'page');
 $page = $T->finish($T->get_var('output'));
-
 $display = COM_siteHeader($_AC_CONF['menu'],$LANG_AC['plugin_name']);
 $display .= $page;
 $display .= COM_siteFooter();
-
 echo $display;
 ?>

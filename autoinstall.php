@@ -38,6 +38,9 @@ $INSTALL_plugin['agenda'] = array(
 
     array('type' => 'table', 'table' => $_TABLES['ac_event'], 'sql' => $_SQL['ac_event']),
     array('type' => 'table', 'table' => $_TABLES['ac_events'], 'sql' => $_SQL['ac_events']),
+    array('type' => 'table', 'table' => $_TABLES['ac_category'], 'sql' => $_SQL['ac_category']),
+
+    array('type' => 'sql', 'sql' => $_DATA['default_category']),
 
     array('type' => 'group', 'group' => 'Agenda Admin', 'desc' => 'Users in this group can administer the agenda plugin',
         'variable' => 'admin_group_id', 'addroot' => true, 'admin' => true),
@@ -108,7 +111,7 @@ function plugin_autouninstall_agenda ()
 {
     $out = array (
         /* give the name of the tables, without $_TABLES[] */
-        'tables' => array('ac_event','ac_events'),
+        'tables' => array('ac_event','ac_events','ac_category'),
         /* give the full name of the group, as in the db */
         'groups' => array('Agenda Admin'),
         /* give the full name of the feature, as in the db */

@@ -37,7 +37,7 @@ $events = array();
 
 $dt = new Date('now',$_USER['tzid']);
 
-$sql = "SELECT * FROM {$_TABLES['ac_events']}  WHERE start BETWEEN '{$startDisplayUnix}' AND '{$endDisplayUnix}' ";
+$sql = "SELECT * FROM {$_TABLES['ac_events']} AS e LEFT JOIN {$_TABLES['ac_category']} AS c ON e.category=c.category_id WHERE start BETWEEN '{$startDisplayUnix}' AND '{$endDisplayUnix}' ";
 
 $result = DB_query($sql);
 while ( $row = DB_fetchArray($result) ) {
@@ -89,6 +89,11 @@ while ( $row = DB_fetchArray($result) ) {
     $eventArray['location']     = strip_tags($row['location']);
     $eventArray['description']  = nl2br($row['description']);
     $eventArray['repeats']      = $row['repeats'];
+
+    $eventArray['backgroundColor'] = $row['bgcolor'];
+//    $eventArray['color'] = $row['bgcolor'];
+    $eventArray['textColor']       = $row['fgcolor'];
+
     $events[]                   = $eventArray;
 }
 echo json_encode($events);

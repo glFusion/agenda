@@ -588,7 +588,7 @@ function initializeCalendar( config )
 		isRTL: config['isrtl'],
 		events: glfusionSiteUrl + '/agenda/ajax/json-events.php',
 		editable: false, // overriden in the event object
-		defaultView: config['defaultview'],
+		defaultView: defaultview,
 		defaultDate:  defaultdate,
 		allDayDefault: false,
 		height: config['autoheight'],
