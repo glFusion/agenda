@@ -75,8 +75,17 @@
 			<button type="submit" name="submit" class="uk-button cancel">{lang_cancel}</button>
 		</div>
 {!endif}
-
 </form>
+
+{!if admin_form}
+<script>
+	var lang = new Array();
+	lang = {
+		'err_end_before_start' : '{lang_err_datetime}',
+		'err_enter_title' : '{lang_err_no_title}'
+	 };
+</script>
+{!endif}
 
 <script>
 	$('#event-allday').change(function(){
@@ -105,3 +114,4 @@
 		}
 	});
 </script>
+<script src="{site_url}/agenda/js/event-validation.js"></script>

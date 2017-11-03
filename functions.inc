@@ -366,7 +366,7 @@ function plugin_getheadercode_agenda()
         $retval .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.js"></script>' . LB;
         $retval .= '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.css" />' . LB;
         $retval .= '<script src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.js"></script>' . LB;
-        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/includes/agenda.js"></script>' . LB;
+        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/js/agenda.js"></script>' . LB;
     }
     return $retval;
 

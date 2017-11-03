@@ -46,7 +46,7 @@ class eventForms {
     */
     public function newEvent( $date = '')
     {
-        global $_CONF, $_AC_CONF, $_TABLES, $_USER, $LANG_AC;
+        global $_CONF, $_AC_CONF, $_TABLES, $_USER, $LANG_AC, $LANG_AC_JS;
 
         $dt = new \Date('now',$_USER['tzid']);
         if ( $date == '' ) {
@@ -90,6 +90,8 @@ class eventForms {
             'lang_monthly'      => $LANG_AC['monthly'],
             'lang_yearly'       => $LANG_AC['yearly'],
             'lang_description'  => $LANG_AC['description'],
+            'lang_err_no_title' => $LANG_AC_JS['err_enter_title'],
+            'lang_err_datetime' => $LANG_AC_JS['err_end_before_start'],
         ));
 
         $T->parse('output', 'page');
@@ -107,7 +109,7 @@ class eventForms {
     */
     public function editEvent($parent_id, $event_id)
     {
-        global $_CONF, $_AC_CONF, $_TABLES, $_USER, $LANG_AC;
+        global $_CONF, $_AC_CONF, $_TABLES, $_USER, $LANG_AC, $LANG_AC_JS;
 
         $page = '';
 
@@ -164,6 +166,9 @@ class eventForms {
                 'lang_save'         => $LANG_AC['save'],
                 'lang_delete'       => $LANG_AC['delete'],
                 'lang_cancel'       => $LANG_AC['cancel'],
+
+                'lang_err_no_title' => $LANG_AC_JS['err_enter_title'],
+                'lang_err_datetime' => $LANG_AC_JS['err_end_before_start'],
 
 
              ));

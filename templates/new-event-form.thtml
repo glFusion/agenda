@@ -60,8 +60,24 @@
 			<textarea id="description" name="description" rows="5" width="120" style="width:90%;">{description}</textarea>
 		</div>
 	</div>
+{!if admin_form}
+		<div class="uk-form-row">
+			<button type="submit" name="submit" class="uk-button uk-button-primary">{lang_save}</button>
+			<button type="submit" name="submit" class="uk-button uk-button-danger">{lang_delete}</button>
+			<button type="submit" name="submit" class="uk-button cancel">{lang_cancel}</button>
+		</div>
+{!endif}
 </form>
 
+{!if admin_form}
+<script>
+	var lang = new Array();
+	lang = {
+		'err_end_before_start' : '{lang_err_datetime}',
+		'err_enter_title' : '{lang_err_no_title}'
+	 };
+</script>
+{!endif}
 <script>
 	$('#event-allday').change(function(){
 		if ($('#event-allday').is(':checked') == true){
@@ -89,3 +105,4 @@
 		}
 	});
 </script>
+<script src="{site_url}/agenda/js/event-validation.js"></script>
