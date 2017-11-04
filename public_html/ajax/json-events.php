@@ -76,7 +76,7 @@ while ( $row = DB_fetchArray($result) ) {
 
 // set permissions for the event
 
-    if (SEC_inGroup('Agenda Admin')) {
+    if (SEC_hasRights('agenda.admin')) {
         $eventArray['editable'] = true;
     } else {
         $eventArray['editable'] = false;
