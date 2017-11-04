@@ -518,7 +518,6 @@ function initializeCalendar( config )
 
 		eventResize: function(event, delta, revertFunc) {
 			$('.qtip').remove();
-			console.log("event has been resized");
 			qTipArray[event.id].hide();
 			var params = "&action=move-event&id=" + event.id;
 			if ( event.start != null ) {
@@ -532,6 +531,7 @@ function initializeCalendar( config )
 				type: "POST",
 				url: glfusionSiteUrl + '/agenda/ajax/ajax-event-handler.php',
 				data: params,
+				dataType: "json",
 				success: function (data) {
 					var result = $.parseJSON(data["js"]);
 					if ( result.errorCode == 0 ) {
