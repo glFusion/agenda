@@ -55,6 +55,7 @@ $LANG_AC = array (
     'more'              => 'more',
     'less'              => 'less',
     'sample_category'   => 'Sample Category',
+    'submission_mod_approved' => 'Event Submission Approved',
 // block strings
     'site_events'       => 'Site Events',
     'no_upcoming'       => 'No Upcoming Events',
