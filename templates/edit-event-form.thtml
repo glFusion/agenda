@@ -1,4 +1,4 @@
-<form class="uk-form" action="{form_action}" id="event-form" name="event-form">
+<form class="uk-form" action="{form_action}" method="post" id="event-form" name="event-form">
 	<input type="hidden" name="action" value="edit-event">
 	<input type="hidden" name="parent_id" value="{parent_id}">
 	<input type="hidden" name="event_id" value="{event_id}">
@@ -21,9 +21,8 @@
 		<label class="uk-form-label uk-hidden-small">{lang_event_start}</label>
 		<div class="uk-form-controls">
 			<input class="uk-form-width-small" type="text" id="event-date" name="event-date" value="{start-date}" placeholder="{lang_start_date}" data-uk-datepicker="{format:'YYYY-MM-DD', weekstart:1}">
-			<i class="uk-icon uk-icon-calendar"></i>
 			<input class="uk-form-width-small" type="text" name="start-time" id="start-time" value="{start-time}" placeholder="Start Time" data-uk-timepicker="{format:'12h'}">
-			<input type="checkbox" id="event-allday" name="event-allday" tabindex="-1"  {allday_checked}><span class="uk-form-help-inline">{lang_all_day_event}</span>
+			<span class=" uk-text-nowrap">{lang_all_day_event}</span><span class="uk-form-help-inline"><input type="checkbox" id="event-allday" name="event-allday" tabindex="-1"  {allday_checked}></span>
 		</div>
 	</div>
 
@@ -31,11 +30,10 @@
 		<label class="uk-form-label uk-hidden-small">{lang_event_end}</label>
 		<div class="uk-form-controls">
 			<input class="uk-form-width-small" type="text" id="event-end-date" name="event-end-date" tabindex="-1" value="{end-date}" placeholder="{lang_end_date}" data-uk-datepicker="{format:'YYYY-MM-DD'. weekstart:1}">
-			<i class="uk-icon uk-icon-calendar"></i>
 			<input class="uk-form-width-small" type="text" name="end-time" id="end-time" value="{end-time}" placeholder="{lang_end_time}" data-uk-timepicker="{format:'12h'}">
-			{!if repeats}
-			<input type="checkbox" name="repeats" id="repeats" value="1" {repeats_checked}><span class="uk-form-help-inline">{lang_repeats}</span>
-			{!endif}
+{!if repeats}
+			<span class="uk-text-nowrap">{lang_repeats}</span><span class="uk-form-help-inline"><input type="checkbox" name="repeats" id="repeats" value="1" {repeats_checked}></span>
+{!endif}
 			<span id="date-errors"></span>
 		</div>
 	</div>
@@ -80,8 +78,8 @@
 {!if admin_form}
 		<div class="uk-form-row">
 			<button type="submit" name="submit" class="uk-button uk-button-primary">{lang_save}</button>
-			<button type="submit" name="submit" class="uk-button uk-button-danger">{lang_delete}</button>
-			<button type="submit" name="submit" class="uk-button cancel">{lang_cancel}</button>
+<!--			<button type="submit" name="submit" class="uk-button uk-button-danger">{lang_delete}</button> -->
+			<button type="submit" name="cancel" class="uk-button cancel" value="{cancel_value}">{lang_cancel}</button>
 		</div>
 {!endif}
 </form>
