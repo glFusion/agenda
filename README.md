@@ -1,7 +1,5 @@
 ## Agenda Plugin for glFusion
 
-For the latest, and more detailed, documentation, please see the [Agenda Plugin Wiki Page](https://www.glfusion.org/wiki/glfusion:plugins:agenda:start)
-
 ### Overview
 
 This plugin offers a full featured calendar for your glFusion site.
@@ -18,6 +16,8 @@ The Agenda Plugin has the following system requirements:
 Agenda is a full featured event management system that supports the following features:
 * Dynamic, JavaScript driven calendar view (provided by Full Calendar)
 * Recurring event support
+* Localized - supports all glFusion supported languages
+* Full RTL support
 * Upcoming Events block
 
 
@@ -39,9 +39,9 @@ Agenda supports the following recurrence patterns:
 * Monthly
 * Yearly
 
-##### Special Notes
+### Special Notes on Recurrence
 
-###### Monthly
+#### Monthly
 
 If a recurring event is created on a day that does not appear in all months - for example, October 31 and is set to repeat each month - it will repeat on the last day of each month.
 
@@ -83,8 +83,6 @@ You can enable or disable anonymous user access to the calendar.  Logged-in user
 #### Event Submission
 Agenda supports limiting who can add new events to the calendar. You can restrict to Admin users only, allow Admins and Logged-In users, or allow anyone (including non-logged in users) to add events.
 
-Events can be queued for review prior to publishing. Queuing can be applied all events (except those entered by Admin users), or just anonymous users who submit an event.
-
 
 ### Configuration
 
@@ -116,10 +114,30 @@ If set to TRUE - the Upcoming Events block will be enabled.
 
 Number of days into the future to list upcoming events.
 
+**Default View**
+
+Select the default calendar view when calendar is initially displayed. Options are Month, Week, Day or List view.
+
+**Auto Height**
+
+Determines how the calendar sizes in the browser window. Auto will use as much 'height' as needed to display the select view without adding scroll bars to the view. Auto also compresses the month view to take only the space needed.  Fit will take as much space as available and add scroll bars to the view if additional vertical space is needed.
+
+**Header Left Items**
+
+Select what to display in the Left header area of the calendar.
+
+**Header Center Items**
+
+Select what to display in the Center header area of the calendar.
+
+**Header Right Items**
+
+Select what to display in the Right header area of the calendar.
+
+**First Day of Week**
+
+Select the first day of the week for your location.
 
 ### License
 
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later
-version.
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
