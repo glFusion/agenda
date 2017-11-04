@@ -18,7 +18,7 @@ if (!defined ('GVERSION')) {
     die ('This file can not be used on its own.');
 }
 
-define('AGENDA_SNAPSHOT','201711032200');
+define('AGENDA_SNAPSHOT','201711041000');
 
 $ac_config = \config::get_instance();
 $_AC_CONF = $ac_config->get_config('agenda');
@@ -504,7 +504,8 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
 //                $fields[] = 'views';
                 break;
             case 'perms' :
-
+                $fields[] = 'owner_id';
+                $group_id = DB_getItem($_TABLES['groups'],'grp_id','grp_name="Agenda Admin"');
                 break;
             default:
                 break;
@@ -588,15 +589,18 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
  //                   $props['hits'] = 0;
                     break;
                 case 'perms' :
-                    $p_anon = 0;
-                    $p_member = 0;
+                    $p_anon   = 2;
+                    $p_member = 2;
+                    if ( COM_isAnonUser() && $_AC_CONF['allow_anonymous_view'] == false )  {
+                        $p_anon = 0;
+                    }
                     $props['perms'] = array(
-                        'owner_id' => 2,
-                        'group_id' => 3,
-                        'perm_owner' => 3,
-                        'perm_group' => 2,
-                        'perm_members' => 2,
-                        'perm_anon' => 2,
+                        'owner_id'      => $A['owner_id'],
+                        'group_id'      => $group_id,
+                        'perm_owner'    => 3,
+                        'perm_group'    => 2,
+                        'perm_members'  => 2,
+                        'perm_anon'     => $p_anon,
                     );
                     break;
                 default:
