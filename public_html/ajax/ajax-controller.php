@@ -224,30 +224,34 @@ function getConfig()
         'isrtl'         => $_AC_CONF['isRTL'],
     );
 
-    switch ($_AC_CONF['allow_entry'])
-    {
-        case 0 :
-            if (SEC_inGroup('Agenda Admin')) {
-                $agendaConfig['allow_new'] = true;
-                $agendaConfig['allow_edit'] = true;
-            }
-            break;
-        case 1 :
-            if ( !COM_isAnonUser() ) {
+    if (SEC_hasRights('agenda.admin')) {
+        $agendaConfig['allow_new'] = true;
+        $agendaConfig['allow_edit'] = true;
+    } else {
+        switch ($_AC_CONF['allow_entry']) {
+            case 0 :
+                if (SEC_hasRights('agenda.admin')) {
+                    $agendaConfig['allow_new'] = true;
+                    $agendaConfig['allow_edit'] = true;
+                }
+                break;
+            case 1 :
+                if ( !COM_isAnonUser() ) {
+                    $agendaConfig['allow_new']  = true;
+                    $agendaConfig['allow_edit'] = false;
+                }
+                break;
+            case 2 :
                 $agendaConfig['allow_new']  = true;
                 $agendaConfig['allow_edit'] = false;
-            }
+                break;
+            default :
+                if (SEC_hasRights('agenda.admin')) {
+                    $agendaConfig['allow_new']  = true;
+                    $agendaConfig['allow_edit'] = false;
+                }
             break;
-        case 2 :
-            $agendaConfig['allow_new']  = true;
-            $agendaConfig['allow_edit'] = false;
-            break;
-        default :
-            if (SEC_inGroup('Agenda Admin')) {
-                $agendaConfig['allow_new']  = true;
-                $agendaConfig['allow_edit'] = false;
-            }
-        break;
+        }
     }
     return $agendaConfig;
 }
