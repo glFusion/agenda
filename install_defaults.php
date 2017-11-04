@@ -65,28 +65,22 @@ function plugin_initconfig_agenda()
     if (!$c->group_exists('agenda')) {
         $c->add('sg_main', NULL, 'subgroup', 0, 0, NULL, 0, true,'agenda');
         $c->add('fs_permissions', NULL, 'fieldset', 0, 0, NULL, 0, true,'agenda');
-//add($param_name, $default_value, $type, $subgroup, $fieldset,
-//         $selection_array=null, $sort=0, $set=true, $group='Core')
         $c->add('allow_anonymous_view', $_AC_DEFAULTS['allow_anonymous_view'],'select',0,0,0,10,true,'agenda');
         $c->add('security_exit', $_AC_DEFAULTS['security_exit'],'select',0,0,1,20,true,'agenda');
         $c->add('allow_entry', $_AC_DEFAULTS['allow_entry'],'select',0,0,2,30,true,'agenda');
         $c->add('submission_queue', $_AC_DEFAULTS['submission_queue'],'select',0,0,3,40,true,'agenda');
-
 // display fieldset
         $c->add('fs_display', NULL, 'fieldset', 0, 1, NULL, 0, true,'agenda');
         $c->add('displayblocks', $_AC_DEFAULTS['displayblocks'],'select', 0, 1, 4, 10, true, 'agenda');
         $c->add('showupcomingevents', $_AC_DEFAULTS['showupcomingevents'],'select', 0, 1, 0, 20, true, 'agenda');
         $c->add('upcomingeventsrange', $_AC_DEFAULTS['upcomingeventsrange'],'text', 0, 1, NULL, 30, true, 'agenda');
-
 // advanced settings fieldset
         $c->add('fs_advanced', NULL, 'fieldset', 0, 2, NULL, 0, true,'agenda');
         $c->add('defaultview', $_AC_DEFAULTS['defaultview'],'select', 0, 2, 5, 10, true, 'agenda');
         $c->add('autoheight', $_AC_DEFAULTS['autoheight'],'select', 0, 2, 6, 20, true, 'agenda');
-
         $c->add('header_left', $_AC_DEFAULTS['header_left'],'select', 0, 2, 7, 30, true, 'agenda');
         $c->add('header_center', $_AC_DEFAULTS['header_center'],'select', 0, 2, 7, 40, true, 'agenda');
         $c->add('header_right', $_AC_DEFAULTS['header_right'],'select', 0, 2, 7, 50, true, 'agenda');
-
         $c->add('first_day', $_AC_DEFAULTS['first_day'],'select', 0, 2, 8, 60, true, 'agenda');
      }
      return true;
