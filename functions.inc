@@ -215,8 +215,8 @@ function plugin_moderationapprove_agenda($id)
 
     if ( (int) $id <= 0 ) return '';
 
-    $sql = "UPDATE {$_TABLES['ac_event']} SET queued=0 WHERE parent_id=".(int) $id;
-    DB_query($sql);
+    $event = new Agenda\eventHandler();
+    $rc = $event->approveEvent($id);
 
     PLG_itemSaved($id,'agenda');
     CACHE_remove_instance('menu');
@@ -296,8 +296,9 @@ function plugin_itemlist_agenda($token)
 
     $header_arr = array(      // display 'text' and use table field 'field'
         array('text' => $LANG_ADMIN['edit'], 'field' => 'parent_id', 'align' => 'center', 'width' => '25px'),
-        array('text' => 'Title', 'field' => 'title'),
-        array('text' => 'Start Date', 'field' => 'start_date'),
+        array('text' => $LANG_AC['title'], 'field' => 'title','align' => 'left', ),
+        array('text' => $LANG_AC['start_date'], 'field' => 'start_date','align' => 'center'),
+        array('text' => $LANG_AC['repeats'], 'field' => 'repeats', 'align' => 'center'),
         array('text' => $LANG29[1], 'field' => 'approve', 'align' => 'center', 'width' => '35px'),
         array('text' => $LANG_ADMIN['delete'], 'field' => 'delete', 'align' => 'center', 'width' => '35px')
     );
@@ -656,7 +657,30 @@ function _ac_getListField($fieldname, $fieldvalue, $A, $icon_arr, $token = "")
         case 'parent_id' :
             $url = $_CONF['site_admin_url'].'/plugins/agenda/index.php?edit=x&src=mod&parent_id='.$A['parent_id'];
             $retval = '<a href="'.$url.'"><i class="uk-icon uk-icon-pencil"></i></a>';
+            break;
 
+        case 'repeats' :
+            if ( $fieldvalue == 1 ) {
+                switch ( $A['repeat_freq'] ) {
+                    case 1 :
+                        $retval = $LANG_AC['daily'];
+                        break;
+                    case 7 :
+                        $retval = $LANG_AC['weekly'];
+                        break;
+                    case 14 :
+                        $retval = $LANG_AC['biweekly'];
+                        break;
+                    case 30 :
+                        $retval = $LANG_AC['monthly'];
+                        break;
+                    case 365 :
+                        $retval = $LANG_AC['yearly'];
+                        break;
+                }
+            } else {
+                $retval = '';
+            }
             break;
 
         case 'approve':

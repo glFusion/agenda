@@ -289,7 +289,7 @@ class eventForms {
         return $page;
     }
 
-    private function getCategories()
+    public function getCategories()
     {
         global $_CONF, $_AC_CONF, $_TABLES, $LANG_AC;
 

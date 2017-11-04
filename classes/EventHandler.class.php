@@ -176,6 +176,172 @@ class eventHandler {
             return 2;
         }
 
+        if ( $queued ) {
+            return 3;
+        }
+
+        // now build events record
+        unset($data['queued']);
+        $data['exception'] = 0;
+        $data['parent_id'] = $parent_id;
+
+        $rc = $this->saveChild($data);
+        if ( $rc != 0 ) {
+            $errorCode = AC_ERR_DB_SAVE_CHILD;
+            DB_delete($_TABLES['ac_event'],'parent_id',$parent_id);
+        }
+
+        if ($repeats == 1 ) {   // handling repeating events
+            $future = 365;
+            if ( $repeat_freq == 365 ) $future = 3650;
+            $until = ($future/$repeat_freq);
+
+            if ( $end_date === '' ) {
+                $end_date = $start_date;
+            }
+
+            $orig_start_date = $start_date;
+            $orig_end_date   = $end_date;
+
+            switch ( $repeat_freq) {
+                case 1 : // daily
+                    $toInsert = 365;
+                    $repeatType = 'daily';
+                    break;
+
+                case 7 : // weekly
+                    $toInsert = 52;
+                    $repeatType = 'weekly';
+                    break;
+
+                case 14 : // bi weekly
+                    $toInsert = 26;
+                    $repeatType = 'biweekly';
+                    break;
+
+                case 30 : // monthly
+                    $toInsert = 12;
+                    $repeatType = 'monthly';
+                    break;
+
+                case 365 : // yearly
+                    $toInsert = 5;
+                    $repeatType = 'yearly';
+                    break;
+            }
+
+            for ( $x = 1; $x <= $toInsert; $x++ ) {
+
+                $start_date = $this->buildRecurring( $repeatType, $orig_start_date, $x);
+                $end_date   = $this->buildRecurring( $repeatType, $orig_end_date, $x);
+
+                $start          = $start_date . " " . $start_time;
+                $end            = $end_date . " " . $end_time;
+
+                $dtStart = new \Date($start,$_USER['tzid']);
+                $dtEnd   = new \Date($end,  $_USER['tzid']);
+
+                $db_start = $dtStart->toUnix(false);
+                $db_end   = $dtEnd->toUnix(false);
+
+                // add the start_date_ad / end_date_ad
+                $db_start_date = $dtStart->format('Y-m-d',true);
+                $db_end_date   = $dtEnd->format('Y-m-d',true);
+
+                // only need to update the dates for the recurring event
+                $data['start'] = $db_start;
+                $data['end']   = $db_end;
+                $data['start_date'] = $db_start_date;
+                $data['end_date'] = $db_end_date;
+
+                $rc = $this->saveChild($data);
+                if ( $rc != 0 ) {
+                    $errorCode = AC_ERR_DB_SAVE_CHILD;
+                    DB_delete($_TABLES['ac_event'],'parent_id',$parent_id);
+                    DB_delete($_TABLES['ac_events'],'parent_id',$parent_id);
+                    return $errorCode;
+                }
+            }
+        }
+
+        PLG_itemSaved($parent_id, 'agenda');
+        CACHE_remove_instance('agenda');
+
+        return $errorCode;
+    }
+
+
+    /**
+    *   Approve an event in the moderation queue
+    *
+    *   @param  int   $args    parent id of event to approve
+    *   @return boolean     0 on success, other indicates error
+    */
+    public function approveEvent( $parent_id )
+    {
+        global $_CONF, $_AC_CONF, $_USER, $_TABLES;
+
+    // initialize vars
+        $errorCode  = 0;
+        $errors     = 0;
+        $data = array();
+
+    // set defaults
+        $repeats = 0;
+        $repeat_freq = 0;
+        $allday = 0;
+        $queued = 0;
+
+        $result = DB_query("SELECT * FROM {$_TABLES['ac_event']} WHERE parent_id=".(int) $parent_id);
+        if ( DB_numRows($result) != 1 ) {
+            return -1;
+        }
+        $args = DB_fetchArray($result);
+
+    // parse submitted data
+        $title          = $args['title'];
+        $start_date     = $args['start_date'];
+        $end_date       = $args['end_date'];
+        $location       = $args['location'];
+        $description    = $args['description'];
+        $category       = $args['category'];
+        $start          = $args['start'];
+        $end            = $args['end'];
+
+        if ( $args['repeats'] == 1 ) {
+            $repeats     = 1;
+            $repeat_freq = $args['repeat_freq'];
+        }
+        if ( $args['allday'] == 1 ) {
+            $allday = 1;
+        }
+        $owner_id = $args['owner_id'];
+        $queued = 0;
+
+        $dtStart = new \Date($start,$_USER['tzid']);
+        $dtEnd   = new \Date($end, $_USER['tzid']);
+        $start_time = $dtStart->format("H:i", true);
+        $end_time   = $dtEnd->format("H:i", true);
+
+        $data = array(
+            'allday'        => $allday,
+            'start'         => $start,
+            'end'           => $end,
+            'start_date'    => $start_date,
+            'end_date'      => $end_date,
+            'title'         => $title,
+            'location'      => $location,
+            'description'   => $description,
+            'repeats'       => $repeats,
+            'repeat_freq'   => $repeat_freq,
+            'category'      => (int) $category,
+            'queued'        => $queued,
+            'owner_id'      => $owner_id
+        );
+
+        // update the queued flag
+        DB_query("UPDATE {$_TABLES['ac_event']} SET queued=0 WHERE parent_id=".(int) $parent_id);
+
         // now build events record
         unset($data['queued']);
         $data['exception'] = 0;
