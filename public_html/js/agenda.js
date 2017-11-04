@@ -191,6 +191,9 @@ function saveevent() {
 			if ( result.errorCode == 0 ) {
 				console.log('save event ajax returned successfully');
 			}
+			if ( result.errorCode == 3 ) { // queued event
+				UIkit.modal.alert("Your event submission has been queued for review.");
+			}
 			$('#calendar').fullCalendar('refetchEvents');
 		},
 		error: function (e) {
@@ -267,6 +270,13 @@ function edit_single_event( event )
 {
 	$('#dialog-form-full').dialog('option', 'title', 'Edit Event');
 	$("#dialog-form-full").html('');
+	if ( window.innerWidth < 600 ) {
+		$('#dialog-form-full').dialog('option', 'height', window.innerHeight);
+		$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .95);
+	} else {
+		$('#dialog-form-full').dialog('option', 'height', window.innerHeight *.85 );
+		$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .8 );
+	}
 
 	url = glfusionSiteUrl + '/agenda/ajax/ajax-form-manager.php';
 	$.ajax({
@@ -322,6 +332,13 @@ function edit_series_event(event)
 {
 	$('#dialog-form-full').dialog('option', 'title', 'Edit Event Series');
 	$("#dialog-form-full").html('');
+	if ( window.innerWidth < 600 ) {
+		$('#dialog-form-full').dialog('option', 'height', window.innerHeight);
+		$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .95);
+	} else {
+		$('#dialog-form-full').dialog('option', 'height', window.innerHeight *.85 );
+		$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .8 );
+	}
 
 	url = glfusionSiteUrl + '/agenda/ajax/ajax-form-manager.php';
 	$.ajax({
@@ -450,8 +467,6 @@ function initializeCalendar( config )
 					edit_single_event(event);
 				}
 				$('#calendar').fullCalendar('refetchEvents');
-			} else {
-				alert('event click for non-admin users');
 			}
 		},
 
