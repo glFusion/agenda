@@ -121,4 +121,4 @@
 		}
 	});
 </script>
-<script src="{site_url}/agenda/js/event-validation.js"></script>
+<script src="{site_url}/agenda/js/event-validation.min.js"></script>
