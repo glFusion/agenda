@@ -28,27 +28,9 @@ function agenda_upgrade()
     $currentVersion = DB_getItem($_TABLES['plugins'],'pi_version',"pi_name='agenda'");
 
     switch ($currentVersion) {
-        case '0.2.0' :
+        case '0.1.0' :
             $c = config::get_instance();
-            $c->add('disable_submissions', 0,'select', 0, 0, 0, 7, true, 'agenda');
-
-        case '0.3.0' :
-            DB_query("ALTER TABLE {$_TABLES['agenda']} ADD email VARCHAR(96) NULL DEFAULT NULL AFTER owner_id",1);
-
-        case '0.4.0' :
-        case '0.4.5' :
-        case '0.5.0' :
-            // no changes in DB / config structure
-        case '0.6.0' :
-            $c = config::get_instance();
-            $c->add('centerblock_where', -1,'select', 0, 0, 3, 40, true, 'agenda');
-
-        case '0.7.0' :
             // no changes
-
-        case '1.0.0' :
-            $c = config::get_instance();
-            $c->add('centerblock_rotate', false,'select', 0, 0, 0, 45, true, 'agenda');
 
         default:
             DB_query("UPDATE {$_TABLES['plugins']} SET pi_version='".$_AC_CONF['pi_version']."',pi_gl_version='".$_AC_CONF['gl_version']."' WHERE pi_name='agenda' LIMIT 1");
