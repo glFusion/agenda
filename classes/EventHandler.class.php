@@ -513,6 +513,10 @@ class eventHandler {
             $sql = "UPDATE {$_TABLES['ac_event']} SET ".$sqlValues." WHERE parent_id=".$parent_id;
             DB_query($sql,1);
         }
+
+        PLG_itemSaved($parent_id, 'agenda');
+        CACHE_remove_instance('agenda');
+
         return $retval;
     }
 
@@ -629,12 +633,12 @@ class eventHandler {
                     end = '{$db_end}'";
 
             $sql .= " WHERE parent_id=".(int) $parent_id;
-
             DB_query($sql,1);
             if ( DB_error() ) {
                 $errorCode = 1;
             }
-        } else if ( $errorCode == 0 ) {
+        }
+        if ( $errorCode == 0 ) {
             // updat events record
             $sql = "UPDATE {$_TABLES['ac_events']} SET
                     title = '{$db_title}',
@@ -652,6 +656,7 @@ class eventHandler {
             DB_query($sql,1);
 
             if ( DB_error() ) {
+
                 $errorCode = 2;
             }
         }
