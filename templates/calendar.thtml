@@ -8,15 +8,3 @@ var defaultdate = '{defaultdate}';
 	<div id="dialog-form-full" title="{lang_agenda}" style="display:none;">
 	</div>
 </div>
-<div id="dialog-series" title="{lang_edit_single_or_series}" style="display:none;">
-	<p>
-		{lang_what_to_edit}
-	</p>
-	<div class="container">
-		<form id="what-to-edit">
-			<input class="required" type="radio" id="edit-series" name="edit-series" value="0">&nbsp;{lang_just_this_one}<br>
-			<input type="radio" id="edit-series" name="edit-series" value="1">&nbsp;{lang_entire_series}<br>
-		</form>
-		<div id="validate-error"></div>
-	</div>
-</div>
