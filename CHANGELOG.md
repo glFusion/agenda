@@ -1,6 +1,6 @@
 Agenda Plugin ChangeLog
 
-## v0.2.0 (unreleased)
+## v0.2.0 (November 7, 2017)
  - Complete rewrite of the tooltip / dialog UI
  - Tooltips open on click
  - Add edit / edit series buttons to tooltips
