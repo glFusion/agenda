@@ -29,9 +29,8 @@ if ( strstr($start,'T') === false ) {
     $startDisplayUnix = strtotime($start);
     $endDisplayUnix   = strtotime($end);
 }
-
-//COM_errorLog($start);
-//COM_errorLog($end);
+$startDisplayUnix = DB_escapeString($startDisplayUnix);
+$endDisplayUnix   = DB_escapeString($endDisplayUnix);
 
 $events = array();
 
@@ -46,11 +45,8 @@ while ( $row = DB_fetchArray($result) ) {
         $acStartTime = '00:00:00';
         $acEndDate = $row['end_date'];
         $acEndTime = '24:00:00';
-
-// send start at 0 - end at 24:00 to ensure it spans the full days on calendar
         $eventArray['start'] = $acStartDate.'T'.$acStartTime;
         $eventArray['end']   = $acEndDate.'T'.$acEndTime;
-// set the pop-up when info - NO TIMEZONE support needed for this.
         $dt->setTimestamp(strtotime($acStartDate.' '.$acStartTime));
         $eventArray['when'] =  $dt->format('l d-M-Y', false);
         $dt->setTimestamp(strtotime($acEndDate. ' ' . '23:00:00'));
@@ -82,16 +78,16 @@ while ( $row = DB_fetchArray($result) ) {
         $eventArray['editable'] = false;
     }
 
+    $newdescription = AC_truncate($row['description'], 250, '...');
+
     $eventArray['id']           = $row['event_id'];
     $eventArray['parent_id']    = $row['parent_id'];
     $eventArray['allDay']       = ($row['allday'] == 1 ? true : false );
     $eventArray['title']        = strip_tags(htmlspecialchars_decode($row['title']));
     $eventArray['location']     = strip_tags($row['location']);
-    $eventArray['description']  = nl2br($row['description']);
+    $eventArray['description']  = nl2br($newdescription);
     $eventArray['repeats']      = $row['repeats'];
-
     $eventArray['backgroundColor'] = $row['bgcolor'];
-//    $eventArray['color'] = $row['bgcolor'];
     $eventArray['textColor']       = $row['fgcolor'];
 
     $events[]                   = $eventArray;
