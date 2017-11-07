@@ -1,5 +1,9 @@
 Agenda Plugin ChangeLog
 
+## v0.2.1 (November 7, 2017)
+ - Fixed error where delete configuration dialog would not close
+ - Improved wrapping of text for All Day and Repeats checkboxes
+
 ## v0.2.0 (November 7, 2017)
  - Complete rewrite of the tooltip / dialog UI
  - Tooltips open on click
