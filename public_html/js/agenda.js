@@ -74,7 +74,7 @@ function saveevent() {
 				console.log('save event ajax returned successfully');
 			}
 			if ( result.errorCode == 3 ) { // queued event
-				UIkit.modal.alert("Your event submission has been queued for review.");
+				UIkit.modal.alert(lang['event_queued']);
 			}
 			$('#calendar').fullCalendar('refetchEvents');
 		},
