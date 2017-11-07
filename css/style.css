@@ -1,18 +1,23 @@
 /* Agenda Plugin for glFusion CMS Styles */
 .tm-agenda-dialog {
-    z-index: 1001 !important;
+	z-index: 1001 !important;
 }
 .tm-agenda-dialog {
-    background:#f5f5f5 !important;
+	background:#f5f5f5 !important;
 }​
 .tm-agenda-dialog .ui-dialog-titlebar,
 .tm-agenda-dialog .ui-widget-header {
-    background: #339CDA !important;
-    color:#fff !important;
+	background: #339CDA !important;
+	color:#fff !important;
 }
 .tm-agenda-dialog .qtip-titlebar {
-    font-weight:700 !important;
+	font-weight:700 !important;
 }
 .agenda-upcoming {
-    margin-top:0 !important;
+	margin-top:0 !important;
+}
+
+.qtip {
+	max-width: 800px !important;
+	min-width: 320px !important;
 }
