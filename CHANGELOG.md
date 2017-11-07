@@ -1,5 +1,10 @@
 Agenda Plugin ChangeLog
 
+## v0.2.2 (unreleased)
+ - Localized submission queue message
+ - Use configuration Week Start setting on date picker
+ - Localized start time string in edit event template
+
 ## v0.2.1 (November 7, 2017)
  - Fixed error where delete configuration dialog would not close
  - Improved wrapping of text for All Day and Repeats checkboxes
