@@ -90,9 +90,14 @@ $LANG_AC = array (
 // JavaScript specific translations
 $LANG_AC_JS = array(
     'add_event'         => 'Add Event',
+    'edit_event'        => 'Edit Event',
+    'edit_event_series' => 'Edit Event Series',
     'save_event'        => 'Save Event',
     'delete_event'      => 'Delete Event',
     'delete_series'     => 'Delete Series',
+    'edit'              => 'Edit',
+    'edit_series'       => 'Edit Series',
+    'close'             => 'Close',
     'delete_event_confirm' => 'Are you positive you want to delete this event?',
     'delete_series_confirm' => 'Are you positive you want to DELETE THE ENTIRE SERIES OF EVENTS?',
     'cancel'            => 'Cancel',
@@ -102,7 +107,7 @@ $LANG_AC_JS = array(
     'err_select_option' => 'Please select an option',
     'err_enter_title'   => 'Please enter an event title',
     'err_end_before_start' => 'End date/time must be greater than start date/time',
-
+    'err_initialize'    => 'Error Initializing Agenda Plugin',
 );
 
 $LANG_AC_ERRORS = array(
