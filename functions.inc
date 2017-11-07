@@ -18,7 +18,7 @@ if (!defined ('GVERSION')) {
     die ('This file can not be used on its own.');
 }
 
-define('AGENDA_SNAPSHOT','201711041000');
+define('AGENDA_SNAPSHOT','201711070800');
 
 $ac_config = \config::get_instance();
 $_AC_CONF = $ac_config->get_config('agenda');
@@ -939,7 +939,7 @@ function phpblock_agenda( $help='', $title='' )
 	preg-match()
 	http://php.net/manual/en/function.preg-match.php
 */
-function FC_truncate($string, $length, $trimmarker = '') {
+function AC_truncate($string, $length, $trimmarker = '') {
     $strlen = strlen($string);
     /* mb_substr forces a break at $length if no word (space) boundary */
     $string = trim(utf8_substr($string, 0, $strlen));

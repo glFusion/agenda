@@ -32,6 +32,9 @@ function agenda_upgrade()
             $c = config::get_instance();
             // no changes
 
+        case '0.1.1' :
+            // no changes
+
         default:
             DB_query("UPDATE {$_TABLES['plugins']} SET pi_version='".$_AC_CONF['pi_version']."',pi_gl_version='".$_AC_CONF['gl_version']."' WHERE pi_name='agenda' LIMIT 1");
             break;
