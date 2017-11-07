@@ -33,7 +33,29 @@ function agenda_upgrade()
             // no changes
 
         case '0.1.1' :
-            // no changes
+            // added new features
+
+            $sql = "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr, ft_gl_core) "
+                 . "VALUES (NULL, 'agenda.view', 'Allows access to the Agenda Calendar', 1)";
+
+            $result = DB_query($sql);
+            $agendaViewFeatureId = DB_insertId();
+
+            $sql = "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr, ft_gl_core) "
+                 . "VALUES (NULL, 'agenda.noqueue', 'Bypasses the Agenda Submission Queue', 1)";
+
+            $result = DB_query($sql);
+            $agendaNoqueueFeatureId = DB_insertId();
+
+            $agendaAdminGroup = DB_getItem($_TABLES['groups'],'grp_id','grp_name="Agenda Admin"');
+
+            // assign new features to admin group..
+            $sql = "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id) VALUES ({$agendaViewFeatureId}, {$agendaAdminGroup})";
+            DB_query($sql);
+            $sql = "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id) VALUES ({$agendaNoqueueFeatureId}, {$agendaAdminGroup})";
+            DB_query($sql);
+            $sql = "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id) VALUES ({$agendaViewFeatureId}, 13)";
+            DB_query($sql);
 
         default:
             DB_query("UPDATE {$_TABLES['plugins']} SET pi_version='".$_AC_CONF['pi_version']."',pi_gl_version='".$_AC_CONF['gl_version']."' WHERE pi_name='agenda' LIMIT 1");

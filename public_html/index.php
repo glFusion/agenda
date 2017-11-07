@@ -21,17 +21,22 @@ if (!in_array('agenda', $_PLUGINS)) {
     exit;
 }
 
-if ( COM_isAnonUser() && $_AC_CONF['allow_anonymous_view'] == false )  {
-    if ( $_AC_CONF['security_exit'] == 0 ) {
-        COM_404();
-        exit;
-    } else {
-        $display  = COM_siteHeader();
-        $display .= SEC_loginRequiredForm();
-        $display .= COM_siteFooter();
-        echo $display;
-        exit;
+if ( COM_isAnonUser() ) {
+    if ( $_AC_CONF['allow_anonymous_view'] == false && !SEC_hasRights('agenda.view')) {
+        if ( $_AC_CONF['security_exit'] == 0 ) {
+            COM_404();
+            exit;
+        } else {
+            $display  = COM_siteHeader();
+            $display .= SEC_loginRequiredForm();
+            $display .= COM_siteFooter();
+            echo $display;
+            exit;
+        }
     }
+} elseif (!SEC_hasRights('agenda.view')) {
+    COM_404();
+    exit;
 }
 
 /*

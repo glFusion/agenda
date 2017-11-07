@@ -75,13 +75,32 @@ Note that any individually edited events in the series will not be updated.
 
 ### Permissions
 
-Agenda is designed to be open - as a result, events do not have any permissions associated with them. If you can view the calendar, you can view an event. The following controls are implemented to restrict access:
+The following controls are implemented to control access:
+
+#### Configuration Settings 
 
 #### Anonymous User Access
 You can enable or disable anonymous user access to the calendar.  Logged-in users will have access to the calendar.
 
 #### Event Submission
 Agenda supports limiting who can add new events to the calendar. You can restrict to Admin users only, allow Admins and Logged-In users, or allow anyone (including non-logged in users) to add events.
+
+
+#### glFusion Groups and Rights
+
+#### Agenda Admin Group
+
+Members of the Agenda Admin group have **full** read / write capabilities.
+
+#### agenda.view Right
+
+Anyone, with the **agenda.view** feature assigned to a group they belong to will be able to view the Agenda Calendar. Note, you can override the Configuration Setting of Allow Anonymous View by assigning the **agenda.view** feature to the Non-Logged-in Users group.
+
+#### agenda.noqueue Right
+
+Anyone with the **agenda.noqueue** feature assigned to a group they belong to will be able to submit new events and **bypass** the submission queue (if enabled).
+
+For more information on glFusion Groups / Rights - please see the [Permissions Overview Wiki Page](https://www.glfusion.org/wiki/glfusion:permissions).
 
 
 ### Configuration

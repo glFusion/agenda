@@ -47,16 +47,24 @@ $INSTALL_plugin['agenda'] = array(
 
     array('type' => 'feature', 'feature' => 'agenda.admin', 'desc' => 'Ability to administer the agenda plugin',
             'variable' => 'admin_feature_id'),
-/* -----------
-// new permission to allow access to the calendar
+
     array('type' => 'feature', 'feature' => 'agenda.view', 'desc' => 'Allows access to the Agenda Calendar',
             'variable' => 'view_feature_id'),
-// new permission to skip the submission queue
+
     array('type' => 'feature', 'feature' => 'agenda.noqueue', 'desc' => 'Bypasses the Agenda Submission Queue',
             'variable' => 'noqueue_feature_id'),
------------- */
+
     array('type' => 'mapping', 'group' => 'admin_group_id', 'feature' => 'admin_feature_id',
             'log' => 'Adding agenda.admin feature to the agenda admin group'),
+
+    array('type' => 'mapping', 'group' => 'admin_group_id', 'feature' => 'view_feature_id',
+            'log' => 'Adding agenda.view feature to the agenda admin group'),
+
+    array('type' => 'mapping', 'group' => 'admin_group_id', 'feature' => 'noqueue_feature_id',
+            'log' => 'Adding agenda.noqueue feature to the agenda admin group'),
+
+    array('type' => 'mapping', 'findgroup' => 'Logged-in Users', 'feature' => 'view_feature_id',
+            'log' => 'Adding agenda.view feature to the logged-in users group'),
 
     array('type' => 'block', 'name' => 'block_agenda', 'title' => 'Upcoming Events',
           'phpblockfn' => 'phpblock_agenda', 'block_type' => 'phpblock',
@@ -122,7 +130,7 @@ function plugin_autouninstall_agenda ()
         /* give the full name of the group, as in the db */
         'groups' => array('Agenda Admin'),
         /* give the full name of the feature, as in the db */
-        'features' => array('agenda.admin'),
+        'features' => array('agenda.admin','agenda.view','agenda.noqueue'),
         /* give the full name of the block, including 'phpblock_', etc */
         'php_blocks' => array('phpblock_agenda'),
         /* give all vars with their name */

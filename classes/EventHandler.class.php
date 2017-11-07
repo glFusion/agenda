@@ -98,6 +98,9 @@ class eventHandler {
                     $errorCode = AC_ERR_NO_ACCESS;
                     break;
             }
+            if ( $queued == 1 && SEC_hasRights('agenda.noqueue')) {
+                $queued = 0;
+            }
         }
 
         if ( $errorCode ) {
