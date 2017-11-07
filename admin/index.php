@@ -31,7 +31,7 @@ USES_lib_admin();
 
 function editEvent( $parent_id )
 {
-    global $_CONF, $_AC_CONF, $_TABLES, $LANG_ADMIN, $LANG_AC, $LANG_AC_JS;
+    global $_CONF, $_AC_CONF, $_TABLES, $_USER, $LANG_ADMIN, $LANG_AC, $LANG_AC_JS;
 
     $page = '';
 
