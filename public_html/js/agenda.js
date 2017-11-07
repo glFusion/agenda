@@ -110,9 +110,7 @@ function deleteevent ( event ) {
 			}
 		});
 		$("#event-form")[0].reset();
-		$('#start-time').val('00:00').prop('disabled', false);
-		$('#end-time').val('01:00').prop('disabled', false);
-		dialog.dialog( "close" );
+		$( "#dialog-form-full" ).dialog( "close" );
 	});
 	return true;
 };
@@ -136,7 +134,7 @@ function deleteeventseries( event ) {
 			}
 		});
 		$("#event-form")[0].reset();
-		dialog.dialog( "close" );
+		$( "#dialog-form-full" ).dialog( "close" );
 	});
 	return true;
 };
