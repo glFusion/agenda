@@ -1,3 +1,17 @@
+/**
+* glFusion CMS
+*
+* Agenda - Agenda Plugin for glFusion
+*
+* JavaScript Event Form Validations
+*
+* @license GNU General Public License version 2 or later
+*     http://www.opensource.org/licenses/gpl-license.php
+*
+*  Copyright (C) 2016-2017 by the following authors:
+*   Mark R. Evans   mark AT glfusion DOT org
+*
+*/
 $(document).ready(function () {
 	$.validator.addMethod("enddate", function(value, element) {
 		var from_time = $("#start-time").val();
@@ -30,23 +44,23 @@ $(document).ready(function () {
 		}
 	}, " * " + lang['err_end_before_start']);
 
-$( "#event-form" ).validate({
-	errorElement: 'span',
-	errorClass: 'uk-text-danger uk-text-bold',
-	rules: {
-		"title": { required:true },
-		"end-time": { enddate: true },
-		"event-allday": { allday: true },
-	},
-	messages: {
-		"title":{	required: ' * ' + lang['err_enter_title']	},
-	},
-	errorPlacement: function(error, element) {
-		if (element.attr("name") == "end-time" || element.attr("name") == "event-allday" ) {
-			error.insertAfter('#date-errors');
-		} else {
-			error.insertAfter( element );
-		}
-	},
-});
+	$( "#event-form" ).validate({
+		errorElement: 'span',
+		errorClass: 'uk-text-danger uk-text-bold',
+		rules: {
+			"title": { required:true },
+			"end-time": { enddate: true },
+			"event-allday": { allday: true },
+		},
+		messages: {
+			"title":{	required: ' * ' + lang['err_enter_title']	},
+		},
+		errorPlacement: function(error, element) {
+			if (element.attr("name") == "end-time" || element.attr("name") == "event-allday" ) {
+				error.insertAfter('#date-errors');
+			} else {
+				error.insertAfter( element );
+			}
+		},
+	});
 });
