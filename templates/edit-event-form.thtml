@@ -78,7 +78,6 @@
 {!if admin_form}
 		<div class="uk-form-row">
 			<button type="submit" name="submit" class="uk-button uk-button-primary">{lang_save}</button>
-<!--			<button type="submit" name="submit" class="uk-button uk-button-danger">{lang_delete}</button> -->
 			<button type="submit" name="cancel" class="uk-button cancel" value="{cancel_value}">{lang_cancel}</button>
 		</div>
 {!endif}
@@ -95,6 +94,22 @@
 {!endif}
 
 <script>
+	$('#start-time').change(function() {
+		var from_time = $("#start-time").val();
+		var to_time 	= $("#end-time").val();
+		var start_date = $("#event-date").val();
+		var end_date 	= $("#event-end-date").val();
+		var from 		= Date.parse(start_date +' '+ from_time);
+		var to 			= Date.parse(end_date + ' '+ to_time);
+		var fromDate = new Date(from);
+		var toDate = new Date(to);
+		if (from > to) {
+			var endHour = fromDate.getHours();
+			var newEndHour = toDate.setHours(endHour + 1 );
+			var newToHours = toDate.toLocaleTimeString();
+			$("#end-time").val(newToHours);
+		}
+	});
 	$('#event-allday').change(function(){
 		if ($('#event-allday').is(':checked') == true){
 			$('#start-time').prop('disabled', true);
