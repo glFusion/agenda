@@ -15,22 +15,11 @@
 
 // global vars
 
-var modal;
 var calendar;
-var dialog;
-var dialog_series;
-var whattoeditform;
-var calheight;
-var calwidth;
-var qTipArray=new Array();
-var qTipAPI = new Array();
-var dragging = 0;
 var lang = new Array();
-//var defaultView = 'month';
+var globalEvent;
 
-//var agendaConfig = { "allow_new":false, "allow_edit":false };
-
-// pull setup data
+// fetch configuration data and language translations
 url = glfusionSiteUrl + '/agenda/ajax/ajax-controller.php';
 $.ajax({
 	type: "POST",
@@ -49,123 +38,19 @@ $.ajax({
 		});
 	},
 	error: function (e) {
-		alert('Error Retrieving Agenda Configuration');
+		alert(lang['err_initialize']);
 		console.log("error retrieving setup information");
 	}
 });
 
 function initializeAgenda() {
 
-	// dialog for event edits
-	dialog = $( "#dialog-form-full" ).dialog({
-		autoOpen: false,
-		modal: true,
-		resizable: true,
-		classes: { "ui-dialog": "tm-agenda-dialog" },
-		height: window.innerHeight * .85,
-		width: window.innerWidth * .8,
-		buttons: [
-		{
-			text: lang['save_event'],
-			"class" : 'uk-button uk-button-primary',
-			click: function() {
-				saveevent();
-			}
-		},
-		{
-			text: lang['cancel'],
-			"class": 'uk-button uk-button-danger',
-			click : function () {
-				dialog.dialog('close');
-			}
-		}
-		],
-		create: function () {
-			var buttons = $('.ui-dialog-buttonset').children('button');
-			buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
-		},
-		close: function() {
-			var openForm = $("event-form");
-			if ( typeof $("#event-form")[ 0 ] !== 'undefined' ) {
-				$("#event-form")[ 0 ].reset();
-			}
+	// binds the escape key to close qtip2
+	$(window).bind('keydown', function(event) {
+		if(event.keyCode === 27) {
+			$('.qtip').qtip('hide', event);
 		}
 	});
-	// end of dialog
-
-	//
-	// recurring event edit dialog to
-	// determine if editing the event
-	// or the series
-	dialog_series = $( "#dialog-series" ).dialog({
-		autoOpen: false,
-		classes: { "ui-dialog": "tm-agenda-dialog" },
-		buttons: [
-		{
-			text: "OK",
-			"class" : 'uk-button uk-button-primary',
-			click: function() {
-				// restore the event object
-				event = $(this).data('event-data');
-
-				// check if form is valid
-				if ( whattoeditform.valid() == false ) return false;
-				var answer = $('input[name="edit-series"]:checked').val();
-				dialog_series.dialog('close');
-				// 0 = edit single event
-				// 1 = edit the series
-				if ( answer == 0 ) {
-					edit_single_event( event );
-				} else {
-					edit_series_event( event );
-				}
-			}
-		},
-		{
-			text: lang['cancel'],
-			"class": 'uk-button uk-button-danger',
-			click : function () {
-				dialog_series.dialog('close');
-			}
-		}
-		],
-		close: function() {
-			$("#what-to-edit")[0].reset();
-
-		},
-		open: function() {
-			//				whattoeditform.validate();
-			var vform = whattoeditform.validate({
-				rules: {
-					"edit-series": {
-						required:true
-					}
-				},
-				messages:
-				{
-					"edit-series":
-					{
-						required: lang['err_select_option']+"<br/>"
-					}
-				},
-				errorPlacement: function(error, element)
-				{
-					console.log(error);
-					if ( element.is(":radio") ) {
-
-						error.replaceAll($("#validate-error"));
-
-						//error.appendTo( element.parents('.container') );
-						// error.insertAfter( element );
-					} else { // This is the default behavior
-						error.insertAfter( element );
-					}
-				}
-			});
-
-		}
-	});
-	// end of dialog series
 }
 
 
@@ -177,9 +62,6 @@ function initializeAgenda() {
 function saveevent() {
 	// ensure the form is valid
 	if ( $('#event-form').valid() == false ) return false;
-
-	// need to know if we are editing or adding or deleting
-
 	url = glfusionSiteUrl + '/agenda/ajax/ajax-event-handler.php';
 	$.ajax({
 		type: "POST",
@@ -201,11 +83,8 @@ function saveevent() {
 			$('#calendar').fullCalendar('refetchEvents');
 		}
 	});
-
 	$("#event-form")[0].reset();
-	$('#start-time').val('00:00').prop('disabled', false);
-	$('#end-time').val('01:00').prop('disabled', false);
-	dialog.dialog( "close" );
+	$( "#dialog-form-full" ).dialog( "close" );
 	return true;
 };
 
@@ -230,7 +109,6 @@ function deleteevent ( event ) {
 				$('#calendar').fullCalendar('refetchEvents');
 			}
 		});
-
 		$("#event-form")[0].reset();
 		$('#start-time').val('00:00').prop('disabled', false);
 		$('#end-time').val('01:00').prop('disabled', false);
@@ -257,26 +135,57 @@ function deleteeventseries( event ) {
 				$('#calendar').fullCalendar('refetchEvents');
 			}
 		});
-
 		$("#event-form")[0].reset();
-		$('#start-time').val('00:00').prop('disabled', false);
-		$('#end-time').val('01:00').prop('disabled', false);
 		dialog.dialog( "close" );
 	});
 	return true;
 };
 
-function edit_single_event( event )
+function edit_single_event( )
 {
-	$('#dialog-form-full').dialog('option', 'title', 'Edit Event');
-	$("#dialog-form-full").html('');
-	if ( window.innerWidth < 600 ) {
-		$('#dialog-form-full').dialog('option', 'height', window.innerHeight);
-		$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .95);
-	} else {
-		$('#dialog-form-full').dialog('option', 'height', window.innerHeight *.85 );
-		$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .8 );
-	}
+	event = globalEvent;
+	$('.qtip').hide();
+
+	var tl = $('#calendar').offset();
+
+	var editDialog = $( "#dialog-form-full" ).dialog({
+		autoOpen: false,
+		modal: true,
+		resizable: true,
+		classes: { "ui-dialog": "tm-agenda-dialog" },
+		position: {
+		  my: "top left",
+		  at: "top left",
+		  of: "#calendar",
+	    collision: "fit"
+		},
+    width: $('#calendar').width(),
+    height: 'auto',
+    title: lang['edit_event'],
+		buttons: [
+			{
+				text: lang['save_event'],
+				"class" : 'uk-button uk-button-success',
+				click: function() {
+					saveevent();
+				}
+			},
+			{
+				text: lang['delete_event'],
+				"class" : 'uk-button uk-button-danger',
+				click: function() {
+					deleteevent(event);
+				}
+			},
+			{
+				text: lang['cancel'],
+				"class": 'uk-button uk-button',
+				click : function () {
+					editDialog.dialog('close');
+				}
+			}
+		]
+	});
 
 	url = glfusionSiteUrl + '/agenda/ajax/ajax-form-manager.php';
 	$.ajax({
@@ -285,61 +194,61 @@ function edit_single_event( event )
 		url: url,
 		data: {"action" : "edit-event", "parent_id" : event.parent_id, "event_id" : event.id },
 		success: function (data) {
-			$("#dialog-form-full").html(data);
+			editDialog.html(data);
+			// override the dialog buttons
+			var buttons = $('.ui-dialog-buttonset').children('button');
+			buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
+			editDialog.dialog("open");
 		},
-
 		error: function (e) {
 			console.log("Error retrieving form");
 		}
 	});
-	// override the dialog buttons
-	var editButtons = [
-	{
-		text: lang['save_event'],
-		"class" : 'uk-button uk-button-success',
-		click: function() {
-			saveevent();
-		}
-	},
-	{
-		text: lang['delete_event'],
-		"class" : 'uk-button uk-button-danger',
-		click: function() {
-			deleteevent(event);
-		}
-	},
-	{
-		text: lang['cancel'],
-		"class": 'uk-button uk-button',
-		click : function () {
-			dialog.dialog('close');
-		}
-	}
-	];
-
-	dialog.dialog("option", "buttons", editButtons); // setter
-	dialog.dialog('option', 'height', window.innerHeight * .85 );
-	dialog.dialog('option', 'width', window.innerWidth * .8 );
-
-	var buttons = $('.ui-dialog-buttonset').children('button');
-	buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
-	//	$(".uk-button-danger").attr("formnovalidate");
-
-	dialog.dialog("open");
 }
 
-function edit_series_event(event)
+function edit_series_event()
 {
-	$('#dialog-form-full').dialog('option', 'title', 'Edit Event Series');
-	$("#dialog-form-full").html('');
-	if ( window.innerWidth < 600 ) {
-		$('#dialog-form-full').dialog('option', 'height', window.innerHeight);
-		$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .95);
-	} else {
-		$('#dialog-form-full').dialog('option', 'height', window.innerHeight *.85 );
-		$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .8 );
-	}
+	event = globalEvent;
+	$('.qtip').hide();
 
+	var editDialog = $( "#dialog-form-full" ).dialog({
+		autoOpen: false,
+		modal: true,
+		resizable: true,
+		classes: { "ui-dialog": "tm-agenda-dialog" },
+		position: {
+		  my: "top left",
+		  at: "top left",
+		  of: "#calendar",
+	    collision: "fit"
+		},
+    width: $('#calendar').width(),
+    height: 'auto',
+    title: lang['edit_event_series'],
+		buttons: [
+			{
+				text: lang['save_event'],
+				"class" : 'uk-button uk-button-success',
+				click: function() {
+					saveevent();
+				}
+			},
+			{
+				text: lang['delete_series'],
+				"class" : 'uk-button uk-button-danger',
+				click: function() {
+					deleteeventseries(event);
+				}
+			},
+			{
+				text: lang['cancel'],
+				"class": 'uk-button uk-button',
+				click : function () {
+					editDialog.dialog('close');
+				}
+			}
+		]
+	});
 	url = glfusionSiteUrl + '/agenda/ajax/ajax-form-manager.php';
 	$.ajax({
 		type: "POST",
@@ -347,46 +256,17 @@ function edit_series_event(event)
 		url: url,
 		data: {"action" : "edit-event-series", "parent_id" : event.parent_id, "event_id" : event.id },
 		success: function (data) {
-			$("#dialog-form-full").html(data);
+			editDialog.html(data);
 			form = $( "#event-form" );
 			form.validate();
+			var buttons = $('.ui-dialog-buttonset').children('button');
+			buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
+			editDialog.dialog("open");
 		},
 		error: function (e) {
 			console.log("Error retrieving form");
 		}
 	});
-	// override the dialog buttons
-	var editButtons = [
-	{
-		text: lang['save_event'],
-		"class" : 'uk-button uk-button-success',
-		click: function() {
-			saveevent();
-		}
-	},
-	{
-		text: lang['delete_series'],
-		"class" : 'uk-button uk-button-danger',
-		click: function() {
-			deleteeventseries(event);
-		}
-	},
-	{
-		text: lang['cancel'],
-		"class": 'uk-button uk-button',
-		click : function () {
-			dialog.dialog('close');
-		}
-	}
-	];
-
-	dialog.dialog("option", "buttons", editButtons); // setter
-	dialog.dialog('option', 'height', window.innerHeight * .85 );
-	dialog.dialog('option', 'width', window.innerWidth * .8 );
-
-	var buttons = $('.ui-dialog-buttonset').children('button');
-	buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
-	dialog.dialog("open");
 }
 
 /*
@@ -401,124 +281,127 @@ function initializeCalendar( config )
 	var m = date.getMonth();
 	var y = date.getFullYear();
 
-	whattoeditform = $("#what-to-edit");
+	// create the tooltip we will use on event click
+	var tooltip = $('<div/>').qtip({
+		id: 'calendar',
+		prerender: true,
+		content: {
+			text: ' ',
+			title: {
+				button: true
+			}
+		},
+		position: {
+			viewport: $(window),
+			my: 'top center',
+			at: 'bottom center',
+			target: 'event',
+			adjust: {
+				method: 'flip flip',
+        scroll: false
+			}
+		},
+		show: {
+			solo: true,
+			event: false,
+		},
+		hide: {
+			event: 'unfocus'
+		},
+		style: {
+			classes: 'qtip-bootstrap qtip-shadow'
+		},
+	}).qtip('api');
 
 	// initialize full calendar
 	calendar = $('#calendar').fullCalendar({
 		dayClick: function(date, jsEvent, view) {
-			if ( config['allow_new'] ) {
-				var clickDate = date.format();
-				$('#dialog-form-full').dialog('option', 'title', lang['add_event']);
-				if ( window.innerWidth < 600 ) {
-					$('#dialog-form-full').dialog('option', 'height', window.innerHeight);
-					$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .95);
-				} else {
-					$('#dialog-form-full').dialog('option', 'height', window.innerHeight *.85 );
-					$('#dialog-form-full').dialog('option', 'width', window.innerWidth * .8 );
-				}
-				$("#dialog-form-full").html('');
-				url = glfusionSiteUrl + '/agenda/ajax/ajax-form-manager.php';
-				$.ajax({
-					type: "POST",
-					dataType: "html",
-					url: url,
-					data: {"action" : "new-event", "clickdate" : clickDate },
-					success: function (data) {
-						$("#dialog-form-full").html(data);
-					},
-					error: function (e) {
-						console.log("error retrieving new-event form");
-					}
-				});
+			if ( $('.qtip').is(':visible') ) {
+				$('.qtip').hide();
+			} else {
+				if ( config['allow_new'] ) {
+					var clickDate = date.format();
 
-				// override the dialog buttons
-				var editButtons = [
-				{
-					text: lang['save_event'],
-					"class" : 'uk-button uk-button-success',
-					click: function() {
-						saveevent();
-					}
-				},
-				{
-					text: lang['cancel'],
-					"class": 'uk-button uk-button',
-					click : function () {
-						dialog.dialog('close');
-					}
+					var createDialog = $( "#dialog-form-full" ).dialog({
+						autoOpen: false,
+						modal: true,
+						resizable: true,
+						classes: { "ui-dialog": "tm-agenda-dialog" },
+						position: {
+						  my: "top left",
+						  at: "top left",
+						  of: "#calendar",
+					    collision: "fit"
+						},
+				    width: $('#calendar').width(),
+				    height: 'auto',
+				    title: lang['add_event'],
+						buttons: [
+							{
+								text: lang['save_event'],
+								"class" : 'uk-button uk-button-success',
+								click: function() {
+									saveevent();
+								}
+							},
+							{
+								text: lang['cancel'],
+								"class": 'uk-button uk-button',
+								click : function () {
+									createDialog.dialog('close');
+								}
+							}
+						]
+					});
+					url = glfusionSiteUrl + '/agenda/ajax/ajax-form-manager.php';
+					$.ajax({
+						type: "POST",
+						dataType: "html",
+						url: url,
+						data: {"action" : "new-event", "clickdate" : clickDate },
+						success: function (data) {
+							createDialog.html(data);
+							var buttons = $('.ui-dialog-buttonset').children('button');
+							buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
+							createDialog.dialog("open");
+						},
+						error: function (e) {
+							console.log("error retrieving new-event form");
+						}
+					});
 				}
-				];
-				dialog.dialog("option", "buttons", editButtons);
-				var buttons = $('.ui-dialog-buttonset').children('button');
-				buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
-				dialog.dialog("open");
 			}
 		},
 
 		// click on event - make this edit
-		eventClick: function(event, element) {
+		eventClick: function(data, event, view) {
+			globalEvent = data;
+			var content = '<p><b>'+lang['when']+'</b><br>'+ data.when +
+			(data.location && '<p><b>'+lang['location']+'</b><br>'+data.location+'</p>' || '') +
+			(data.description && '<p><b>'+lang['details']+'</b><br>'+data.description+'</p>' || '');
+
 			if ( config['allow_edit'] ) {
-				$('.qtip').remove();
-				qTipArray[event.id].hide();
-
-				if ( event.repeats == 1 ) {
-					$("#dialog-series").data('event-data', event).dialog('open');
-				} else {
-					edit_single_event(event);
+				content = content +
+				'<div class="uk-align-right">'+
+				'<button onclick="edit_single_event();" id="edit-button" class="uk-margin-small-right uk-button uk-button-small uk-button-success" type="button">'+lang['edit']+'</button>';
+				if ( data.repeats == 1 ) {
+					content = content +
+					'<button onclick="edit_series_event();" class="uk-margin-small-right uk-button uk-button-small uk-button-primary">'+lang['edit_series']+'</button>';
 				}
-				$('#calendar').fullCalendar('refetchEvents');
+				content = content +
+				'</div>';
 			}
-		},
-
-		// apply during the event display / render
-		eventRender: function(event, element, view) {
-			if ( dragging == 0 ) { // don't render tooltip if dragging in progress
-				var mouseTarget = false;
-				if ( view.name == 'listMonth') {
-					mouseTarget = 'event';
-				}
-				eval("var qtip_" + event.id + '=1');
-				qTipArray[event.id] = element.qtip({
-					content:{
-						title : event.title,
-						text : '<p><b>'+lang['when']+'</b><br>'+ event.when +
-						(event.location && '<p><b>'+lang['location']+'</b><br>'+event.location+'</p>' || '') +
-						(event.description && '<p><b>'+lang['details']+'</b><br>'+event.description+'</p>' || '')
-					},
-					show: {
-						delay: 500
-					},
-					style: {
-						classes: 'qtip-bootstrap qtip-shadow',
-						width: 	 '1000px'
-					},
-					position: {
-						my: 'top center',
-						at: 'bottom center',
-						target: mouseTarget, // Defaults to target element
-						container: $('#calendar'), // Defaults to $(document.body)
-						viewport: $(window), // Requires Viewport plugin
-						adjust: {
-							x: 0, y: 0, // Minor x/y adjustments
-							mouse: true, // Follow mouse when using target:'mouse'
-							resize: true, // Reposition on resize by default
-							method: 'flip flip' // Requires Viewport plugin
-						},
-						effect: function(api, pos, viewport) {
-							$(this).animate(pos, {
-								duration: 200,
-								queue: false
-							});
-						}
-					},
-				}); // end of qtip
-				qTipAPI[event.id] = qTipArray[event.id].qtip('api');
-			}
+			tooltip.set({
+				'content.text': content,
+				'content.title' : '<b>'+data.title+'</b>',
+				'position.target' : 'event',
+				'position.adjust.method' : 'flip',
+			})
+			.reposition(event).show(event);
 		},
 
 		eventResize: function(event, delta, revertFunc) {
-			$('.qtip').remove();
-			qTipArray[event.id].hide();
+			$('.qtip').hide();
 			var params = "&action=move-event&id=" + event.id;
 			if ( event.start != null ) {
 				params = params + "&date=" + event.start.format();
@@ -547,25 +430,12 @@ function initializeCalendar( config )
 			});
 		},
 
-		// moved an event
-		eventDragStart: function( event, jsEvent, ui, view ) {
-			dragging = 1;
-		},
-		eventDragStop: function( event, jsEvent, ui, view ) {
-			dragging = 0;
-		},
+
 		eventResizeStart: function( event, jsEvent, ui, view ) {
-			$('.qtip').remove();
-			dragging = 1;
-			qTipArray[event.id].hide();
+			$('.qtip').hide();
 		},
-		eventResizeStop: function( event, jsEvent, ui, view ) {
-			dragging = 0;
-		},
+
 		eventDrop: function(event, delta, revertFunc) {
-			$('.qtip').remove();
-			qTipArray[event.id].hide();
-			qTipArray[event.id].qtip('destroy', true);
 			var params = "&action=move-event&id=" + event.id;
 			if ( event.start != null ) {
 				params = params + "&date=" + event.start.format();
