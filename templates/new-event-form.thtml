@@ -19,7 +19,7 @@
 		<div class="uk-form-controls">
 			<input class="uk-form-width-small" type="text" id="event-date" name="event-date" value="{start-date}" placeholder="{lang_start_date}" data-uk-datepicker="{format:'YYYY-MM-DD', weekstart:0}">
 			<input class="uk-form-width-small" type="text" name="start-time" id="start-time" value="{start-time}" placeholder="{lang_start_time}" data-uk-timepicker="{format:'12h'}">
-			<span class=" uk-text-nowrap">{lang_all_day_event}</span><span class="uk-form-help-inline"><input type="checkbox" id="event-allday" name="event-allday" tabindex="-1"  {allday_checked}></span>
+			<span class=" uk-text-nowrap">{lang_all_day_event}<span class="uk-form-help-inline"><input type="checkbox" id="event-allday" name="event-allday" tabindex="-1"  {allday_checked}></span></span>
 		</div>
 	</div>
 
@@ -28,7 +28,7 @@
 		<div class="uk-form-controls">
 			<input class="uk-form-width-small" type="text" id="event-end-date" name="event-end-date" tabindex="-1" value="{end-date}" placeholder="{lang_end_date}" data-uk-datepicker="{format:'YYYY-MM-DD', weekstart:0}">
 			<input class="uk-form-width-small" type="text" name="end-time" id="end-time" value="{end-time}" placeholder="{lang_end_time}" data-uk-timepicker="{format:'12h'}">
-			<span class="uk-text-nowrap">{lang_repeats}</span><span class="uk-form-help-inline"><input type="checkbox" name="repeats" id="repeats" value="1" {repeats_checked}></span>
+			<span class="uk-text-nowrap">{lang_repeats}<span class="uk-form-help-inline"><input type="checkbox" name="repeats" id="repeats" value="1" {repeats_checked}></span></span>
 			<span id="date-errors"></span>
 		</div>
 	</div>
