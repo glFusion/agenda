@@ -15,12 +15,12 @@
 $(document).ready(function () {
 	$.validator.addMethod("enddate", function(value, element) {
 		var from_time = $("#start-time").val();
-		var to_time = $("#end-time").val();
+		var to_time 	= $("#end-time").val();
 		var start_date = $("#event-date").val();
-		var end_date = $("#event-end-date").val();
-		var from = Date.parse(start_date +' '+ from_time);
-		var to = Date.parse(end_date + ' '+ to_time);
-		if (from > to){
+		var end_date 	= $("#event-end-date").val();
+		var momentFrom = moment(start_date + ' ' + from_time, 'YYYY-MM-DD hh:mm A');
+		var momentTo   = moment(end_date + ' ' + to_time, 'YYYY-MM-DD hh:mm A');
+		if (momentFrom > momentTo) {
 			return false;
 		} else {
 			return true;
@@ -45,6 +45,8 @@ $(document).ready(function () {
 	}, " * " + lang['err_end_before_start']);
 
 	$( "#event-form" ).validate({
+	  focusCleanup: true,
+	  onfocusout: true,
 		errorElement: 'span',
 		errorClass: 'uk-text-danger uk-text-bold',
 		rules: {

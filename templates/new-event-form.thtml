@@ -91,18 +91,14 @@
 		var to_time 	= $("#end-time").val();
 		var start_date = $("#event-date").val();
 		var end_date 	= $("#event-end-date").val();
-		var from 		= Date.parse(start_date +' '+ from_time);
-		var to 			= Date.parse(end_date + ' '+ to_time);
-		var fromDate = new Date(from);
-		var toDate = new Date(to);
-		if (from > to) {
-			var endHour = fromDate.getHours();
-			var newEndHour = toDate.setHours(endHour + 1 );
-			var newToHours = toDate.toLocaleTimeString();
+		var momentFrom = moment(start_date + ' ' + from_time, 'YYYY-MM-DD hh:mm A');
+		var momentTo   = moment(end_date + ' ' + to_time, 'YYYY-MM-DD hh:mm A');
+		if (momentFrom > momentTo) {
+			var updated_end_date_time = moment(momentFrom).add(1, 'h');
+			var newToHours = updated_end_date_time.format('hh:mm A');
 			$("#end-time").val(newToHours);
 		}
 	});
-
 	$('#event-allday').change(function(){
 		if ($('#event-allday').is(':checked') == true){
 			$('#start-time').prop('disabled', true);
