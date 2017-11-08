@@ -24,7 +24,7 @@ global $_DB_table_prefix, $_TABLES;
 
 $_AC_CONF['pi_name']            = 'agenda';
 $_AC_CONF['pi_display_name']    = 'Agenda';
-$_AC_CONF['pi_version']         = '0.2.1';
+$_AC_CONF['pi_version']         = '0.2.2';
 $_AC_CONF['gl_version']         = '1.7.0';
 $_AC_CONF['pi_url']             = 'https://www.glfusion.org/';
 
