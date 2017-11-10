@@ -638,7 +638,7 @@ function deleteCategory()
 
 function agenda_admin_menu($action)
 {
-    global $_CONF, $_AC_CONF, $LANG_ADMIN, $LANG_AC, $LANG01;
+    global $_CONF, $_AC_CONF, $LANG_ADMIN, $LANG_AC, $LANG_AC_JS, $LANG01;
 
     $retval = '';
 
