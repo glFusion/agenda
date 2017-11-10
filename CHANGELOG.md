@@ -1,6 +1,6 @@
 Agenda Plugin ChangeLog
 
-## v0.3.0 (unreleased)
+## v0.3.0 (November 10, 2017)
  - New recurrence rules engine
  - Migrated date / time validations to momemt JS
  - Localized submission queue message
