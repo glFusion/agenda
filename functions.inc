@@ -18,7 +18,7 @@ if (!defined ('GVERSION')) {
     die ('This file can not be used on its own.');
 }
 
-define('AGENDA_SNAPSHOT','201711100900');
+define('AGENDA_SNAPSHOT','201711101300');
 
 $ac_config = \config::get_instance();
 $_AC_CONF = $ac_config->get_config('agenda');
@@ -670,30 +670,6 @@ function _ac_getListField($fieldname, $fieldvalue, $A, $icon_arr, $token = "")
             $retval = '<a href="'.$url.'"><i class="uk-icon uk-icon-pencil"></i></a>';
             break;
 
-        case 'repeats' :
-            if ( $fieldvalue == 1 ) {
-                switch ( $A['repeat_freq'] ) {
-                    case 1 :
-                        $retval = $LANG_AC['daily'];
-                        break;
-                    case 7 :
-                        $retval = $LANG_AC['weekly'];
-                        break;
-                    case 14 :
-                        $retval = $LANG_AC['biweekly'];
-                        break;
-                    case 30 :
-                        $retval = $LANG_AC['monthly'];
-                        break;
-                    case 365 :
-                        $retval = $LANG_AC['yearly'];
-                        break;
-                }
-            } else {
-                $retval = '';
-            }
-            break;
-
         case 'approve':
             $retval = '';
             $attr['title'] = $LANG29[1];
@@ -959,7 +935,7 @@ function AC_truncate($string, $length, $trimmarker = '') {
     return $string;
 }
 
-function FC_notifyUser($email)
+function AC_notifyUser($email)
 {
 	global $_CONF, $_AC_CONF, $LANG_AC;
 
