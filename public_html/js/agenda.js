@@ -385,8 +385,8 @@ function initializeCalendar( config )
 			(data.description && '<p><b>'+lang['details']+'</b><br>'+data.description+'</p>' || '');
 
 			if ( config['allow_edit'] ) {
-				content = content +
-				'<div class="uk-align-right">'+
+				content = content + '<hr>' +
+				'<div class="uk-align-left">'+
 				'<button onclick="edit_single_event();" id="edit-button" class="uk-margin-small-right uk-button uk-button-small uk-button-success" type="button">'+lang['edit']+'</button>';
 				if ( data.repeats == 1 ) {
 					content = content +
