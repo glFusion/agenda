@@ -67,6 +67,9 @@ function agenda_upgrade()
             $sql = "ALTER TABLE {$_TABLES['ac_event']} ADD COLUMN `rrule` VARCHAR(128) NULL AFTER `repeat_freq`;";
             DB_query($sql,1);
 
+        case '0.3.0' :
+            // no changes
+
         default:
             DB_query("UPDATE {$_TABLES['plugins']} SET pi_version='".$_AC_CONF['pi_version']."',pi_gl_version='".$_AC_CONF['gl_version']."' WHERE pi_name='agenda' LIMIT 1");
             break;

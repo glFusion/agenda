@@ -1,5 +1,12 @@
 Agenda Plugin ChangeLog
 
+## v0.3.1
+ - Left align buttons on both pop-up and edit strings
+ - Reduced the size of the description entry field by 1 row
+ - Fixed some E_ALL errors
+ - Fixed some missing localized string
+ - End before start validation did not work if an all day event
+
 ## v0.3.0 (November 10, 2017)
  - New recurrence rules engine
  - Migrated date / time validations to momemt JS
