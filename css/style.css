@@ -10,13 +10,15 @@
 	background: #339CDA !important;
 	color:#fff !important;
 }
+.tm-agenda-dialog .ui-dialog-buttonset {
+	float:left !important;
+}
 .tm-agenda-dialog .qtip-titlebar {
 	font-weight:700 !important;
 }
 .agenda-upcoming {
 	margin-top:0 !important;
 }
-
 .qtip {
 	max-width: 800px !important;
 	min-width: 320px !important;
