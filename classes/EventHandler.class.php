@@ -15,11 +15,6 @@
 
 namespace Agenda;
 
-define('AC_ERR_INVALID_DATE',1);
-define('AC_ERR_DB_SAVE_PARENT',2);
-define('AC_ERR_DB_SAVE_CHILD',3);
-define('AC_ERR_NO_ACCESS',4);
-
 /**
 *   EventHandler class
 *   @package Agenda
@@ -228,10 +223,6 @@ class eventHandler {
                 $startDateArray[] = $occurrence->format('Y-m-d');
             }
 
-// need to debug duration
-COM_errorLog("******* Calculating Duration");
-COM_errorLog("start date is " . $start_date);
-COM_errorLog("end date is   " . $end_date);
             // calculate the duration (# of days) of the event
             $startD = trim($start_date . " " . '00:00:00');
             $endD   = trim($end_date . " " . '00:00:00');
@@ -240,12 +231,10 @@ COM_errorLog("end date is   " . $end_date);
             $dtDiff = $dtEndD->toUnix() - $dtStartD->toUnix();
             $durationDays = (int) floor($dtDiff / (60 * 60 * 24));
 
-COM_errorLog("we calculated the duration as " . $durationDays);
             for ( $x = 1; $x < $iterations; $x++ ) {
 
                 $start_date = $startDateArray[$x];
                 $end_date = date('Y-m-d', strtotime($start_date . ' +'.$durationDays.' days'));
-COM_errorLog("new end date is " . $end_date);
                 $start          = $start_date . " " . $start_time;
                 $end            = $end_date . " " . $end_time;
 
@@ -1096,7 +1085,7 @@ COM_errorLog("new end date is " . $end_date);
     {
         $rrule = '';
 
-        if ( isset($_POST['freq']) && $_post['freq'] != 'none' ) {
+        if ( isset($_POST['freq']) && $_POST['freq'] != 'none' ) {
             $freq = COM_applyFilter($_POST['freq']);
             $interval = COM_applyFilter($_POST['interval']);
 
@@ -1156,19 +1145,6 @@ COM_errorLog("new end date is " . $end_date);
                 $rrule .= 'UNTIL='.COM_applyFilter($_POST['recur-end-date']).';';
             }
         }
-COM_errorLog($rrule);
         return $rrule;
     }
-
-    public function getAllEventData()
-    {
-
-    }
-
-    public function getEventData()
-    {
-
-    }
-
-
 }

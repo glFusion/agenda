@@ -15,11 +15,6 @@
 
 namespace Agenda;
 
-define('AC_ERR_INVALID_DATE',1);
-define('AC_ERR_DB_SAVE_PARENT',2);
-define('AC_ERR_DB_SAVE_CHILD',3);
-define('AC_ERR_NO_ACCESS',4);
-
 /**
 *   EventForm class
 *   @package Agenda

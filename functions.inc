@@ -57,6 +57,11 @@ switch( $_AC_CONF['displayblocks'] ) {
         break;
 }
 
+define('AC_ERR_INVALID_DATE',1);
+define('AC_ERR_DB_SAVE_PARENT',2);
+define('AC_ERR_DB_SAVE_CHILD',3);
+define('AC_ERR_NO_ACCESS',4);
+
 require_once $_CONF['path'].'plugins/agenda/vendor/autoload.php';
 
 spl_autoload_register('agenda_autoloader');
