@@ -1,6 +1,7 @@
 Agenda Plugin ChangeLog
 
-## v0.2.2 (unreleased)
+## v0.3.0 (unreleased)
+ - New recurrence rules engine
  - Migrated date / time validations to momemt JS
  - Localized submission queue message
  - Use configuration Week Start setting on date picker

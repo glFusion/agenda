@@ -32,18 +32,22 @@ The upgrade process is identical to the installation process, simply upload the 
 ### Usage Notes
 
 #### Recurring Events
-Agenda supports the following recurrence patterns:
-* Daily
-* Weekly
-* Every 2 weeks
-* Monthly
-* Yearly
+
+Agenda support the iCal RRULE standard for recurring events (RFC 2445).
+
+Some examples of types of recurring events you can create:
+
+* Weekly on Tuesday and Thursday for 5 weeks
+* Monthly on the 1st Friday for ten occurrences
+* Yearly, every forth Thursday in November (Thanksgiving in the US)
 
 ### Special Notes on Recurrence
 
-#### Monthly
+Per RFC section 3.3.10, recurrence instances falling on invalid dates and times are ignored rather than corrected:
 
-If a recurring event is created on a day that does not appear in all months - for example, October 31 and is set to repeat each month - it will repeat on the last day of each month.
+> Recurrence rules may generate recurrence instances with an invalid date (e.g., February 30) or nonexistent local time (e.g., 1:30 AM on a day where the local time is moved forward by an hour at 1:00 AM). Such recurrence instances MUST be ignored and MUST NOT be counted as part of the recurrence set.
+
+This means recurring events that have an event that would occur on an invalid date is simply ignored. For example, every month on the 29th would skip February 29 on years that are not leap years.
 
 ### Recurring Event Rules
 
@@ -77,7 +81,7 @@ Note that any individually edited events in the series will not be updated.
 
 The following controls are implemented to control access:
 
-#### Configuration Settings 
+#### Configuration Settings
 
 #### Anonymous User Access
 You can enable or disable anonymous user access to the calendar.  Logged-in users will have access to the calendar.
