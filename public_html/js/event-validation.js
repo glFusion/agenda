@@ -13,6 +13,7 @@
 *
 */
 $(document).ready(function () {
+
 	$.validator.addMethod("enddate", function(value, element) {
 		var from_time = $("#start-time").val();
 		var to_time 	= $("#end-time").val();
@@ -46,7 +47,7 @@ $(document).ready(function () {
 
 	$( "#event-form" ).validate({
 	  focusCleanup: true,
-	  onfocusout: true,
+//	  onfocusout: true,
 		errorElement: 'span',
 		errorClass: 'uk-text-danger uk-text-bold',
 		rules: {

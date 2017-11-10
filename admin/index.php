@@ -31,7 +31,7 @@ USES_lib_admin();
 
 function editEvent( $parent_id )
 {
-    global $_CONF, $_AC_CONF, $_TABLES, $_USER, $LANG_ADMIN, $LANG_AC, $LANG_AC_JS;
+    global $_CONF, $_AC_CONF, $_TABLES, $_USER, $LANG_ADMIN, $LANG_AC, $LANG_AC_JS, $LANG_WEEK, $LANG_MONTH;
 
     $page = '';
 
@@ -41,6 +41,10 @@ function editEvent( $parent_id )
 
     if ( DB_numRows($result) > 0 ) {
         $row = DB_fetchArray($result);
+
+        // load needed JS
+        $outputHandler = \outputHandler::getInstance();
+        $outputHandler->addLinkScript($_CONF['site_url'].'/agenda/fc/moment.min.js',HEADER_PRIO_NORMAL);
 
         $T = new \Template ($_CONF['path'] . 'plugins/agenda/templates');
         $T->set_file ('page','edit-event-form.thtml');
@@ -73,6 +77,7 @@ function editEvent( $parent_id )
 
         $T->set_var(array(
             'form_action'       => $_CONF['site_admin_url'].'/plugins/agenda/index.php',
+            'cancel_value'      => 'mod',
             'title'             => $row['title'],
             'start-date'        => $row['start_date'],
             'end-date'          => $row['end_date'],
@@ -104,31 +109,180 @@ function editEvent( $parent_id )
             'lang_cancel'       => $LANG_AC['cancel'],
             'lang_err_no_title' => $LANG_AC_JS['err_enter_title'],
             'lang_err_datetime' => $LANG_AC_JS['err_end_before_start'],
-            'cancel_value' => 'mod',
+            'lang_repeat'       => $LANG_AC['repeat'],
+            'lang_none'         => $LANG_AC['none'],
+            'lang_hourly'       => $LANG_AC['hourly'],
+            'lang_daily'        => $LANG_AC['daily'],
+            'lang_weekly'       => $LANG_AC['weekly'],
+            'lang_monthly'      => $LANG_AC['monthly'],
+            'lang_yearly'       => $LANG_AC['yearly'],
+            'lang_every'        => $LANG_AC['every'],
+            'lang_hours'        => $LANG_AC['hours'],
+            'lang_days'         => $LANG_AC['days'],
+            'lang_weeks'        => $LANG_AC['weeks'],
+            'lang_months'       => $LANG_AC['months'],
+            'lang_weekly_help'  => $LANG_AC['weekly_help'],
+            'lang_on_day'       => $LANG_AC['on_day'],
+            'lang_on_the'       => $LANG_AC['on_the'],
+            'lang_first'        => $LANG_AC['first'],
+            'lang_second'       => $LANG_AC['second'],
+            'lang_third'        => $LANG_AC['third'],
+            'lang_forth'        => $LANG_AC['forth'],
+            'lang_last'         => $LANG_AC['last'],
+            'lang_day'          => $LANG_AC['day'],
+            'lang_weekday'      => $LANG_AC['weekday'],
+            'lang_weekend'      => $LANG_AC['weekend'],
+            'lang_after'        => $LANG_AC['after'],
+            'lang_on_date'      => $LANG_AC['on_date'],
+            'lang_occurrences'  => $LANG_AC['occurrences'],
+            'lang_end_after_date' => $LANG_AC['end_after_date'],
+            'lang_hours'        => $LANG_AC['hours'],
+            'lang_days'         => $LANG_AC['days'],
+            'lang_weeks'        => $LANG_AC['weeks'],
+            'lang_months'       => $LANG_AC['months'],
+            'lang_january'      => $LANG_MONTH[1],
+            'lang_february'     => $LANG_MONTH[2],
+            'lang_march'        => $LANG_MONTH[3],
+            'lang_april'        => $LANG_MONTH[4],
+            'lang_may'          => $LANG_MONTH[5],
+            'lang_june'         => $LANG_MONTH[6],
+            'lang_july'         => $LANG_MONTH[7],
+            'lang_august'       => $LANG_MONTH[8],
+            'lang_september'    => $LANG_MONTH[9],
+            'lang_october'      => $LANG_MONTH[10],
+            'lang_november'     => $LANG_MONTH[11],
+            'lang_december'     => $LANG_MONTH[12],
+            'lang_jan'          => $LANG_MONTH[13],
+            'lang_feb'          => $LANG_MONTH[14],
+            'lang_mar'          => $LANG_MONTH[15],
+            'lang_apr'          => $LANG_MONTH[16],
+            'lang_may'          => $LANG_MONTH[17],
+            'lang_jun'          => $LANG_MONTH[18],
+            'lang_jul'          => $LANG_MONTH[19],
+            'lang_aug'          => $LANG_MONTH[20],
+            'lang_sep'          => $LANG_MONTH[21],
+            'lang_oct'          => $LANG_MONTH[22],
+            'lang_nov'          => $LANG_MONTH[23],
+            'lang_dec'          => $LANG_MONTH[24],
+            'lang_sun'          => $LANG_WEEK[8],
+            'lang_mon'          => $LANG_WEEK[9],
+            'lang_tue'          => $LANG_WEEK[10],
+            'lang_wed'          => $LANG_WEEK[11],
+            'lang_thu'          => $LANG_WEEK[12],
+            'lang_fri'          => $LANG_WEEK[13],
+            'lang_sat'          => $LANG_WEEK[14],
+            'lang_sunday'       => $LANG_WEEK[1],
+            'lang_monday'       => $LANG_WEEK[2],
+            'lang_tuesday'      => $LANG_WEEK[3],
+            'lang_wednesday'    => $LANG_WEEK[4],
+            'lang_thursday'     => $LANG_WEEK[5],
+            'lang_friday'       => $LANG_WEEK[6],
+            'lang_saturday'     => $LANG_WEEK[7],
+            'lang_of'           => $LANG_AC['of'],
+            'lang_end'          => $LANG_AC['end'],
          ));
          $T->set_var('repeats',1);
-         if ( $row['repeats'] == 1 ) {
-            $T->set_var('repeats_checked',' checked="checked" ');
-            switch ( $row['repeat_freq'] ) {
-                case 1 :
-                    $T->set_var('daily_checked',' checked="checked" ');
-                    break;
-                case 7 :
-                    $T->set_var('weekly_checked',' checked="checked" ');
-                    break;
-                case 14 :
-                    $T->set_var('biweekly_checked',' checked="checked" ');
-                    break;
-                case 30 :
-                    $T->set_var('monthly_checked', ' checked="checked" ');
-                    break;
-                case 365 :
-                    $T->set_var('yearly_checked',' checked="checked" ');
-                    break;
+
+        // parse rrule
+
+        if ( $row['repeats'] == 1 ) {
+            $ruleArray = explode(';',$row['rrule']);
+            $rules = array();
+            foreach ( $ruleArray AS $element ) {
+                $rule = explode('=',$element);
+                if ( $rule[0] != '' ) {
+                    $rules[$rule[0]] = $rule[1];
+                }
             }
-        } else {
-            $T->set_var('repeats_checked','');
+
+            $T->set_var('freq_selected_'.$rules['FREQ'],' selected="selected" ');
+            switch ( $rules['FREQ'] ) {
+                case 'DAILY' :
+                    $T->set_var('interval_value',$rules['INTERVAL']);
+                    break;
+                case 'WEEKLY' :
+                    $T->set_var('interval_value',$rules['INTERVAL']);
+                    $T->set_var('byday_value',$rules['BYDAY']);
+                    $bydayArray = explode(',',$rules['BYDAY']);
+                    foreach ($bydayArray AS $day) {
+                        $T->set_var($day.'_selected','uk-button-success');
+                    }
+                    break;
+                case 'MONTHLY' :
+                    $T->set_var('interval_value',$rules['INTERVAL']);
+                    if ( isset($rules['BYMONTHDAY'])) { // by month day - mtype = 0
+                        $T->set_var('mtype_0_checked',' checked="checked" ');
+                        $T->set_var('day_'.$rules['BYMONTHDAY'],' selected="selected" ');
+                    } else {
+                        $T->set_var('mtype_1_checked',' checked="checked" ');
+                        $T->set_var('setpos_'.$rules['BYSETPOS'].'_selected',' selected="selected" ');
+                        switch ($rules['BYDAY']) {
+                            case 'SU':
+                            case 'MO':
+                            case 'TU':
+                            case 'WE':
+                            case 'TH':
+                            case 'FR':
+                            case 'SA':
+                            case 'SU':
+                                $T->set_var('moday_'.$rules['BYDAY'].'_selected',' selected="selected" ');
+                                break;
+                            case 'SU,MO,TU,WE,TH,FR,SA' :
+                                $T->set_var('moday_day_selected',' selected="selected" ');
+                                break;
+                            case 'MO,TU,WE,TH,FR' :
+                                $T->set_var('moday_weekday_selected',' selected="selected" ');
+                                break;
+                            case 'SA,SU' :
+                                $T->set_var('moday_weekend_selected',' selected="selected" ');
+                                break;
+                        }
+                    }
+                    break;
+                case 'YEARLY' :
+                    if ( isset($rules['BYMONTHDAY'])) {  // yr-type = 0
+                        $T->set_var('yrtype_0_checked',' checked="checked" ');
+                        $T->set_var('mo_'.$rules['BYMONTH'],' selected="selected" ');
+                        $T->set_var('day_'.$rules['BYMONTHDAY'],' selected="selected" ');
+                    } else {
+                        $T->set_var('yrtype_1_checked',' checked="checked" ');
+                        $T->set_var('setpos_'.$rules['BYSETPOS'].'_selected',' selected="selected" ');
+                        switch ($rules['BYDAY']) {
+                            case 'SU':
+                            case 'MO':
+                            case 'TU':
+                            case 'WE':
+                            case 'TH':
+                            case 'FR':
+                            case 'SA':
+                            case 'SU':
+                                $T->set_var('moday_'.$rules['BYDAY'].'_selected',' selected="selected" ');
+                                break;
+                            case 'SU,MO,TU,WE,TH,FR,SA' :
+                                $T->set_var('moday_day_selected',' selected="selected" ');
+                                break;
+                            case 'MO,TU,WE,TH,FR' :
+                                $T->set_var('moday_weekday_selected',' selected="selected" ');
+                                break;
+                            case 'SA,SU' :
+                                $T->set_var('moday_weekend_selected',' selected="selected" ');
+                                break;
+                        }
+                        $T->set_var('mo_'.$rules['BYMONTH'],' selected="selected" ');
+                    }
+                    break;
+                default :
+                break;
+            }
+            if ( isset($rules['COUNT'])) {
+                $T->set_var('end_type_0_selected',' selected="selected" ');
+                $T->set_var('endafter_value',$rules['COUNT']);
+            } else {
+                $T->set_var('end_type_1_selected',' selected="selected" ');
+                $T->set_var('recur-end-date',$rules['UNTIL']);
+            }
         }
+        // end of recurence edits
 
         if ( $row['allday'] == 1 ) {
             $T->set_var('allday_checked',' checked="checked" ');
@@ -144,7 +298,6 @@ function editEvent( $parent_id )
         $page = $T->finish($T->get_var('output'));
     }
     return $page;
-
 }
 
 
@@ -152,108 +305,9 @@ function saveEditEvent($args = array())
 {
     global $_CONF, $_AC_CONF, $_USER, $_TABLES;
 
-    $errorCode = 0;
-    $errors = 0;
-
-// set defaults
-    $repeats = 0;
-    $repeat_freq = 0;
-    $allday = 0;
-
-    // get the parentid and the event id
-
-    $parent_id      = (int) COM_applyFilter($args['parent_id'],true);
-
-// parse submitted data
-    $title          = $args['title'];
-    $start_date     = $args['event-date'];
-    $end_date       = $args['event-end-date'];
-    $start_time     = isset($args['start-time']) ? $args['start-time'] : '';
-    $end_time       = isset($args['end-time'])   ? $args['end-time'] : '';
-    $location       = $args['location'];
-    $description    = $args['description'];
-    $category       = (int) $args['category'];
-    if (isset($args['repeats'])) {
-        $repeats     = 1;
-        $repeat_freq = COM_applyFilter($args['repeat-freq'],true);
-    }
-    if ( isset($args['event-allday'] ) ) {
-        $allday = 1;
-        $end_time = '24:00:00';
-    }
-    if ( $start_time == '' ) {
-        $start_time = '00:00:00';
-    }
-    if ( $end_time == '' ) {
-        $end_time = '24:00:00';
-    }
-    $start_time = date("H:i", strtotime($start_time));
-    $end_time   = date("H:i", strtotime($end_time));
-    // create the full start / end time for the event
-    $start          = trim($start_date . " " . $start_time);
-    $end            = trim($end_date . " " . $end_time);
-
-    // validation checks
-
-    if ( !agenda_validateDate($start_date, 'Y-m-d') ) {
-        $errorCode = 1;
-        $errors++;
-    }
-
-    if ( !agenda_validateDate($end_date, 'Y-m-d') ) {
-        $errorCode = 1;
-        $errors++;
-    }
-
-    if ( $errors ) {
-        return $errorCode;
-    }
-
-    // filter our input
-    $filter = new \sanitizer();
-    $filter->setPostmode('text');
-    $description = $filter->filterText($description);
-    $title = $filter->filterText($title);
-    $location = $filter->filterText($location);
-
-    // calculate the dates
-
-    $dtStart = new \Date($start,$_USER['tzid']);
-    $dtEnd   = new \Date($end,  $_USER['tzid']);
-
-    // create the unix timestamp start / end dates
-    $db_start = $dtStart->toUnix(false);
-    $db_end   = $dtEnd->toUnix(false);
-    // use the entered start / end date
-    $db_start_date = DB_escapeString($start_date);
-    $db_end_date   = DB_escapeString($end_date);
-
-    // prepare other stuff for db
-    $db_title           = DB_escapeString($title);
-    $db_location        = DB_escapeString($location);
-    $db_description     = DB_escapeString($description);
-
-    // update parent record
-    $sql = "UPDATE {$_TABLES['ac_event']} SET
-            title = '{$db_title}',
-            location = '{$db_location}',
-            description = '{$db_description}',
-            allday = {$allday},
-            repeats = {$repeats},
-            repeat_freq = {$repeat_freq},
-            category = {$category},
-            start_date = '{$db_start_date}',
-            end_date = '{$db_end_date}',
-            start = '{$db_start}',
-            end = '{$db_end}'";
-
-    $sql .= " WHERE parent_id=".(int) $parent_id;
-
-    DB_query($sql,1);
-    if ( DB_error() ) {
-        $errorCode = 1;
-    }
-    return $errorCode;
+    $event = new Agenda\eventHandler();
+    $rc = $event->updateQueuedEvent($args);
+    return $rc;
 }
 
 
@@ -587,12 +641,21 @@ function agenda_admin_menu($action)
     global $_CONF, $_AC_CONF, $LANG_ADMIN,$LANG_AC;
 
     $retval = '';
-
-    $menu_arr = array(
-        array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php?catlist=x','text' => $LANG_AC['category_list'],'active' => ($action == 'catlist' ? true : false)),
-        array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php?newcat=x','text' => $LANG_AC['category_new'],'active' => ($action == 'newcat' ? true : false)),
-        array( 'url' => $_CONF['site_admin_url'], 'text' => $LANG_ADMIN['admin_home'])
-    );
+//    http://dev.glfusion.org/admin/plugins/agenda/index.php?edit=x&src=mod&parent_id=45
+    if ( $action == 'edit' ) {
+        $menu_arr = array(
+            array( 'url' => $_CONF['site_admin_url'].'/moderation.php','text' => 'Submissions','active' =>false),
+            array( 'url' => $_CONF['site_admin_url'].'/moderation.php','text' => 'Edit Event','active' => true),
+            array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php?catlist=x','text' => $LANG_AC['category_list'],'active' => ($action == 'catlist' ? true : false)),
+            array( 'url' => $_CONF['site_admin_url'], 'text' => $LANG_ADMIN['admin_home'])
+        );
+    } else {
+        $menu_arr = array(
+            array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php?catlist=x','text' => $LANG_AC['category_list'],'active' => ($action == 'catlist' ? true : false)),
+            array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php?newcat=x','text' => $LANG_AC['category_new'],'active' => ($action == 'newcat' ? true : false)),
+            array( 'url' => $_CONF['site_admin_url'], 'text' => $LANG_ADMIN['admin_home'])
+        );
+    }
 
     $retval = '<h2>'.$LANG_AC['plugin_name'].'</h2>';
 

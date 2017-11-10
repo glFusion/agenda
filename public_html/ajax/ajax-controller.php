@@ -63,7 +63,7 @@ function getConfig()
         case 'afrikaans_utf-8' :
             $_AC_CONF['iso_lang'] = 'af';
             break;
-// bosnian not support by FC
+// bosnian no support by FC
         case 'bosnian' :
         case 'bosnian_utf-8' :
             $_AC_CONF['iso_lang'] = 'en';

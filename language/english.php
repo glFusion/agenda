@@ -85,6 +85,44 @@ $LANG_AC = array (
     'what_to_edit'       => 'This is one event in a series. What do you want to edit?',
     'just_this_one'     => 'Just this one',
     'entire_series'     => 'The entire series',
+
+    // rrule
+
+    'repeat'            => 'Repeat',
+    'none'              => 'None',
+    'hourly'            => 'Hourly',
+    'daily'             => 'Daily',
+    'weekly'            => 'Weekly',
+    'monthly'           => 'Monthly',
+    'yearly'            => 'Yearly',
+    'every'             => 'every',
+    'hours'             => 'hour(s)',
+    'days'              => 'day(s)',
+    'weeks'             => 'week(s)',
+    'months'            => 'month(s)',
+// LANG_WEEK already has these - just use them...
+    'weekly_help'       => 'Select each day of the week for event to occur',
+    'on_day'            => 'on day',
+    'on_the'            => 'on the',
+    'first'             => 'First',
+    'second'            => 'Second',
+    'third'             => 'Third',
+    'forth'             => 'Forth',
+    'last'              => 'Last',
+//LANG WEEK has weekday names too
+    'day'               => 'Day',
+    'weekday'           => 'Weekday',
+    'weekend'           => 'Weekend',
+// LANG_MONTH has month names and abbreviations
+    'after'             => 'After',
+    'on_date'           => 'On Date',
+    'occurrences'       => 'Occurrences',
+    'end_after_date'    => 'End After Date',
+    'of'                => 'of',
+    'end'               => 'End',
+
+
+
 );
 
 // JavaScript specific translations

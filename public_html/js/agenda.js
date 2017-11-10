@@ -39,12 +39,11 @@ $.ajax({
 	},
 	error: function (e) {
 		alert(lang['err_initialize']);
-		console.log("error retrieving setup information");
+		console.log("AJAX call to initialize Agenda plugin failed.");
 	}
 });
 
 function initializeAgenda() {
-
 	// binds the escape key to close qtip2
 	$(window).bind('keydown', function(event) {
 		if(event.keyCode === 27) {
@@ -52,7 +51,6 @@ function initializeAgenda() {
 		}
 	});
 }
-
 
 /*
 * general functions
@@ -79,7 +77,7 @@ function saveevent() {
 			$('#calendar').fullCalendar('refetchEvents');
 		},
 		error: function (e) {
-			console.log("Error saving event");
+			console.log("AJAX call to save event failed.");
 			$('#calendar').fullCalendar('refetchEvents');
 		}
 	});
@@ -88,7 +86,10 @@ function saveevent() {
 	return true;
 };
 
-function deleteevent ( event ) {
+function deleteevent () {
+
+	event = globalEvent;
+
 	// validate we want to do this...
 	UIkit.modal.confirm(lang['delete_event_confirm'], function(){
 		url = glfusionSiteUrl + '/agenda/ajax/ajax-event-handler.php';
@@ -96,16 +97,17 @@ function deleteevent ( event ) {
 			type: "POST",
 			dataType: "json",
 			url: url,
-			data: {"action" : "delete-event", "parent_id" : event.parent_id, "event_id" : event.id },
+			data: {"action" : "delete-event", "parent_id" : globalEvent.parent_id, "event_id" : globalEvent.id },
 			success: function (data) {
 				var result = $.parseJSON(data["js"]);
-				if ( result.errorcode == 0 ) {
-					console.log('success');
+				if ( result.errorCode == 0 ) {
+				} else {
+					console.log('Error deleting event - see glFusion error.log for details');
 				}
 				$('#calendar').fullCalendar('refetchEvents');
 			},
 			error: function (e) {
-				console.log("Error deleting event");
+				console.log("AJAX call to delete event failed.");
 				$('#calendar').fullCalendar('refetchEvents');
 			}
 		});
@@ -115,7 +117,7 @@ function deleteevent ( event ) {
 	return true;
 };
 
-function deleteeventseries( event ) {
+function deleteeventseries() {
 	// validate we want to do this...
 	UIkit.modal.confirm(lang['delete_series_confirm'], function(){
 		url = glfusionSiteUrl + '/agenda/ajax/ajax-event-handler.php';
@@ -123,13 +125,18 @@ function deleteeventseries( event ) {
 			type: "POST",
 			dataType: "json",
 			url: url,
-			data: {"action" : "delete-event-series", "parent_id" : event.parent_id, "event_id" : event.id },
+			data: {"action" : "delete-event-series", "parent_id" : globalEvent.parent_id, "event_id" : globalEvent.id },
 			success: function (data) {
-				console.log('Deleting an event returned successfully');
+				var result = $.parseJSON(data["js"]);
+				if ( result.errorCode == 0 ) {
+					console.log('Deleting event series returned successfully');
+				} else {
+					console.log('Error deleting series - see glFusion error.log for details');
+				}
 				$('#calendar').fullCalendar('refetchEvents');
 			},
 			error: function (e) {
-				console.log("Error deleting event");
+				console.log("AJAX call to delete event series failed.");
 				$('#calendar').fullCalendar('refetchEvents');
 			}
 		});
@@ -141,10 +148,8 @@ function deleteeventseries( event ) {
 
 function edit_single_event( )
 {
-	event = globalEvent;
+//	event = globalEvent;
 	$('.qtip').hide();
-
-	var tl = $('#calendar').offset();
 
 	var editDialog = $( "#dialog-form-full" ).dialog({
 		autoOpen: false,
@@ -172,7 +177,7 @@ function edit_single_event( )
 				text: lang['delete_event'],
 				"class" : 'uk-button uk-button-danger',
 				click: function() {
-					deleteevent(event);
+					deleteevent();
 				}
 			},
 			{
@@ -190,7 +195,7 @@ function edit_single_event( )
 		type: "POST",
 		dataType: "html",
 		url: url,
-		data: {"action" : "edit-event", "parent_id" : event.parent_id, "event_id" : event.id },
+		data: {"action" : "edit-event", "parent_id" : globalEvent.parent_id, "event_id" : globalEvent.id },
 		success: function (data) {
 			editDialog.html(data);
 			// override the dialog buttons
@@ -199,7 +204,7 @@ function edit_single_event( )
 			editDialog.dialog("open");
 		},
 		error: function (e) {
-			console.log("Error retrieving form");
+			console.log("AJAX call to retrieve edit event form failed.");
 		}
 	});
 }
@@ -235,7 +240,7 @@ function edit_series_event()
 				text: lang['delete_series'],
 				"class" : 'uk-button uk-button-danger',
 				click: function() {
-					deleteeventseries(event);
+					deleteeventseries();
 				}
 			},
 			{
@@ -262,7 +267,7 @@ function edit_series_event()
 			editDialog.dialog("open");
 		},
 		error: function (e) {
-			console.log("Error retrieving form");
+			console.log("AJAX call to retrieve edit event series form failed.");
 		}
 	});
 }
@@ -364,7 +369,7 @@ function initializeCalendar( config )
 							createDialog.dialog("open");
 						},
 						error: function (e) {
-							console.log("error retrieving new-event form");
+							console.log("AJAX call to retrieve new-event form failed.");
 						}
 					});
 				}
@@ -374,6 +379,7 @@ function initializeCalendar( config )
 		// click on event - make this edit
 		eventClick: function(data, event, view) {
 			globalEvent = data;
+
 			var content = '<p><b>'+lang['when']+'</b><br>'+ data.when +
 			(data.location && '<p><b>'+lang['location']+'</b><br>'+data.location+'</p>' || '') +
 			(data.description && '<p><b>'+lang['details']+'</b><br>'+data.description+'</p>' || '');
@@ -422,7 +428,7 @@ function initializeCalendar( config )
 					$('#calendar').fullCalendar( 'rerenderEvents' );
 				},
 				error: function (e) {
-					console.log("Error resizing event");
+					console.log("AJAX call to resize an event failed.");
 					revertFunc();
 				}
 			});
@@ -455,7 +461,7 @@ function initializeCalendar( config )
 					$('#calendar').fullCalendar('refetchEvents');
 				},
 				error: function (e) {
-					console.log("Error moving event");
+					console.log("AJAX call to move an event failed.");
 					revertFunc();
 				}
 			});

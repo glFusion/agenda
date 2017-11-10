@@ -56,9 +56,11 @@ class eventHandler {
         $location       = $args['location'];
         $description    = $args['description'];
         $category       = $args['category'];
-        if (isset($args['repeats'])) {
+
+        if ( isset($args['freq']) && $args['freq'] != 'none' ) {
+            $repeats = 1;
             $repeats     = 1;
-            $repeat_freq = COM_applyFilter($args['repeat-freq'],true);
+            $repeat_freq = 0; //COM_applyFilter($args['repeat-freq'],true);
         }
         if ( isset($args['event-allday'] ) ) {
             $allday = 1;
@@ -136,6 +138,7 @@ class eventHandler {
         }
 
         if ( $errors ) {
+            COM_errorLog("ERROR: Agenda Plugin: Valdation of start / end event date failed.");
             return $errorCode;
         }
 
@@ -149,7 +152,6 @@ class eventHandler {
         $location = $filter->filterText($location);
 
         // initilize the date objects for start / end
-
         $dtStart = new \Date($start,$_USER['tzid']);
         $dtEnd   = new \Date($end,  $_USER['tzid']);
 
@@ -179,6 +181,13 @@ class eventHandler {
             return 2;
         }
 
+        $rrule = $this->buildRrule();
+        if ( $rrule != '' ) {
+            $repeats = 1;
+            // update the parent record with the recurrence rule
+            DB_query("UPDATE {$_TABLES['ac_event']} SET rrule='".DB_escapeString($rrule)."' WHERE parent_id=".$parent_id);
+        }
+
         if ( $queued ) {
             return 3;
         }
@@ -194,50 +203,49 @@ class eventHandler {
             DB_delete($_TABLES['ac_event'],'parent_id',$parent_id);
         }
 
-        if ($repeats == 1 ) {   // handling repeating events
-            $future = 365;
-            if ( $repeat_freq == 365 ) $future = 3650;
-            $until = ($future/$repeat_freq);
-
+        if ( $rrule != '' ) {
             if ( $end_date === '' ) {
                 $end_date = $start_date;
             }
-
             $orig_start_date = $start_date;
             $orig_end_date   = $end_date;
 
-            switch ( $repeat_freq) {
-                case 1 : // daily
-                    $toInsert = 365;
-                    $repeatType = 'daily';
-                    break;
-
-                case 7 : // weekly
-                    $toInsert = 52;
-                    $repeatType = 'weekly';
-                    break;
-
-                case 14 : // bi weekly
-                    $toInsert = 26;
-                    $repeatType = 'biweekly';
-                    break;
-
-                case 30 : // monthly
-                    $toInsert = 12;
-                    $repeatType = 'monthly';
-                    break;
-
-                case 365 : // yearly
-                    $toInsert = 5;
-                    $repeatType = 'yearly';
-                    break;
+            // calculate the future dates
+            $ruleArray = explode(';',$rrule);
+            $rules = array();
+            foreach ( $ruleArray AS $element ) {
+                $rule = explode('=',$element);
+                if ( $rule[0] != '' ) {
+                    $rules[$rule[0]] = $rule[1];
+                }
             }
 
-            for ( $x = 1; $x <= $toInsert; $x++ ) {
+            $rrule = new \RRule\RRule($rules);
 
-                $start_date = $this->buildRecurring( $repeatType, $orig_start_date, $x);
-                $end_date   = $this->buildRecurring( $repeatType, $orig_end_date, $x);
+            $iterations = count($rrule);
+            $startDateArray = array();
+            foreach ( $rrule as $occurrence ) {
+                $startDateArray[] = $occurrence->format('Y-m-d');
+            }
 
+// need to debug duration
+COM_errorLog("******* Calculating Duration");
+COM_errorLog("start date is " . $start_date);
+COM_errorLog("end date is   " . $end_date);
+            // calculate the duration (# of days) of the event
+            $startD = trim($start_date . " " . '00:00:00');
+            $endD   = trim($end_date . " " . '00:00:00');
+            $dtStartD = new \Date($startD,$_USER['tzid']);
+            $dtEndD   = new \Date($endD,  $_USER['tzid']);
+            $dtDiff = $dtEndD->toUnix() - $dtStartD->toUnix();
+            $durationDays = (int) floor($dtDiff / (60 * 60 * 24));
+
+COM_errorLog("we calculated the duration as " . $durationDays);
+            for ( $x = 1; $x < $iterations; $x++ ) {
+
+                $start_date = $startDateArray[$x];
+                $end_date = date('Y-m-d', strtotime($start_date . ' +'.$durationDays.' days'));
+COM_errorLog("new end date is " . $end_date);
                 $start          = $start_date . " " . $start_time;
                 $end            = $end_date . " " . $end_time;
 
@@ -356,49 +364,42 @@ class eventHandler {
             DB_delete($_TABLES['ac_event'],'parent_id',$parent_id);
         }
 
-        if ($repeats == 1 ) {   // handling repeating events
-            $future = 365;
-            if ( $repeat_freq == 365 ) $future = 3650;
-            $until = ($future/$repeat_freq);
-
+        $rrule = $args['rrule'];
+        if ( $rrule != '' && $rrule != null ) {
             if ( $end_date === '' ) {
                 $end_date = $start_date;
             }
-
             $orig_start_date = $start_date;
             $orig_end_date   = $end_date;
 
-            switch ( $repeat_freq) {
-                case 1 : // daily
-                    $toInsert = 365;
-                    $repeatType = 'daily';
-                    break;
+            // calculate the future dates
+            $ruleArray = explode(';',$rrule);
+            $rules = array();
+            foreach ( $ruleArray AS $element ) {
+                $rule = explode('=',$element);
+                if ( $rule[0] != '' ) {
+                    $rules[$rule[0]] = $rule[1];
+                }
+            }
+            $rrule = new \RRule\RRule($rules);
 
-                case 7 : // weekly
-                    $toInsert = 52;
-                    $repeatType = 'weekly';
-                    break;
-
-                case 14 : // bi weekly
-                    $toInsert = 26;
-                    $repeatType = 'biweekly';
-                    break;
-
-                case 30 : // monthly
-                    $toInsert = 12;
-                    $repeatType = 'monthly';
-                    break;
-
-                case 365 : // yearly
-                    $toInsert = 5;
-                    $repeatType = 'yearly';
-                    break;
+            $iterations = count($rrule);
+            $startDateArray = array();
+            foreach ( $rrule as $occurrence ) {
+                $startDateArray[] = $occurrence->format('Y-m-d');
             }
 
-            for ( $x = 1; $x <= $toInsert; $x++ ) {
+            // calculate the duration (# of days) of the event
+            $startD = trim($start_date . " " . '00:00:00');
+            $endD   = trim($end_date . " " . '00:00:00');
+            $dtStartD = new \Date($startD,$_USER['tzid']);
+            $dtEndD   = new \Date($endD,  $_USER['tzid']);
+            $durationDays = (int) $dtEndD->format('d') - (int) $dtStartD->format('d');
 
-                $start_date = $this->buildRecurring( $repeatType, $orig_start_date, $x);
-                $end_date   = $this->buildRecurring( $repeatType, $orig_end_date, $x);
+            for ( $x = 1; $x < $iterations; $x++ ) {
+
+                $start_date = $startDateArray[$x];
+                $end_date = date('Y-m-d', strtotime($start_date . ' +'.$durationDays.' day'));
 
                 $start          = $start_date . " " . $start_time;
                 $end            = $end_date . " " . $end_time;
@@ -737,6 +738,146 @@ class eventHandler {
     }
 
     /**
+    *   Save an edited event in submission queue
+    *
+    *   @param  array   $args    Array of input arguments
+    *   @return boolean     0 on success, other indicates error
+    */
+    public function updateQueuedEvent($args = array())
+    {
+        global $_CONF, $_AC_CONF, $_USER, $_TABLES;
+
+        $errorCode = 0;
+        $errors = 0;
+
+    // set defaults
+        $allday = 0;
+
+        // get the parentid and the event id
+
+        $parent_id      = (int) COM_applyFilter($args['parent_id'],true);
+
+    // parse submitted data
+        $title          = $args['title'];
+        $start_date     = $args['event-date'];
+        $end_date       = $args['event-end-date'];
+        $start_time     = isset($args['start-time']) ? $args['start-time'] : '';
+        $end_time       = isset($args['end-time'])   ? $args['end-time'] : '';
+        $location       = $args['location'];
+        $description    = $args['description'];
+        $category       = $args['category'];
+
+        if ( isset($args['freq']) && $args['freq'] != 'none' ) {
+            $repeats = 1;
+            $repeats     = 1;
+            $repeat_freq = 0;
+        }
+        if ( isset($args['event-allday'] ) ) {
+            $allday = 1;
+            $end_time = '24:00:00';
+        }
+        if ( COM_isAnonUser() ) {
+            $owner_id = 1;
+        } else {
+            $owner_id = $_USER['uid'];
+        }
+
+        if ( $errorCode ) {
+            return $errorCode;
+        }
+
+    // check / validate submitted data
+
+        if ( $start_time == '' ) {
+            $start_time = '00:00:00';
+        }
+        if ( $end_time == '' ) {
+            $end_time = '24:00:00';
+        }
+
+        $start_time = date("H:i", strtotime($start_time));
+        $end_time   = date("H:i", strtotime($end_time));
+
+        // create the full start / end time for the event
+        $start          = trim($start_date . " " . $start_time);
+        $end            = trim($end_date . " " . $end_time);
+
+        // validation checks
+
+        if ( !agenda_validateDate($start_date, 'Y-m-d') ) {
+            $errorCode = AC_ERR_INVALID_DATE;
+            $errors++;
+        }
+
+        if ( !agenda_validateDate($end_date, 'Y-m-d') ) {
+            $errorCode = AC_ERR_INVALID_DATE;
+            $errors++;
+        }
+
+        if ( $errors ) {
+            COM_errorLog("ERROR: Agenda Plugin: Valdation of start / end event date failed.");
+            return $errorCode;
+        }
+
+        // sanitize the input
+
+        $filter = new \sanitizer();
+        $filter->setPostmode('text');
+
+        $description = $filter->filterText($description);
+        $title = $filter->filterText($title);
+        $location = $filter->filterText($location);
+
+        // initilize the date objects for start / end
+        $dtStart = new \Date($start,$_USER['tzid']);
+        $dtEnd   = new \Date($end,  $_USER['tzid']);
+
+        // create the unix timestamp start / end dates
+        $start = $dtStart->toUnix(false);
+        $end   = $dtEnd->toUnix(false);
+
+        $rrule = $this->buildRrule();
+        if ( $rrule != '' ) {
+            $repeats = 1;
+        }
+
+        $data = array(
+            'allday'        => $allday,
+            'start'         => $start,
+            'end'           => $end,
+            'start_date'    => $start_date,
+            'end_date'      => $end_date,
+            'title'         => $title,
+            'location'      => $location,
+            'description'   => $description,
+            'repeats'       => $repeats,
+            'repeat_freq'   => $repeat_freq,
+            'rrule'         => $rrule,
+            'category'      => (int) $category,
+        );
+
+        $dataSQL = '';
+        $commaCount = 0;
+        // build out our data structions
+        foreach ($data AS $column => $value) {
+            if ( $commaCount > 0 ) {
+                $dataSQL .= ', ';
+            }
+            $dataSQL .= $column . " = '".DB_escapeString($value)."'";
+            $commaCount++;
+        }
+        $sql = "UPDATE {$_TABLES['ac_event']} SET ";
+        $sql .= $dataSQL;
+        $sql .= " WHERE parent_id=".(int) $parent_id;
+        DB_query($sql,1);
+        if ( DB_error() ) {
+            $errorCode = 1;
+        }
+
+        return $errorCode;
+    }
+
+    /**
     *   Delete a single event
     *
     *   @param  int    $parent_id    parent id of event to delete
@@ -752,17 +893,24 @@ class eventHandler {
         if ( $this->hasWriteAccess() ) {
             // validation check
             if ( $parent_id < 1 || $event_id < 1 ) {
+                COM_errorLog("ERROR: Agenda Plugin: deleteEvent() received an invalid parent id or event id");
                 return -1;
             }
             $sql = "DELETE FROM {$_TABLES['ac_events']} WHERE event_id=".(int) $event_id . " AND parent_id=".(int) $parent_id;
             DB_query($sql);
-            $sql = "DELETE FROM {$_TABLES['ac_event']} WHERE parent_id=".(int) $parent_id;
-            DB_query($sql);
 
-            PLG_itemDeleted($parent_id,'agenda');
+            // don't delete parent if it is a series
+            $series = DB_getItem($_TABLES['ac_event'],'repeats','parent_id='.(int) $parent_id);
+            if ( $series != 1 ) {
+                $sql = "DELETE FROM {$_TABLES['ac_event']} WHERE parent_id=".(int) $parent_id;
+                DB_query($sql);
+                PLG_itemDeleted($parent_id,'agenda');
+            }
+
             CACHE_remove_instance('agenda');
             $retval = 0;
         } else {
+            COM_errorLog("ERROR: Agenda Plugin: Attempt to delete event with proper permissions");
             $retval = -1;
         }
         return $retval;
@@ -780,7 +928,6 @@ class eventHandler {
         global $_CONF, $_AC_CONF, $_TABLES;
 
         $retval = 0;
-
         if ( $this->hasWriteAccess() ) {
             $sql = "DELETE FROM {$_TABLES['ac_events']} WHERE parent_id=".(int) $parent_id;
             DB_query($sql);
@@ -791,6 +938,7 @@ class eventHandler {
             CACHE_remove_instance('agenda');
             $retval = 0;
         } else {
+            COM_errorLog("ERROR: Agenda Plugin: User did not have permissions to delete event series.");
             $retval = -1;
         }
         return $retval;
@@ -935,6 +1083,81 @@ class eventHandler {
                 break;
         }
         return $retval;
+    }
+
+    /**
+    *   Returns a well formed RRULE record
+    *
+    *   requires the appropriate POST fields be availble
+    *
+    *   @return string      Blank (no recurrence) or a RRULE string
+    */
+    private function buildRrule()
+    {
+        $rrule = '';
+
+        if ( isset($_POST['freq']) && $_post['freq'] != 'none' ) {
+            $freq = COM_applyFilter($_POST['freq']);
+            $interval = COM_applyFilter($_POST['interval']);
+
+            switch ($freq) {
+                case 'HOURLY' :
+                    $rrule = 'FREQ=HOURLY;INTERVAL=' . (int) $interval.';';
+                    break;
+
+                case 'DAILY' :
+                    $rrule = 'FREQ=DAILY;INTERVAL=' . (int) $interval .';';
+                    break;
+
+                case 'WEEKLY' :
+                    $rrule = 'FREQ=WEEKLY;INTERVAL='. (int) $interval;
+
+                    if ( isset($_POST['wk-byday']) && $_POST['wk-byday'] != '' ) {
+                        $rrule .= ';BYDAY='. $_POST['wk-byday'];
+                    }
+                    $rrule .= ';';
+                    break;
+
+                case 'MONTHLY' :
+                    $rrule = 'FREQ=MONTHLY;INTERVAL='.(int) $interval.';';
+                    if ( $_POST['mtype'] == 0 ) {
+                        $rrule .= "BYMONTHDAY=".(int) COM_applyFilter($_POST['mo-dom'],true) . ';';
+                    } elseif ( $_POST['mtype'] == 1 ) {
+                        $rrule .= "BYSETPOS=".COM_applyFilter($_POST['mo-setpos']);
+                        if ( isset($_POST['mo-day']) && $_POST['mo-day'] != '' ) {
+                            $rrule .= ';BYDAY='.COM_applyFilter($_POST['mo-day']);
+                        }
+                        $rrule .= ';';
+                    }
+                    break;
+
+                case 'YEARLY' :
+                    $rrule = 'FREQ=YEARLY;';
+                    if ( $_POST['yr-type'] == 0 ) {
+                        $rrule .= "BYMONTH=".(int) COM_applyFilter($_POST['yr-month'],true).';';
+                        $rrule .= "BYMONTHDAY=".(int) COM_applyFilter($_POST['yr-dom'],true).';';
+                    } elseif ( $_POST['yr-type'] == 1 ) {
+                        $rrule .= "BYSETPOS=".(int) COM_applyFilter($_POST['yr-setpos'],true).';';
+                        $rrule .= "BYDAY=".COM_applyFilter($_POST['yr-day']).';';
+                        $rrule .= "BYMONTH=".(int) COM_applyFilter($_POST['yr-month2'],true).';';
+                    }
+                    break;
+                default : // must be a frequency we do not support
+                    return '';
+                    break;
+            }
+
+    // validate event date is valid
+            $rrule .= 'DTSTART='.COM_applyFilter($_POST['event-date']).';';
+
+            if ($_POST['end-type'] == 0 ) {
+                $rrule .= 'COUNT='.(int) COM_applyFilter($_POST['endafter'],true).';';
+            } elseif ( $_POST['end-type'] == 1 ) {
+                $rrule .= 'UNTIL='.COM_applyFilter($_POST['recur-end-date']).';';
+            }
+        }
+COM_errorLog($rrule);
+        return $rrule;
     }
 
     public function getAllEventData()
