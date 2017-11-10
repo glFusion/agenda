@@ -1125,7 +1125,7 @@ COM_errorLog("new end date is " . $end_date);
                     } elseif ( $_POST['mtype'] == 1 ) {
                         $rrule .= "BYSETPOS=".COM_applyFilter($_POST['mo-setpos']);
                         if ( isset($_POST['mo-day']) && $_POST['mo-day'] != '' ) {
-                            $rrule .= ';BYDAY='.COM_applyFilter($_POST['mo-day']);
+                            $rrule .= ';BYDAY='.$_POST['mo-day'];
                         }
                         $rrule .= ';';
                     }
@@ -1138,7 +1138,7 @@ COM_errorLog("new end date is " . $end_date);
                         $rrule .= "BYMONTHDAY=".(int) COM_applyFilter($_POST['yr-dom'],true).';';
                     } elseif ( $_POST['yr-type'] == 1 ) {
                         $rrule .= "BYSETPOS=".(int) COM_applyFilter($_POST['yr-setpos'],true).';';
-                        $rrule .= "BYDAY=".COM_applyFilter($_POST['yr-day']).';';
+                        $rrule .= "BYDAY=".$_POST['yr-day'].';';
                         $rrule .= "BYMONTH=".(int) COM_applyFilter($_POST['yr-month2'],true).';';
                     }
                     break;
