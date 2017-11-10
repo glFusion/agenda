@@ -18,7 +18,7 @@ if (!defined ('GVERSION')) {
     die ('This file can not be used on its own.');
 }
 
-define('AGENDA_SNAPSHOT','201711081100');
+define('AGENDA_SNAPSHOT','201711091900');
 
 $ac_config = \config::get_instance();
 $_AC_CONF = $ac_config->get_config('agenda');
@@ -56,6 +56,8 @@ switch( $_AC_CONF['displayblocks'] ) {
         $_AC_CONF['menu'] = 'menu';
         break;
 }
+
+require_once $_CONF['path'].'plugins/agenda/vendor/autoload.php';
 
 spl_autoload_register('agenda_autoloader');
 

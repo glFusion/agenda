@@ -30,6 +30,7 @@ $_SQL['ac_event'] = "CREATE TABLE {$_TABLES['ac_event']} (
     description text default NULL,
     repeats     tinyint(1)  default '0',
     repeat_freq	int(30) default NULL,
+    rrule       varchar(128) default NULL,
     category    int(30) default '1',
     queued      tinyint(1) unsigned default 0,
     owner_id mediumint(8) unsigned NOT NULL default '1',
