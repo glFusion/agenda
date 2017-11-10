@@ -265,7 +265,7 @@
 	<div class="uk-form-row">
 		<label class="uk-form-label" for="description">{lang_description}</label>
 		<div class="uk-form-controls">
-			<textarea id="description" name="description" rows="4" width="120" style="width:80%;">{description}</textarea>
+			<textarea id="description" name="description" rows="4" width="120" style="width:85%;">{description}</textarea>
 		</div>
 	</div>
 	{!if admin_form}
