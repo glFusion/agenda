@@ -694,6 +694,14 @@ function _ac_getListField($fieldname, $fieldvalue, $A, $icon_arr, $token = "")
                 . '&amp;' . CSRF_TOKEN . '=' . $token, $attr);
             break;
 
+        case 'repeats' :
+            if ( $fieldvalue == 1 ) {
+                $retval = '<i class="uk-icon uk-icon-repeat uk-text-success"></i>';
+            } else {
+                $retval = '';
+            }
+            break;
+
         default :
             $retval = $fieldvalue;
             break;
