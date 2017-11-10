@@ -638,14 +638,14 @@ function deleteCategory()
 
 function agenda_admin_menu($action)
 {
-    global $_CONF, $_AC_CONF, $LANG_ADMIN,$LANG_AC;
+    global $_CONF, $_AC_CONF, $LANG_ADMIN, $LANG_AC, $LANG01;
 
     $retval = '';
-//    http://dev.glfusion.org/admin/plugins/agenda/index.php?edit=x&src=mod&parent_id=45
+
     if ( $action == 'edit' ) {
         $menu_arr = array(
-            array( 'url' => $_CONF['site_admin_url'].'/moderation.php','text' => 'Submissions','active' =>false),
-            array( 'url' => $_CONF['site_admin_url'].'/moderation.php','text' => 'Edit Event','active' => true),
+            array( 'url' => $_CONF['site_admin_url'].'/moderation.php','text' => $LANG01[10],'active' =>false),
+            array( 'url' => $_CONF['site_admin_url'].'/moderation.php','text' => $LANG_AC_JS['edit_event'],'active' => true),
             array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php?catlist=x','text' => $LANG_AC['category_list'],'active' => ($action == 'catlist' ? true : false)),
             array( 'url' => $_CONF['site_admin_url'], 'text' => $LANG_ADMIN['admin_home'])
         );
