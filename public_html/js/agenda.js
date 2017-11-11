@@ -390,7 +390,14 @@ function initializeCalendar( config )
 				'<button onclick="edit_single_event();" id="edit-button" class="uk-margin-small-right uk-button uk-button-small uk-button-success" type="button">'+lang['edit']+'</button>';
 				if ( data.repeats == 1 ) {
 					content = content +
-					'<button onclick="edit_series_event();" class="uk-margin-small-right uk-button uk-button-small uk-button-primary">'+lang['edit_series']+'</button>';
+					'<button onclick="edit_series_event();" class="uk-margin-small-right uk-button uk-button-small uk-button-primary"';
+					if ( data.exception == 1 ) {
+						content = content + ' disabled="disabled" ';
+					}
+					content = content + '>' + lang['edit_series'] + '</button>';
+					if ( data.exception == 1 ) {
+						content = content + '&nbsp;' + lang['exception_event'];
+					}
 				}
 				content = content +
 				'</div>';

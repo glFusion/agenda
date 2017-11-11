@@ -89,6 +89,7 @@ while ( $row = DB_fetchArray($result) ) {
     $eventArray['repeats']      = $row['repeats'];
     $eventArray['backgroundColor'] = $row['bgcolor'];
     $eventArray['textColor']       = $row['fgcolor'];
+    $eventArray['exception']    = $row['exception'];
 
     $events[]                   = $eventArray;
 }

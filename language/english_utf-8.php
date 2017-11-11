@@ -147,6 +147,7 @@ $LANG_AC_JS = array(
     'err_end_before_start' => 'End date/time must be greater than start date/time',
     'err_initialize'    => 'Error Initializing Agenda Plugin',
     'event_queued'      => 'Thank you for your submission. Your event submission has been placed in the queue for review and approval.',
+    'exception_event'   => 'Exception Event',
 );
 
 $LANG_AC_ERRORS = array(
