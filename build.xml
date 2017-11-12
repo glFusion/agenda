@@ -28,8 +28,8 @@
     <!-- ============================== -->
     <target name="prepare">
         <echo msg="Making directory ${dstDir}..."/>
-        <delete dir="${dstDir}" quiet="true"/>
-        <mkdir dir="${dstDir}"/>
+        <delete dir="${dstDir}/${plugin}" quiet="true"/>
+        <mkdir dir="${dstDir}/${plugin}"/>
     </target>
 
     <!-- ============================== -->
@@ -39,7 +39,7 @@
 
 	<!-- Copy files -->
         <echo msg="Copying files..."/>
-        <copy todir="${dstDir}">
+        <copy todir="${dstDir}/${plugin}">
             <fileset dir="${srcDir}">
                 <exclude name=".git"/>
                 <exclude name=".git/**"/>
@@ -65,13 +65,13 @@
 
         <!-- Change permissions -->
         <echo msg="Changing directory and file permissions..."/>
-        <chmod file="${dstDir}" mode="0777"/>
+        <chmod file="${dstDir}/${plugin}" mode="0777"/>
 
         <!-- The subtask needs to know where to find templates that reference JS files.  -->
 
         <foreach param="filename" absparam="absfilename" target="subtask.minify-js">
             <!-- The subtask needs to be told which files to minify. -->
-            <fileset dir="${dstDir}/public_html/js">
+            <fileset dir="${dstDir}/${plugin}/public_html/js">
                 <include name="**/*.js"/>
             </fileset>
         </foreach>
@@ -83,20 +83,20 @@
 		<property name="minified_path" value="${dirname}/${basename}.min.js" />
 
 		<!-- compress JS -->
-		<jsMin targetDir="${dstDir}/public_html/js" suffix=".min." failOnError="false">
-		  <fileset dir="${dstDir}/public_html/js">
+		<jsMin targetDir="${dstDir}/${plugin}/public_html/js" suffix=".min" failOnError="false">
+		  <fileset dir="${dstDir}/${plugin}/public_html/js">
 			<include name="${basename}.js"/>
 		  </fileset>
 		</jsMin>
 
-		<delete file="${dstDir}/public_html/js/${basename}.js" />
+		<delete file="${dstDir}/${plugin}/public_html/js/${basename}.js" />
 
 		<!-- Search for references to the original file and replace with the minified filename and hash. -->
         <!-- If the original is foo.js, the replacement will be something like foo-min-694136eac92bb82e23a0837c814a1bce4fd54d46.js -->
         <!-- The Apache rewrite rule for this replacement is: -->
         <!-- RewriteRule ^(.*)-min-[a-f0-9]+\.(css|js|gif|png|jpg)$ /$1-min.$2 [L] -->
         <reflexive>
-            <fileset dir="${dstDir}">
+            <fileset dir="${dstDir}/${plugin}">
                 <!-- Files could also be included via wildcard, i.e. *.phtml, but that might be excessive. -->
                 <include name="functions.inc" />
                 <include name="templates/*"/>
@@ -123,7 +123,7 @@
         </zip>
 
         <echo msg="Removing work files..."/>
-        <delete dir="${dstDir}"/>
+        <delete dir="${dstDir}/${plugin}"/>
 
         <echo msg="Files copied and compressed in Dist directory"/>
     </target>
