@@ -127,7 +127,7 @@
             </fileset>
             <filterchain>
                 <replaceregexp>
-                    <regexp pattern="\(unreleased)\" replace="(${build.date})"/>
+                    <regexp pattern="\(unreleased\)" replace="(${build.date})"/>
                 </replaceregexp>
             </filterchain>
         </reflexive>
