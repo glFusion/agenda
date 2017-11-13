@@ -17,6 +17,10 @@
         <format property="build.date" pattern="%B %e, %Y"/>
     </tstamp>
 
+    <tstamp>
+        <format property="build.datetime" pattern="%Y%m%d%H%m"/>
+    </tstamp>
+
     <!-- ============================== -->
     <!-- Target: help                   -->
     <!-- ============================== -->
@@ -128,6 +132,18 @@
             <filterchain>
                 <replaceregexp>
                     <regexp pattern="\(unreleased\)" replace="(${build.date})"/>
+                </replaceregexp>
+            </filterchain>
+        </reflexive>
+
+        <!-- update release date in changelog -->
+        <reflexive>
+            <fileset dir="${dstDir}/${pi.id}">
+                <include pattern="functions.inc" />
+            </fileset>
+            <filterchain>
+                <replaceregexp>
+                    <regexp pattern="##builddatetime##" replace="${build.datetime}"/>
                 </replaceregexp>
             </filterchain>
         </reflexive>
