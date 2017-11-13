@@ -1,6 +1,8 @@
 Agenda Plugin ChangeLog
 
-## v0.3.1
+## v0.3.2 (unreleased)
+
+## v0.3.1 (November 12, 2017)
  - Disable Edit Series button on repeating events that are marked as an exception
  - Left align buttons on both pop-up and edit strings
  - Reduced the size of the description entry field by 1 row
