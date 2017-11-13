@@ -4,6 +4,13 @@
     <property name="srcDir" value="." override="false"/>
     <property name="dstDir" value="../dist" override="false"/>
 	<property name="releaseDir" value="../../dist" override="false"/>
+	<property name="local.settings.file" value="${plugin}.php" />
+
+	<includepath classpath="../../tasks"/>
+    <taskdef name="phpvariable" classname="PhpVariableTask"/>
+
+	<phpVariable file="${local.settings.file}" variable="_AC_CONF[pi_version]" outputProperty="pi.version" />
+	<phpVariable file="${local.settings.file}" variable="_AC_CONF[gl_version]" outputProperty="glfusion_version" />
 
     <!-- ============================== -->
     <!-- Target: help                   -->
@@ -11,17 +18,16 @@
     <target name="help">
         <echo msg="Agenda Plugin Build Tools"/>
         <echo msg="----------------------"/>
-        <echo msg="First of all, change the directory to the root directory of the repository, where 'build.xml' resides."/>
-        <echo msg="Then, edit the 'build.properties' file in the root directory, if necessary."/>
-        <echo msg="For Unixy users, please use 'phing' instead of 'phing.bat' in the descriptions below."/>
+        <echo msg="This must be run from where 'build.xml' resides."/>
+        <echo msg="Update 'build.properties' file in the root directory, if necessary."/>
         <echo msg=""/>
         <echo msg="To show help [this screen], enter:"/>
-        <echo msg="./system/build/vendor/phing/phing/bin/phing.bat[ENTER]"/>
+        <echo msg="phing[ENTER]"/>
         <echo msg=""/>
-        <echo msg="To create a tarball, enter:"/>
-        <echo msg="./system/build/vendor/phing/phing/bin/phing.bat dist[ENTER]"/>
+        <echo msg="To create the Plugin distribution, execute:"/>
+        <echo msg="phing dist[ENTER]"/>
         <echo msg=""/>
-    </target>
+	</target>
 
     <!-- ============================== -->
     <!-- Target: prepare                -->
@@ -30,6 +36,7 @@
         <echo msg="Making directory ${dstDir}..."/>
         <delete dir="${dstDir}/${plugin}" quiet="true"/>
         <mkdir dir="${dstDir}/${plugin}"/>
+
     </target>
 
     <!-- ============================== -->
@@ -115,8 +122,8 @@
     <!-- ============================== -->
     <target name="dist" depends="build">
         <echo msg="Creating an archive..."/>
-        <delete file="${releaseDir}/agenda-${version}-${glfusion_version}.zip" quiet="true"/>
-        <zip destfile="${releaseDir}/agenda-${version}-${glfusion_version}.zip">
+        <delete file="${releaseDir}/agenda-${pi.version}-${glfusion_version}.zip" quiet="true"/>
+        <zip destfile="${releaseDir}/agenda-${pi.version}-${glfusion_version}.zip">
             <fileset dir="${dstDir}">
                 <include name="**/**"/>
             </fileset>
@@ -125,6 +132,6 @@
         <echo msg="Removing work files..."/>
         <delete dir="${dstDir}/${plugin}"/>
 
-        <echo msg="Files copied and compressed in Dist directory"/>
+        <echo msg="Files copied and compressed in ${releaseDir} directory"/>
     </target>
 </project>
