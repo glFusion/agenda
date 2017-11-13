@@ -131,6 +131,7 @@
 
         <echo msg="Removing work files..."/>
         <delete dir="${dstDir}/${plugin}"/>
+        <delete dir="${dstDir}"/>
 
         <echo msg="Files copied and compressed in ${releaseDir} directory"/>
     </target>
