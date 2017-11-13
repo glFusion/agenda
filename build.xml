@@ -13,19 +13,22 @@
     <parsepluginxml file="${local.plugin.file}" variable="glfusionversion" outputProperty="pi.glfusion_version"/>
     <parsepluginxml file="${local.plugin.file}" variable="name" outputProperty="pi.name" />
 
+    <tstamp>
+        <format property="build.date" pattern="%B %e, %Y"/>
+    </tstamp>
+
     <!-- ============================== -->
     <!-- Target: help                   -->
     <!-- ============================== -->
     <target name="help">
         <echo msg="${pi.name} Plugin Build Tools"/>
         <echo msg="----------------------"/>
-        <echo msg="This must be run from where 'build.xml' resides."/>
-        <echo msg="Update 'build.properties' file in the root directory, if necessary."/>
+        <echo msg="This must be run from the directory where 'build.xml' resides."/>
         <echo msg=""/>
         <echo msg="To show help [this screen], enter:"/>
         <echo msg="phing[ENTER]"/>
         <echo msg=""/>
-        <echo msg="To create the Plugin distribution, execute:"/>
+        <echo msg="To create the Plugin distribution:"/>
         <echo msg="phing dist[ENTER]"/>
         <echo msg=""/>
     </target>
@@ -113,6 +116,18 @@
             <filterchain>
                 <replaceregexp>
                     <regexp pattern="${basename}\.js" replace="${basename}.min.js"/>
+                </replaceregexp>
+            </filterchain>
+        </reflexive>
+
+        <!-- update release date in changelog -->
+        <reflexive>
+            <fileset dir="${dstDir}/${pi.id}">
+                <include pattern="CHANGELOG.md" />
+            </fileset>
+            <filterchain>
+                <replaceregexp>
+                    <regexp pattern="\(unreleased)\" replace="(${build.date})"/>
                 </replaceregexp>
             </filterchain>
         </reflexive>
