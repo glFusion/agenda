@@ -18,7 +18,7 @@
     </tstamp>
 
     <tstamp>
-        <format property="build.datetime" pattern="%Y%m%d%H%m"/>
+        <format property="build.datetime" pattern="%Y%m%d%H%M"/>
     </tstamp>
 
     <!-- ============================== -->
