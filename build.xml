@@ -124,8 +124,8 @@
     <!-- ============================== -->
     <target name="dist" depends="build">
         <echo msg="Creating an archive..."/>
-        <delete file="${releaseDir}/agenda-${pi.version}-${pi.glfusion_version}.zip" quiet="true"/>
-        <zip destfile="${releaseDir}/agenda-${pi.version}-${pi.glfusion_version}.zip">
+        <delete file="${releaseDir}/${pi.id}-${pi.version}-${pi.glfusion_version}.zip" quiet="true"/>
+        <zip destfile="${releaseDir}/${pi.id}-${pi.version}-${pi.glfusion_version}.zip">
             <fileset dir="${dstDir}">
                 <include name="**/**"/>
             </fileset>
