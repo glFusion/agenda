@@ -136,7 +136,7 @@
             </filterchain>
         </reflexive>
 
-        <!-- update release date in changelog -->
+        <!-- update snapshot date/time in functions.inc -->
         <reflexive>
             <fileset dir="${dstDir}/${pi.id}">
                 <include pattern="functions.inc" />
