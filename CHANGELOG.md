@@ -1,6 +1,6 @@
 Agenda Plugin ChangeLog
 
-## v0.4.0 (unreleased)
+## v0.4.0 (November 14, 2017)
  - Added several new configuration options to control how the calendar displays
    - display week number
    - time formats
