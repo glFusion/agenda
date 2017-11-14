@@ -161,6 +161,42 @@ Select what to display in the Right header area of the calendar.
 
 Select the first day of the week for your location.
 
+**Week View :: Display Event Time**
+
+If TRUE, the Event Start Time will display next to the event (All Day events DO NOT display a start time).
+
+**Week View :: Display Event End Time**
+
+If TRUE, the Event End Time will also display next to the event (All Day events DO NOT display a end time).
+
+**Day View :: Event Limit**
+
+Limits the number of events displayed on a day. When there are too many events, a link that looks like “+2 more” is displayed.
+
+**Day View :: Time Format**
+
+Determines the time-text that will be displayed on each event. For example, 'hh:mm a' will display 12:25 am. See PHP date() formats for details on different formats.formats</a> for details on different formats.
+
+**Day View :: Display Event Time**
+
+If TRUE, the Event Start Time will display next to the event (All Day events DO NOT display a start time).
+
+**Day View :: Display Event End Time**
+
+If TRUE, the Event End Time will also display next to the event (All Day events DO NOT display a end time).
+
+**List View :: Time Format**
+
+Determines the time-text that will be displayed on each event. For example, 'hh:mm a' will display 12:25 am. See PHP date() formats for details on different formats.
+
+**List View :: Display Event Time**
+
+If TRUE, the Event Start Time will display next to the event (All Day events DO NOT display a start time).
+
+**List View :: Display Event End Time**
+
+If TRUE, the Event End Time will also display next to the event (All Day events DO NOT display a end time).
+
 ### License
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
