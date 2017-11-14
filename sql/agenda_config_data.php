@@ -107,7 +107,7 @@ $agendaConfigData = array(
     	'group' => 'agenda'
     ),
     array(
-    	'name' => 'upcomingeventsrang',
+    	'name' => 'upcomingeventsrange',
     	'default_value' => 14,
     	'type' => 'text',
     	'subgroup' => 0,
