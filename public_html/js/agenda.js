@@ -148,7 +148,7 @@ function deleteeventseries() {
 
 function edit_single_event( )
 {
-//	event = globalEvent;
+	//	event = globalEvent;
 	$('.qtip').hide();
 
 	var editDialog = $( "#dialog-form-full" ).dialog({
@@ -157,36 +157,36 @@ function edit_single_event( )
 		resizable: true,
 		classes: { "ui-dialog": "tm-agenda-dialog" },
 		position: {
-		  my: "top left",
-		  at: "top left",
-		  of: "#calendar",
-	    collision: "fit"
+			my: "top left",
+			at: "top left",
+			of: "#calendar",
+			collision: "fit"
 		},
-    width: $('#calendar').width(),
-    height: 'auto',
-    title: lang['edit_event'],
+		width: $('#calendar').width(),
+		height: 'auto',
+		title: lang['edit_event'],
 		buttons: [
-			{
-				text: lang['save_event'],
-				"class" : 'uk-button uk-button-success',
-				click: function() {
-					saveevent();
-				}
-			},
-			{
-				text: lang['delete_event'],
-				"class" : 'uk-button uk-button-danger',
-				click: function() {
-					deleteevent();
-				}
-			},
-			{
-				text: lang['cancel'],
-				"class": 'uk-button uk-button',
-				click : function () {
-					editDialog.dialog('close');
-				}
+		{
+			text: lang['save_event'],
+			"class" : 'uk-button uk-button-success',
+			click: function() {
+				saveevent();
 			}
+		},
+		{
+			text: lang['delete_event'],
+			"class" : 'uk-button uk-button-danger',
+			click: function() {
+				deleteevent();
+			}
+		},
+		{
+			text: lang['cancel'],
+			"class": 'uk-button uk-button',
+			click : function () {
+				editDialog.dialog('close');
+			}
+		}
 		]
 	});
 
@@ -220,36 +220,36 @@ function edit_series_event()
 		resizable: true,
 		classes: { "ui-dialog": "tm-agenda-dialog" },
 		position: {
-		  my: "top left",
-		  at: "top left",
-		  of: "#calendar",
-	    collision: "fit"
+			my: "top left",
+			at: "top left",
+			of: "#calendar",
+			collision: "fit"
 		},
-    width: $('#calendar').width(),
-    height: 'auto',
-    title: lang['edit_event_series'],
+		width: $('#calendar').width(),
+		height: 'auto',
+		title: lang['edit_event_series'],
 		buttons: [
-			{
-				text: lang['save_event'],
-				"class" : 'uk-button uk-button-success',
-				click: function() {
-					saveevent();
-				}
-			},
-			{
-				text: lang['delete_series'],
-				"class" : 'uk-button uk-button-danger',
-				click: function() {
-					deleteeventseries();
-				}
-			},
-			{
-				text: lang['cancel'],
-				"class": 'uk-button uk-button',
-				click : function () {
-					editDialog.dialog('close');
-				}
+		{
+			text: lang['save_event'],
+			"class" : 'uk-button uk-button-success',
+			click: function() {
+				saveevent();
 			}
+		},
+		{
+			text: lang['delete_series'],
+			"class" : 'uk-button uk-button-danger',
+			click: function() {
+				deleteeventseries();
+			}
+		},
+		{
+			text: lang['cancel'],
+			"class": 'uk-button uk-button',
+			click : function () {
+				editDialog.dialog('close');
+			}
+		}
 		]
 	});
 	url = glfusionSiteUrl + '/agenda/ajax/ajax-form-manager.php';
@@ -301,7 +301,7 @@ function initializeCalendar( config )
 			target: 'event',
 			adjust: {
 				method: 'flip flip',
-        scroll: false
+				scroll: false
 			}
 		},
 		show: {
@@ -331,29 +331,29 @@ function initializeCalendar( config )
 						resizable: true,
 						classes: { "ui-dialog": "tm-agenda-dialog" },
 						position: {
-						  my: "top left",
-						  at: "top left",
-						  of: "#calendar",
-					    collision: "fit"
+							my: "top left",
+							at: "top left",
+							of: "#calendar",
+							collision: "fit"
 						},
-				    width: $('#calendar').width(),
-				    height: 'auto',
-				    title: lang['add_event'],
+						width: $('#calendar').width(),
+						height: 'auto',
+						title: lang['add_event'],
 						buttons: [
-							{
-								text: lang['save_event'],
-								"class" : 'uk-button uk-button-success',
-								click: function() {
-									saveevent();
-								}
-							},
-							{
-								text: lang['cancel'],
-								"class": 'uk-button uk-button',
-								click : function () {
-									createDialog.dialog('close');
-								}
+						{
+							text: lang['save_event'],
+							"class" : 'uk-button uk-button-success',
+							click: function() {
+								saveevent();
 							}
+						},
+						{
+							text: lang['cancel'],
+							"class": 'uk-button uk-button',
+							click : function () {
+								createDialog.dialog('close');
+							}
+						}
 						]
 					});
 					url = glfusionSiteUrl + '/agenda/ajax/ajax-form-manager.php';
@@ -441,7 +441,6 @@ function initializeCalendar( config )
 			});
 		},
 
-
 		eventResizeStart: function( event, jsEvent, ui, view ) {
 			$('.qtip').hide();
 		},
@@ -472,7 +471,6 @@ function initializeCalendar( config )
 					revertFunc();
 				}
 			});
-
 		},
 		// config options
 		header: {
@@ -489,6 +487,32 @@ function initializeCalendar( config )
 		allDayDefault: false,
 		height: config['autoheight'],
 		firstDay: config['first_day'],
+		weekNumbers : config['weeknumbers'],
+		views: {
+			month: {
+				eventLimit: config['month_eventlimit'] + 1,
+				timeFormat: config['month_timeformat'],
+				displayEventTime: config['month_displayeventtime'],
+				displayEventEnd: config['month_displayeventend'],
+			},
+			week : {
+				eventLimit: config['week_eventlimit'] + 1,
+				timeFormat: config['week_timeformat'],
+				displayEventTime: config['week_displayeventtime'],
+				displayEventEnd: config['week_displayeventend'],
+			},
+			day: {
+				eventLimit: config['day_eventlimit'] + 1,
+				timeFormat: config['day_timeformat'],
+				displayEventTime: config['day_displayeventtime'],
+				displayEventEnd: config['day_displayeventend'],
+			},
+			listMonth: {
+				timeFormat: config['list_timeformat'],
+				displayEventTime: config['list_displayeventtime'],
+				displayEventEnd: config['list_displayeventend'],
+			}
+		}
 	});
 	// end of full calendar initialization
 }
