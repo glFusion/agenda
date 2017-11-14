@@ -1,6 +1,14 @@
 Agenda Plugin ChangeLog
 
-## v0.3.1
+## v0.4.0 (November 14, 2017)
+ - Added several new configuration options to control how the calendar displays
+   - display week number
+   - time formats
+   - start / end times on events
+   - number of events per 'box'
+ - Rewrote upgrade / install routine to leverage a single source for config data
+
+## v0.3.1 (November 12, 2017)
  - Disable Edit Series button on repeating events that are marked as an exception
  - Left align buttons on both pop-up and edit strings
  - Reduced the size of the description entry field by 1 row

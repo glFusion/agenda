@@ -120,9 +120,6 @@ $LANG_AC = array (
     'end_after_date'    => 'End After Date',
     'of'                => 'of',
     'end'               => 'End',
-
-
-
 );
 
 // JavaScript specific translations
@@ -160,6 +157,7 @@ $LANG_configsections['agenda'] = array(
 );
 
 $LANG_confignames['agenda'] = array(
+// General Settings
     'allow_anonymous_view'  => 'Allow Non-Logged-In users to view calendar',
     'security_exit'         => 'Security Exit',
     'allow_entry'           => 'Who Can Submit Events',
@@ -167,12 +165,42 @@ $LANG_confignames['agenda'] = array(
     'displayblocks'         => 'Display Blocks',
     'showupcomingevents'    => 'Show Upcoming Events Block',
     'upcomingeventsrange'   => 'Days to include in Upcoming Event Block',
+
+// Global Calendar Settings
+
     'defaultview'           => 'Default View',
     'autoheight'            => 'Auto Height',
     'header_left'           => 'Header Left',
     'header_center'         => 'Header Center',
     'header_right'          => 'Header Right',
     'first_day'             => 'First Day of Week',
+    'weeknumbers'           => 'Display Week Numbers',
+
+// View Settings - Month View
+
+    'month_eventlimit'          => 'Event Limit',
+    'month_timeformat'          => 'Time Format',
+    'month_displayeventtime'    => 'Display Start Time',
+    'month_displayeventend'     => 'Display End Time',
+
+// Week View
+
+    'week_eventlimit'           => 'Event Limit',
+    'week_timeformat'           => 'Time Format',
+    'week_displayeventtime'     => 'Display Start Time',
+    'week_displayeventend'      => 'Display End Time',
+
+// Day View
+    'day_eventlimit'            => 'Event Limit',
+    'day_timeformat'            => 'Time Format',
+    'day_displayeventtime'      => 'Display Start Time',
+    'day_displayeventend'       => 'Display End Time',
+
+// List View
+    'list_timeformat'           => 'Time Format',
+    'list_displayeventtime'     => 'Display Start Time',
+    'list_displayeventend'      => 'Display End Time',
+
 );
 
 $LANG_configsubgroups['agenda'] = array(
@@ -181,9 +209,12 @@ $LANG_configsubgroups['agenda'] = array(
 
 $LANG_fs['agenda'] = array(
     'fs_main'       => 'Main Settings',
-    'fs_permissions'=> 'Permission Settings',
-    'fs_display'    => 'Display Settings',
-    'fs_advanced'   => 'Advanced Settings',
+    'fs_general'    => 'General Settings',
+    'fs_global'     => 'Global View Settings',
+    'fs_month'      => 'Month View Settings',
+    'fs_week'       => 'Week View Settings',
+    'fs_day'        => 'Day View Settings',
+    'fs_list'       => 'List View Settings',
 );
 
 $LANG_configselects['agenda'] = array(

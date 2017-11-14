@@ -211,18 +211,9 @@ function getConfig()
         $_AC_CONF['isRTL'] = false;
     }
 
-    $agendaConfig = array(
-        'allow_new'     => false,
-        'allow_edit'    => false,
-        'defaultview'   => $_AC_CONF['defaultview'],
-        'autoheight'    => $_AC_CONF['autoheight'],
-        'header_left'   => $_AC_CONF['header_left'],
-        'header_center' => $_AC_CONF['header_center'],
-        'header_right'  => $_AC_CONF['header_right'],
-        'first_day'     => $_AC_CONF['first_day'],
-        'locale'        => $_AC_CONF['iso_lang'],
-        'isrtl'         => $_AC_CONF['isRTL'],
-    );
+    $agendaConfig = $_AC_CONF;
+    $agendaConfig['allow_new']  = false;
+    $agendaConfig['allow_edit'] = false;
 
     if (SEC_hasRights('agenda.admin')) {
         $agendaConfig['allow_new'] = true;
