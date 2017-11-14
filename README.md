@@ -175,7 +175,7 @@ Limits the number of events displayed on a day. When there are too many events, 
 
 **Day View :: Time Format**
 
-Determines the time-text that will be displayed on each event. For example, 'hh:mm a' will display 12:25 am. See PHP date() formats for details on different formats.formats</a> for details on different formats.
+Determines the time-text that will be displayed on each event. For example, 'hh:mm a' will display 12:25 am. See PHP date() formats for details on different formats.
 
 **Day View :: Display Event Time**
 
