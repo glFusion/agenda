@@ -153,7 +153,7 @@ $agendaConfigData = array(
     ),
     array(
     	'name' => 'header_left',
-    	'default_value' => 'today prev,next',
+    	'default_value' => 'today prev,next print',
     	'type' => 'select',
     	'subgroup' => 0,
     	'fieldset' => 1,
