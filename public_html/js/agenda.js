@@ -478,6 +478,14 @@ function initializeCalendar( config )
 			center: config['header_center'],
 			right: config['header_right']
 		},
+		customButtons: {
+			print: {
+				text: lang['print'],
+				click: function() {
+					printPreview();
+				}
+			}
+		},
 		locale: config['locale'],
 		isRTL: config['isrtl'],
 		events: glfusionSiteUrl + '/agenda/ajax/json-events.php',
@@ -515,4 +523,34 @@ function initializeCalendar( config )
 		}
 	});
 	// end of full calendar initialization
+}
+
+function printPreview() {
+	var headerElements = document.getElementsByClassName('fc-header');
+	for(var i = 0, length = headerElements.length; i < length; i++) {
+		headerElements[i].style.display = 'none';
+	}
+	var toPrint = document.getElementById('calendar-area').cloneNode(true);
+	for(var i = 0, length = headerElements.length; i < length; i++) {
+		headerElements[i].style.display = '';
+	}
+	var linkElements = document.getElementsByTagName('link');
+	var link = '';
+	for(var i = 0, length = linkElements.length; i < length; i++) {
+		link = link + linkElements[i].outerHTML;
+	}
+	var styleElements = document.getElementsByTagName('style');
+	var styles = '';
+	for(var i = 0, length = styleElements.length; i < length; i++) {
+		styles = styles + styleElements[i].innerHTML;
+	}
+	link = link + '<link rel="stylesheet" type="text/css" href="'+glfusionSiteUrl+'/agenda/fc/fullcalendar.print.min.css">';
+	var popupWin = window.open('', '_blank');
+	popupWin.document.open();
+	popupWin.document.write('<html><title>'+lang['agenda_calendar']+'</title>'+ link +'<style>'+styles+'</style></head><body">');
+	popupWin.document.write(toPrint.innerHTML);
+	popupWin.document.write('</html>');
+	popupWin.document.close();
+	popupWin.print();
+	setTimeout(function(){popupWin.close();}, 1);
 }

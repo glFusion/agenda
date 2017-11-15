@@ -124,6 +124,7 @@ $LANG_AC = array (
 
 // JavaScript specific translations
 $LANG_AC_JS = array(
+    'agenda_calendar'   => 'Agenda Calendar',
     'add_event'         => 'Add Event',
     'edit_event'        => 'Edit Event',
     'edit_event_series' => 'Edit Event Series',
@@ -145,6 +146,7 @@ $LANG_AC_JS = array(
     'err_initialize'    => 'Error Initializing Agenda Plugin',
     'event_queued'      => 'Thank you for your submission. Your event submission has been placed in the queue for review and approval.',
     'exception_event'   => 'Exception Event',
+    'print'             => 'Print',
 );
 
 $LANG_AC_ERRORS = array(
@@ -228,8 +230,8 @@ $LANG_configselects['agenda'] = array(
     7  => array(
         'Title' => 'title',
         'None'  => '',
-        'Today Prev,Next' => 'today prev,next',
-        'Today PrevYear,NextYear Prev,Next' => 'today prevYear,nextYear prev,next',
+        'Today Prev,Next' => 'today prev,next print',
+        'Today PrevYear,NextYear Prev,Next' => 'today prevYear,nextYear prev,next print',
         'Views' => 'month,agendaWeek,agendaDay,listMonth',
     ),
     8  => array(

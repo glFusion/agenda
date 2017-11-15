@@ -2,9 +2,10 @@
 var defaultview = '{view}';
 var defaultdate = '{defaultdate}';
 </script>
-<div id="calendar-area" class="uk-height-1-1 uk-width-1-1">
-	<div id="calendar" class="uk-height-1-1"></div>
-	<div class="uk-text-primary">Version: {version}</div>
+<div id="calendar-area">
+	<div id="calendar"></div>
+
 	<div id="dialog-form-full" title="{lang_agenda}" style="display:none;">
 	</div>
 </div>
+<div class="uk-text-primary">Version: {version}</div>
