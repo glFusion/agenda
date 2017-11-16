@@ -526,6 +526,7 @@ function initializeCalendar( config )
 }
 
 function printPreview() {
+	var waitToPrint = "<script>window.onload = function () { window.setTimeout(function () { window.print(); window.close(); }, 500); }</script>";
 	var headerElements = document.getElementsByClassName('fc-header');
 	for(var i = 0, length = headerElements.length; i < length; i++) {
 		headerElements[i].style.display = 'none';
@@ -547,10 +548,10 @@ function printPreview() {
 	link = link + '<link rel="stylesheet" type="text/css" href="'+glfusionSiteUrl+'/agenda/fc/fullcalendar.print.min.css">';
 	var popupWin = window.open('', '_blank');
 	popupWin.document.open();
-	popupWin.document.write('<html><title>'+lang['agenda_calendar']+'</title>'+ link +'<style>'+styles+'</style></head><body">');
+	popupWin.document.write('<html><title>'+lang['agenda_calendar']+'</title>'+ link +'<style>'+styles+'</style>'+waitToPrint+'</head><body">');
 	popupWin.document.write(toPrint.innerHTML);
 	popupWin.document.write('</html>');
 	popupWin.document.close();
-	popupWin.print();
-	setTimeout(function(){popupWin.close();}, 1);
+//	popupWin.print();
+//	setTimeout(function(){popupWin.close();}, 1);
 }
