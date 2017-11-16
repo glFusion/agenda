@@ -146,7 +146,7 @@ $LANG_AC_JS = array(
     'err_initialize'    => 'Error Initializing Agenda Plugin',
     'event_queued'      => 'Thank you for your submission. Your event submission has been placed in the queue for review and approval.',
     'exception_event'   => 'Exception Event',
-    'print'             => 'Print',
+    'print'             => 'print',
 );
 
 $LANG_AC_ERRORS = array(
