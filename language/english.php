@@ -177,6 +177,7 @@ $LANG_confignames['agenda'] = array(
     'header_right'          => 'Header Right',
     'first_day'             => 'First Day of Week',
     'weeknumbers'           => 'Display Week Numbers',
+    'printenabled'          => 'Enable Print',
 
 // View Settings - Month View
 
