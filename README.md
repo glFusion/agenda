@@ -178,7 +178,7 @@ If TRUE, a print button will be displayed in the Agenda header to allow printing
 
 **Month View :: Event Limit**
 
-Limits the number of events displayed on a day. When there are too many events, a link that looks like “+2 more” is displayed.
+Limits the number of events displayed on a day. When there are too many events, a link that looks like ""+2 more" is displayed.
 
 **Month View :: Time Format**
 
