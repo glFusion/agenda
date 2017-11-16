@@ -171,7 +171,7 @@ If TRUE, the Event End Time will also display next to the event (All Day events 
 
 **Day View :: Event Limit**
 
-Limits the number of events displayed on a day. When there are too many events, a link that looks like “+2 more” is displayed.
+Limits the number of events displayed on a day. When there are too many events, a link that looks like "+2 more" is displayed.
 
 **Day View :: Time Format**
 
