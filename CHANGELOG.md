@@ -2,6 +2,7 @@ Agenda Plugin ChangeLog
 
 ## v0.5.0 (unreleased)
  - Add print option
+ - Resolved duplicate entries in Upcoming Events Block
 
 ## v0.4.0 (November 14, 2017)
  - Added several new configuration options to control how the calendar displays
