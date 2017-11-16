@@ -29,12 +29,8 @@ function agenda_upgrade()
 
     switch ($currentVersion) {
         case '0.1.0' :
-            $c = config::get_instance();
-            // no changes
-
         case '0.1.1' :
             // added new features
-
             $sql = "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr, ft_gl_core) "
                  . "VALUES (NULL, 'agenda.view', 'Allows access to the Agenda Calendar', 1)";
 
@@ -58,26 +54,18 @@ function agenda_upgrade()
             DB_query($sql);
 
         case '0.2.0' :
-            // no changes
-
         case '0.2.1' :
-            // no changes
-
         case '0.2.2' :
             $sql = "ALTER TABLE {$_TABLES['ac_event']} ADD COLUMN `rrule` VARCHAR(128) NULL AFTER `repeat_freq`;";
             DB_query($sql,1);
 
         case '0.3.0' :
-            // no changes
-
         case '0.3.1' :
-            // no changes
-
         case '0.3.2' :
-            // new configuration settings
-            agenda_update_config();
+        case '0.4.0' :
 
         default:
+            agenda_update_config();
             DB_query("UPDATE {$_TABLES['plugins']} SET pi_version='".$_AC_CONF['pi_version']."',pi_gl_version='".$_AC_CONF['gl_version']."' WHERE pi_name='agenda' LIMIT 1");
             break;
     }

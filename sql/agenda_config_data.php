@@ -153,7 +153,7 @@ $agendaConfigData = array(
     ),
     array(
     	'name' => 'header_left',
-    	'default_value' => 'today prev,next',
+    	'default_value' => 'today prev,next print',
     	'type' => 'select',
     	'subgroup' => 0,
     	'fieldset' => 1,
@@ -206,6 +206,18 @@ $agendaConfigData = array(
     	'set' => TRUE,
     	'group' => 'agenda'
     ),
+    array(
+    	'name' => 'printenabled',
+    	'default_value' => 1,
+    	'type' => 'select',
+    	'subgroup' => 0,
+    	'fieldset' => 1,
+    	'selection_array' => 0,
+    	'sort' => 80,
+    	'set' => TRUE,
+    	'group' => 'agenda'
+    ),
+
 // Month View
     array(
     	'name' => 'fs_month',

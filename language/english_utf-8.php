@@ -124,6 +124,7 @@ $LANG_AC = array (
 
 // JavaScript specific translations
 $LANG_AC_JS = array(
+    'agenda_calendar'   => 'Agenda Calendar',
     'add_event'         => 'Add Event',
     'edit_event'        => 'Edit Event',
     'edit_event_series' => 'Edit Event Series',
@@ -145,6 +146,7 @@ $LANG_AC_JS = array(
     'err_initialize'    => 'Error Initializing Agenda Plugin',
     'event_queued'      => 'Thank you for your submission. Your event submission has been placed in the queue for review and approval.',
     'exception_event'   => 'Exception Event',
+    'print'             => 'print',
 );
 
 $LANG_AC_ERRORS = array(
@@ -175,6 +177,7 @@ $LANG_confignames['agenda'] = array(
     'header_right'          => 'Header Right',
     'first_day'             => 'First Day of Week',
     'weeknumbers'           => 'Display Week Numbers',
+    'printenabled'          => 'Enable Print',
 
 // View Settings - Month View
 
@@ -240,7 +243,7 @@ $LANG_configselects['agenda'] = array(
         'Thursday'  => 4,
         'Friday'    => 5,
         'Saturday'  => 6
-        ),
+    ),
 );
 
 ?>

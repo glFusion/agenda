@@ -56,6 +56,16 @@ function getConfig()
 
     $agendaConfig = array();
 
+    if ( isset($_AC_CONF['printenabled']) && $_AC_CONF['printenabled'] == 1 ) {
+        if ( $_AC_CONF['header_left'] == 'today prev,next' || $_AC_CONF['header_left'] == 'today prevYear,nextYear prev,next' ) {
+            $_AC_CONF['header_left'] = $_AC_CONF['header_left'] . ' print';
+        } elseif ( $_AC_CONF['header_center'] == 'today prev,next' || $_AC_CONF['header_center'] == 'today prevYear,nextYear prev,next' ) {
+            $_AC_CONF['header_center'] = $_AC_CONF['header_center'] . ' print';
+        } elseif ( $_AC_CONF['header_right'] == 'today prev,next' || $_AC_CONF['header_right'] == 'today prevYear,nextYear prev,next' ) {
+            $_AC_CONF['header_right'] = $_AC_CONF['header_right'] . ' print';
+        }
+    }
+
     // locale mapping $LANG_LOCALE
     // Set the ISO 2 digit code for language
     switch ($_CONF['language']) {

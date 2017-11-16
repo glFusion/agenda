@@ -784,20 +784,22 @@ function phpblock_agenda( $help='', $title='' )
             // cache for up to 1 hour
             if ( CACHE_get_instance_update($cacheInstance, 0) > time() - 3600 ) {
                 return $retval;
+            } else {
+                $retval = '';
             }
         }
 
         $range = $_AC_CONF['upcomingeventsrange'];
-        if( $range == 0 ) {
+        if ( $range == 0 ) {
             $range = 14; // fallback: 14 days
         }
 
         $dateonly = $_CONF['dateonly'];
-        if( empty( $dateonly )) {
+        if ( empty( $dateonly )) {
             $dateonly = 'd-M'; // fallback: day - abbrev. month name
         }
 
-        if( empty( $title )) {
+        if ( empty( $title )) {
             $title = DB_getItem( $_TABLES['blocks'], 'title',"name = 'block_agenda'" );
         }
 
@@ -828,7 +830,7 @@ function phpblock_agenda( $help='', $title='' )
 
         $skipFirstBreak = true;
 
-        while( $theRow <= $numRows AND $numDays < $range ) {
+        while ( $theRow <= $numRows && $numDays < $range ) {
             // Retreive the next event, and format the start date.
             $theEvent = DB_fetchArray( $allEvents );
 
@@ -848,15 +850,15 @@ function phpblock_agenda( $help='', $title='' )
             $dayName2 = $dtEnd->format('l',true);
             $abbrDate2 = $dtEnd->format($dateonly,true);
             $todaysEvent = false;
-            if( $dtStart->format('Ymd',true) == $dtNow->format('Ymd',true)) {
+            if ( $dtStart->format('Ymd',true) == $dtNow->format('Ymd',true) ) {
                 $todaysEvent = true;
                 $todaysClassName = 'site-event-today';
             }
 
             // If either of the dates [start/end] change, then display a new header.
-            if( $oldDate1 != $abbrDate1 || $oldDate2 != $abbrDate2 ) {
+            if ( $oldDate1 != $abbrDate1 || $oldDate2 != $abbrDate2 ) {
 
-                if( !empty( $newevents )) {
+                if ( !empty( $newevents ) ) {
                     $retval .= COM_makeList( $newevents, $classname );
                     $newevents = array();
                 }
@@ -865,21 +867,21 @@ function phpblock_agenda( $help='', $title='' )
                 $oldDate2 = $abbrDate2;
                 $numDays ++;
 
-                if( $numDays < $range ) {
-                    if( !empty( $newevents )) {
-                         $retval .= COM_makeList( $newevents, $classname );
-                    }
-                    if( $skipFirstBreak ) {
+                if ( $numDays < $range ) {
+//                    if( !empty( $newevents )) {
+//                         $retval .= COM_makeList( $newevents, $classname );
+//                    }
+                    if ( $skipFirstBreak ) {
                         $skipFirstBreak = false;
                     }
-                    if( $todaysEvent ) {
+                    if ( $todaysEvent ) {
                         $retval .= '<b>'.$LANG_AC['today'].'</b>';
                     } else {
                         $retval .= '<b>' . $dayName1 . '</b>&nbsp;<small>'
                                 . $abbrDate1 . '</small>';
                     }
                     // If different start and end dates, then display end date:
-                    if( $abbrDate1 != $abbrDate2 ) {
+                    if ( $abbrDate1 != $abbrDate2 ) {
                         $retval .= ' - <b>' . $dayName2 . '</b>&nbsp;<small>' . $abbrDate2 . '</small>';
                     }
                 }
@@ -887,7 +889,7 @@ function phpblock_agenda( $help='', $title='' )
             }
 
             // Now display this event record.
-            if( $numDays < $range ) {
+            if ( $numDays < $range ) {
                 $dt->setTimeStamp($theEvent['start']);
                 $newevent_url = $_CONF['site_url'].'/agenda/index.php?v=agendaDay';
                 $newevent_url .= '&y='.$dt->format('Y',true);
@@ -896,7 +898,7 @@ function phpblock_agenda( $help='', $title='' )
                 $newevent_url = COM_buildURL( $newevent_url );
 
                 $attr = array();
-                if( $todaysEvent ) {
+                if ( $todaysEvent ) {
                     $attr = array('class' => $todaysClassName, 'title' => $theEvent['title']);
                 }
                 $newevent = COM_createLink(
@@ -909,12 +911,12 @@ function phpblock_agenda( $help='', $title='' )
             $theRow++;
         } // end of while
 
-            if( !empty( $newevents )) {
-                $retval .= COM_makeList( $newevents, $classname );
-                $newevents = array();
-            }
+        if ( !empty( $newevents )) {
+            $retval .= COM_makeList( $newevents, $classname );
+            $newevents = array();
+        }
 
-        if( $eventsFound == 0 ) {
+        if ( $eventsFound == 0 ) {
             // There aren't any upcoming events, show a nice message
             $retval .= $LANG_AC['no_upcoming'];
         }
