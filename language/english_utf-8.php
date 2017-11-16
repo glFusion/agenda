@@ -230,8 +230,8 @@ $LANG_configselects['agenda'] = array(
     7  => array(
         'Title' => 'title',
         'None'  => '',
-        'Today Prev,Next' => 'today prev,next print',
-        'Today PrevYear,NextYear Prev,Next' => 'today prevYear,nextYear prev,next print',
+        'Today Prev,Next' => 'today prev,next',
+        'Today PrevYear,NextYear Prev,Next' => 'today prevYear,nextYear prev,next',
         'Views' => 'month,agendaWeek,agendaDay,listMonth',
     ),
     8  => array(
@@ -242,7 +242,7 @@ $LANG_configselects['agenda'] = array(
         'Thursday'  => 4,
         'Friday'    => 5,
         'Saturday'  => 6
-        ),
+    ),
 );
 
 ?>
