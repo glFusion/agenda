@@ -1,5 +1,9 @@
 Agenda Plugin ChangeLog
 
+## v0.6.0
+ - Use datetimepicker plugin for pop-up calendar
+ - Do not allow end date to be prior to begin date
+
 ## v0.5.0 (November 16, 2017)
  - Add print option
  - New configuration setting to enable print button / feature
