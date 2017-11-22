@@ -18,6 +18,7 @@
 var calendar;
 var lang = new Array();
 var globalEvent;
+var agendaConfig;
 
 // fetch configuration data and language translations
 url = glfusionSiteUrl + '/agenda/ajax/ajax-controller.php';
@@ -31,7 +32,7 @@ $.ajax({
 	success: function (data) {
 		var result = $.parseJSON(data["js"]);
 		lang = result.lang;
-		var agendaConfig = result.config;
+		agendaConfig = result.config;
 		$(document).ready(function () {
 			initializeCalendar(agendaConfig);
 			initializeAgenda();
@@ -486,7 +487,7 @@ function initializeCalendar( config )
 				}
 			}
 		},
-		locale: config['locale'],
+		locale: config['iso_lang'],
 		isRTL: config['isrtl'],
 		events: glfusionSiteUrl + '/agenda/ajax/json-events.php',
 		editable: false, // overriden in the event object
