@@ -220,7 +220,7 @@ class eventForms {
                 $row['start_date'] = $row['start_date'];
                 $row['end_date'] = $row['end_date'];
                 $row['start_time'] = '00:00';
-                $row['end_time'] = '23:59';
+                $row['end_time'] = '00:00';
             }
 
             $catSelList = '';
