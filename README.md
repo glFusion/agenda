@@ -66,15 +66,11 @@ If you delete the entire series, this event **will** be deleted as well.
 
 ##### Editing a Series
 
-When editing the entire series, you can only change the following data items:
+When editing an Event Series, there are two methods to edit the series - updating without changing the dates / times or recurrence rules and updating the recurrence rules (Edit Recurrence checked in the edit form).
 
-* Location
-* Description
-* Category
+When updating just the Location, Description and/or Category (Edit Recurrence checkbox **not** checked), when saved, the entire event series will be updated **except** any exception events.
 
-You cannot change the date / times or the recurring data. If you need to edit any of these, you should delete the current series and create a new one.
-
-Note that any individually edited events in the series will not be updated.
+When **Edit Recurrence** is checked, allowing you to edit all attributes of the event series, when saved, the **entire** event series (including exception events) are deleted and the series is re-created using the new rules. It is important to remember when **Edit Recurrence** is checked, all exception events are removed on save. Agenda will also place a warning on the screen to remind you of this as well.
 
 
 ### Permissions
