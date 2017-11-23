@@ -239,7 +239,7 @@
 					<input class="uk-form-width-mini" type="text" name="endafter" value="10"> {lang_occurrences}
 				</span>
 				<span id="repeat-end-date" style="display:none;">
-					<input class="uk-form-width-small" type="text" id="recur-end-date" name="recur-end-date" value="{start-date}" placeholder="{lang_end_after_date}" data-uk-datepicker="{format:'YYYY-MM-DD', weekstart: {weekstart} }">
+					<input class="uk-form-width-small" type="text" id="recur-end-date" name="recur-end-date" value="{start-date}" placeholder="{lang_end_after_date}">
 				</span>
 			</div>
 		</fieldset>
@@ -345,6 +345,11 @@ $('#event-end-date').datetimepicker({
   timepicker:false,
 	mask:'9999-19-39',
   onShow:setMinimum
+});
+$('#recur-end-date').datetimepicker({
+	format:'Y-m-d',
+	timepicker:false,
+	mask:'9999-19-39',
 });
 </script>
 <script src="{site_url}/agenda/js/rrule.js"></script>
