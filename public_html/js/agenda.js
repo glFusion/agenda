@@ -158,8 +158,8 @@ function edit_single_event( )
 		resizable: true,
 		classes: { "ui-dialog": "tm-agenda-dialog" },
 		position: {
-			my: "top left",
-			at: "top left",
+			my: "left top",
+			at: "left top",
 			of: "#calendar",
 			collision: "fit"
 		},
@@ -221,8 +221,8 @@ function edit_series_event()
 		resizable: true,
 		classes: { "ui-dialog": "tm-agenda-dialog" },
 		position: {
-			my: "top left",
-			at: "top left",
+			my: "left top",
+			at: "left top",
 			of: "#calendar",
 			collision: "fit"
 		},
@@ -332,8 +332,8 @@ function initializeCalendar( config )
 						resizable: true,
 						classes: { "ui-dialog": "tm-agenda-dialog" },
 						position: {
-							my: "top left",
-							at: "top left",
+							my: "left top",
+							at: "left top",
 							of: "#calendar",
 							collision: "fit"
 						},
