@@ -4,21 +4,273 @@
 	<input type="hidden" name="event_id" value="{event_id}">
 
 	<div class="uk-form-row">
-		<label class="uk-form-label uk-hidden-small">{lang_event_title}</label>
 		<div class="uk-form-controls">
 			<input class="required uk-form-width-large" type="text" name="title" id="title" placeholder="{lang_event_title}" value="{title}">
 		</div>
 	</div>
 
 	<div class="uk-form-row">
-		<label class="uk-form-label uk-hidden-small">{lang_location}</label>
 		<div class="uk-form-controls">
 			<input type="text" class="uk-form-width-large" name="location" id="location" value="{location}" placeholder="{lang_location}">
 		</div>
 	</div>
 
 	<div class="uk-form-row">
-		<label class="uk-form-label" for="category">{lang_category}</label>
+		<div class="uk-text-bold">{lang_repeats} {rrule}</div>
+	</div>
+
+	<div class="uk-form-row">
+		<div class="uk-form-controls">
+			<div class="uk-text-nowrap">
+				Edit Recurrence <input type="checkbox" id="edit-recurrence" name="edit-recurrence">
+			</div>
+		</div>
+	</div>
+
+	<div class="uk-form-row"></div>
+	<div id="recurrence-rules" style="display:none;border:1px solid black;padding:10px;margin-bottom:10px;">
+		<div class="uk-form-row">
+			<div class="uk-form-controls">
+				<input class="uk-form-width-small" type="text" id="event-date" name="event-date" value="{start-date}" placeholder="{lang_start_date}">
+				<input class="uk-form-width-small" type="text" name="start-time" id="start-time" value="{start-time}" placeholder="{lang_start_time}" data-uk-timepicker="{format:'12h'}">
+				<span class=" uk-text-nowrap">{lang_all_day_event}<span class="uk-form-help-inline"><input type="checkbox" id="event-allday" name="event-allday" tabindex="-1"  {allday_checked}></span></span>
+			</div>
+		</div>
+
+		<div class="uk-form-row">
+			<div class="uk-form-controls">
+				<input class="uk-form-width-small" type="text" id="event-end-date" name="event-end-date" tabindex="-1" value="{end-date}" placeholder="{lang_end_date}">
+				<input class="uk-form-width-small" type="text" name="end-time" id="end-time" value="{end-time}" placeholder="{lang_end_time}" data-uk-timepicker="{format:'12h'}">
+				<span id="date-errors"></span>
+			</div>
+		</div>
+
+		<!-- REPEAT OPTIONS -->
+
+		<div class="uk-form-row uk-margin">
+			<div class="uk-form-controls">
+				<!-- Repeat Type -->
+				<select name="freq" id="freq">
+					<option value="none" {freq_selected_none}>{lang_none}</option>
+					<option value="DAILY" {freq_selected_DAILY}>{lang_daily}</option>
+					<option value="WEEKLY" {freq_selected_WEEKLY}>{lang_weekly}</option>
+					<option value="MONTHLY" {freq_selected_MONTHLY}>{lang_monthly}</option>
+					<option value="YEARLY" {freq_selected_YEARLY}>{lang_yearly}</option>
+				</select>
+				<span id="intervals" style="padding-left:10px;display:none;">
+					every <input type="text" class="uk-form-width-mini" name="interval" value="{interval_value}"> <span id="interval-prompt"></span>
+				</span>
+			</div>
+		</div>
+
+		<div id="recurring-rules" style="display:none;">
+			<fieldset data-uk-margin>
+				<!-- weekly select -->
+
+				<div class="uk-form-row" id="weekday-select" style="padding-top:10px;display:none;">
+					<div class="uk-button-group">
+						<button style="font-size:14px !important;" type="button" class="uk-button {SU_selected}" id="SU">{lang_sun}</button>
+						<button style="font-size:14px !important;" type="button" class="uk-button {MO_selected}" id="MO">{lang_mon}</button>
+						<button style="font-size:14px !important;" type="button" class="uk-button {TU_selected}" id="TU">{lang_tue}</button>
+						<button style="font-size:14px !important;" type="button" class="uk-button {WE_selected}" id="WE">{lang_wed}</button>
+						<button style="font-size:14px !important;" type="button" class="uk-button {TH_selected}" id="TH">{lang_thu}</button>
+						<button style="font-size:14px !important;" type="button" class="uk-button {FR_selected}" id="FR">{lang_fri}</button>
+						<button style="font-size:14px !important;" type="button" class="uk-button {SA_selected}" id="SA">{lang_sat}</button>
+					</div>
+					<input type="hidden" name="wk-byday" id="wk-byday" value="{byday_value}">
+					<span>{lang_weekly_help}</span>
+				</div>
+
+				<!-- Monthly -->
+
+				<div id="monthly-rules">
+					<div class="uk-form-row">
+						<input type="radio" name="mtype" value="0" {mtype_0_checked}> {lang_on_day}
+						<select name="mo-dom" id="mo-dom">
+							<option value="1" {day_1}>1</option>
+							<option value="2" {day_2}>2</option>
+							<option value="3" {day_3}>3</option>
+							<option value="4" {day_4}>4</option>
+							<option value="5" {day_5}>5</option>
+							<option value="6" {day_6}>6</option>
+							<option value="7" {day_7}>7</option>
+							<option value="8" {day_8}>8</option>
+							<option value="9" {day_9}>9</option>
+							<option value="10" {day_10}>10</option>
+							<option value="11" {day_11}>11</option>
+							<option value="12" {day_12}>12</option>
+							<option value="13" {day_13}>13</option>
+							<option value="14" {day_14}>14</option>
+							<option value="15" {day_15}>15</option>
+							<option value="16" {day_16}>16</option>
+							<option value="17" {day_17}>17</option>
+							<option value="18" {day_18}>18</option>
+							<option value="19" {day_19}>19</option>
+							<option value="20" {day_20}>20</option>
+							<option value="21" {day_21}>21</option>
+							<option value="22" {day_22}>22</option>
+							<option value="23" {day_23}>23</option>
+							<option value="24" {day_24}>24</option>
+							<option value="25" {day_25}>25</option>
+							<option value="26" {day_26}>26</option>
+							<option value="27" {day_27}>27</option>
+							<option value="28" {day_28}>28</option>
+							<option value="29" {day_29}>29</option>
+							<option value="30" {day_30}>30</option>
+							<option value="31" {day_31}>31</option>
+						</select>
+
+					</div>
+
+					<div class="uk-form-row">
+						<input type="radio" name="mtype" value="1" {mtype_1_checked}> {lang_on_the}
+						<select name="mo-setpos" id="mo-setpos">
+							<option value="1" {setpos_1_selected}>{lang_first}</option>
+							<option value="2" {setpos_2_selected}>{lang_second}</option>
+							<option value="3" {setpos_3_selected}>{lang_third}</option>
+							<option value="4" {setpos_4_selected}>{lang_forth}</option>
+							<option value="-1" {setpos_-1_selected}>{lang_last}<</option>
+						</select>
+
+						<select name="mo-day" id="mo-day">
+							<option value="SU" {moday_SU_selected}>{lang_sunday}</option>
+							<option value="MO" {moday_MO_selected}>{lang_monday}</option>
+							<option value="TU" {moday_TU_selected}>{lang_tuesday}</option>
+							<option value="WE" {moday_WE_selected}>{lang_wednesday}</option>
+							<option value="TH" {moday_TH_selected}>{lang_thursday}</option>
+							<option value="FR" {moday_FR_selected}>{lang_friday}</option>
+							<option value="SA" {moday_SA_selected}>{lang_saturday}</option>
+							<option value="SU,MO,TU,WE,TH,FR,SA" {moday_day_selected}>{lang_day}</option>
+							<option value="MO,TU,WE,TH,FR" {moday_weekday_selected}>{lang_weekday}</option>
+							<option value="SA,SU" {moday_weekend_selected}>{lang_weekend}</option>
+						</select>
+					</div>
+				</div>
+
+				<!-- Yearly -->
+
+				<div class="uk-form-row" id="yearly-rules">
+					<div class="uk-form-row">
+						<input type="radio" name="yr-type" value="0" {yrtype_0_checked}> {lang_on}
+
+						<select name="yr-month" id="yr-month">
+							<option value="1"  {mo_1}>{lang_jan}</option>
+							<option value="2"  {mo_2}>{lang_feb}</option>
+							<option value="3"  {mo_3}>{lang_mar}</option>
+							<option value="4"  {mo_4}>{lang_apr}</option>
+							<option value="5"  {mo_5}>{lang_may}</option>
+							<option value="6"  {mo_6}>{lang_jun}</option>
+							<option value="7"  {mo_7}>{lang_jul}</option>
+							<option value="8"  {mo_8}>{lang_aug}</option>
+							<option value="9"  {mo_9}>{lang_sep}</option>
+							<option value="10" {mo_10}>{lang_oct}</option>
+							<option value="11" {mo_11}>{lang_nov}</option>
+							<option value="12" {mo_12}>{lang_dec}</option>
+						</select>
+
+						<select name="yr-dom" id="yr-dom">
+							<option value="1" {day_1}>1</option>
+							<option value="2" {day_2}>2</option>
+							<option value="3" {day_3}>3</option>
+							<option value="4" {day_4}>4</option>
+							<option value="5" {day_5}>5</option>
+							<option value="6" {day_6}>6</option>
+							<option value="7" {day_7}>7</option>
+							<option value="8" {day_8}>8</option>
+							<option value="9" {day_9}>9</option>
+							<option value="10" {day_10}>10</option>
+							<option value="11" {day_11}>11</option>
+							<option value="12" {day_12}>12</option>
+							<option value="13" {day_13}>13</option>
+							<option value="14" {day_14}>14</option>
+							<option value="15" {day_15}>15</option>
+							<option value="16" {day_16}>16</option>
+							<option value="17" {day_17}>17</option>
+							<option value="18" {day_18}>18</option>
+							<option value="19" {day_19}>19</option>
+							<option value="20" {day_20}>20</option>
+							<option value="21" {day_21}>21</option>
+							<option value="22" {day_22}>22</option>
+							<option value="23" {day_23}>23</option>
+							<option value="24" {day_24}>24</option>
+							<option value="25" {day_25}>25</option>
+							<option value="26" {day_26}>26</option>
+							<option value="27" {day_27}>27</option>
+							<option value="28" {day_28}>28</option>
+							<option value="29" {day_29}>29</option>
+							<option value="30" {day_30}>30</option>
+							<option value="31" {day_31}>31</option>
+						</select>
+
+					</div>
+
+					<div class="uk-form-row">
+
+						<input type="radio" name="yr-type" value="1" {yrtype_1_checked}> {lang_on_the}
+						<select name="yr-setpos">
+							<option value="1" {setpos_1_selected}>{lang_first}</option>
+							<option value="2" {setpos_2_selected}>{lang_second}</option>
+							<option value="3" {setpos_3_selected}>{lang_third}</option>
+							<option value="4" {setpos_4_selected}>{lang_forth}</option>
+							<option value="-1" {setpos_-1_selected}>{lang_last}<</option>
+						</select>
+
+						<select name="yr-day" id="yr-day">
+							<option value="SU" {moday_SU_selected}>{lang_sunday}</option>
+							<option value="MO" {moday_MO_selected}>{lang_monday}</option>
+							<option value="TU" {moday_TU_selected}>{lang_tuesday}</option>
+							<option value="WE" {moday_WE_selected}>{lang_wednesday}</option>
+							<option value="TH" {moday_TH_selected}>{lang_thursday}</option>
+							<option value="FR" {moday_FR_selected}>{lang_friday}</option>
+							<option value="SA" {moday_SA_selected}>{lang_saturday}</option>
+							<option value="SU,MO,TU,WE,TH,FR,SA" {moday_day_selected}>{lang_day}</option>
+							<option value="MO,TU,WE,TH,FR" {moday_weekday_selected}>{lang_weekday}</option>
+							<option value="SA,SU" {moday_weekend_selected}>{lang_weekend}</option>
+						</select>
+
+						{lang_of}
+
+						<select name="yr-month2" id="yr-month2">
+							<option value="1" {mo_1}>{lang_jan}</option>
+							<option value="2" {mo_2}>{lang_feb}</option>
+							<option value="3" {mo_3}>{lang_mar}</option>
+							<option value="4" {mo_4}>{lang_apr}</option>
+							<option value="5" {mo_5}>{lang_may}</option>
+							<option value="6" {mo_6}>{lang_jun}</option>
+							<option value="7" {mo_7}>{lang_jul}</option>
+							<option value="8" {mo_8}>{lang_aug}</option>
+							<option value="9" {mo_9}>{lang_sep}</option>
+							<option value="10" {mo_10}>{lang_oct}</option>
+							<option value="11" {mo_11}>{lang_nov}</option>
+							<option value="12" {mo_12}>{lang_dec}</option>
+						</select>
+
+					</div>
+				</div>
+
+				<div class="uk-form-row uk-margin-bottom">
+					{lang_end}&nbsp;
+					<select name="end-type" id="end-type">
+						<option value="0" {end_type_0_selected}>{lang_after}</option>
+						<option value="1" {end_type_1_selected}>{lang_on_date}</option>
+					</select>
+					<span id="max-occurrence"><input class="uk-form-width-mini" type="text" name="endafter" value="{endafter_value}"> {lang_occurrences}</span>
+					<span id="repeat-end-date" style="display:none;">
+						<input class="uk-form-width-small" type="text" id="recur-end-date" name="recur-end-date" value="{recur-end-date}" placeholder="{lang_end_after_date}">
+					</span>
+				</div>
+			</fieldset>
+		</div> <!-- end of recurring rules -->
+		<!-- END REPEAT OPTIONS -->
+
+{!if has_exceptions}
+		<div class="uk-alert uk-alert-danger uk-margin-bottom">
+			{lang_exception_warning}
+		</div>
+{!endif}
+	</div>
+
+	<div class="uk-form-row">
 		<div class="uk-form-controls">
 			<select name="category" id="category">
 				{category_select}
@@ -34,4 +286,147 @@
 	</div>
 
 </form>
+
+<script>
+	$('#edit-recurrence').change(function(){
+		if ($('#edit-recurrence').is(':checked') == true){
+			$('#recurrence-rules').show();
+		} else {
+			$('#recurrence-rules').hide();
+		}
+	});
+	// special for editing to initialize all day and recurrence rules
+	var lang_months = '{lang_months}';
+	var lang_weeks  = '{lang_weeks}';
+	var lang_days   = '{lang_days}';
+	var lang_hours  = '{lang_hours}'
+
+	$(document).ready(function() {
+		if ($('#event-allday').is(':checked') == true){
+			$('#start-time').prop('disabled', true);
+			$('#end-time').prop('disabled', true);
+		}
+
+		var repeatOption = $('select[name="freq"]').val();
+		if ( repeatOption != 'none' ) {
+			$('#recurring-rules').show();
+			switch ( repeatOption ) {
+				case 'HOURLY' :
+					$('#event-interval').show();
+					$('#intervals').show();
+					$('#weekday-select').hide();
+					$('#monthly-rules').hide();
+					$('#yearly-rules').hide();
+					$('#interval-prompt').html(lang_hours);
+					break;
+
+				case 'DAILY' :
+					$('#event-interval').show();
+					$('#intervals').show();
+					$('#weekday-select').hide();
+					$('#monthly-rules').hide();
+					$('#yearly-rules').hide();
+					$('#interval-prompt').html(lang_days);
+					break;
+
+				case 'WEEKLY' :
+					$('#event-interval').show();
+					$('#intervals').show();
+					$('#weekday-select').show();
+					$('#monthly-rules').hide();
+					$('#yearly-rules').hide();
+					$('#interval-prompt').html(lang_weeks);
+					break;
+
+				case 'MONTHLY' :
+					$('#event-interval').show();
+					$('#intervals').show();
+					$('#monthly-rules').show();
+					$('#weekday-select').hide();
+					$('#yearly-rules').hide();
+					$('#interval-prompt').html(lang_months);
+					break;
+
+				case 'YEARLY' :
+					$('#intervals').hide();
+					$('#event-interval').hide();
+					$('#weekday-select').hide();
+					$('#monthly-rules').hide();
+					$('#yearly-rules').show();
+					break;
+			}
+		}
+		var endType = $('select[name="end-type"]').val();
+		switch ( endType ) {
+			case "0" :
+				$("#max-occurrence").show();
+				$("#repeat-end-date").hide();
+				break;
+
+			default :
+				$("#max-occurrence").hide();
+				$("#repeat-end-date").show();
+				break;
+		}
+		$('#start-time').change(function() {
+			var from_time = $("#start-time").val();
+			var to_time 	= $("#end-time").val();
+			var start_date = $("#event-date").val();
+			var end_date 	= $("#event-end-date").val();
+			var momentFrom = moment(start_date + ' ' + from_time, 'YYYY-MM-DD hh:mm A');
+			var momentTo   = moment(end_date + ' ' + to_time, 'YYYY-MM-DD hh:mm A');
+			if (momentFrom > momentTo) {
+				var updated_end_date_time = moment(momentFrom).add(1, 'h');
+				var newToHours = updated_end_date_time.format('hh:mm A');
+				$("#end-time").val(newToHours);
+			}
+		});
+
+		$('#event-allday').change(function(){
+			if ($('#event-allday').is(':checked') == true){
+				$('#start-time').prop('disabled', true);
+				$('#end-time').prop('disabled', true);
+			} else {
+				$('#start-time').prop('disabled', false);
+				$('#end-time').prop('disabled', false);
+			}
+		});
+
+		$('#event-date').change(function(){
+			var start_date = $("#event-date").val();
+			var end_date 	= $("#event-end-date").val();
+			var momentFrom = moment(start_date, 'YYYY-MM-DD');
+			var momentTo   = moment(end_date, 'YYYY-MM-DD');
+			if (momentFrom > momentTo) {
+				$("#event-end-date").val(start_date);
+			}
+		});
+	}); // end of document ready
+	$.datetimepicker.setLocale(agendaConfig['iso_lang']);
+	// don't allow an end date before the start date
+	var setMinimum = function( currentDateTime ){
+		var start_date = $("#event-date").val();
+		this.setOptions({
+			minDate: start_date
+		});
+	};
+	$('#event-date').datetimepicker({
+		format:'Y-m-d',
+		timepicker:false,
+		mask:'9999-19-39',
+	});
+	$('#event-end-date').datetimepicker({
+		format:'Y-m-d',
+		timepicker:false,
+		mask:'9999-19-39',
+		onShow:setMinimum
+	});
+	$('#recur-end-date').datetimepicker({
+		format:'Y-m-d',
+		timepicker:false,
+		mask:'9999-19-39',
+	});
+</script>
+
+<script src="{site_url}/agenda/js/rrule.js"></script>
 <script src="{site_url}/agenda/js/event-validation.js"></script>

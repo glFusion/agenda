@@ -462,6 +462,7 @@ class eventForms {
             'lang_of'           => $LANG_AC['of'],
             'lang_end'          => $LANG_AC['end'],
             'lang_exception_warning' => $LANG_AC['exception_warning'],
+            'lang_repeats'      => $LANG_AC['repeats'],
             ));
 
             if ( $row['repeats'] == 1 ) {

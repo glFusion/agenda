@@ -149,15 +149,15 @@
 				<div class="uk-form-row">
 					<input type="radio" name="yr-type" value="0" {yrtype_0_checked}> {lang_on}
 					<select name="yr-month" id="yr-month">
-						<option value="1" {mo_1}>{lang_jan}<option>
-						<option value="2" {mo_2}>{lang_feb}<option>
-						<option value="3" {mo_3}>{lang_mar}<option>
-						<option value="4" {mo_4}>{lang_apr}<option>
-						<option value="5" {mo_5}>{lang_may}<option>
-						<option value="6" {mo_6}>{lang_jun}<option>
-						<option value="7" {mo_7}>{lang_jul}<option>
-						<option value="8" {mo_8}>{lang_aug}<option>
-						<option value="9" {mo_9}>{lang_sep}<option>
+						<option value="1" {mo_1}>{lang_jan}</option>
+						<option value="2" {mo_2}>{lang_feb}</option>
+						<option value="3" {mo_3}>{lang_mar}</option>
+						<option value="4" {mo_4}>{lang_apr}</option>
+						<option value="5" {mo_5}>{lang_may}</option>
+						<option value="6" {mo_6}>{lang_jun}</option>
+						<option value="7" {mo_7}>{lang_jul}</option>
+						<option value="8" {mo_8}>{lang_aug}</option>
+						<option value="9" {mo_9}>{lang_sep}</option>
 						<option value="10" {mo_10}>{lang_oct}</option>
 						<option value="11" {mo_11}>{lang_nov}</option>
 						<option value="12" {mo_12}>{lang_dec}</option>
@@ -215,9 +215,9 @@
 						<option value="MO" {moday_MO_selected}>{lang_monday}</option>
 						<option value="TU" {moday_TU_selected}>{lang_tuesday}</option>
 						<option value="WE" {moday_WE_selected}>{lang_wednesday}</option>
-						<option value="TH" {moday_TH_selected}>{lang_thursday}<option>
+						<option value="TH" {moday_TH_selected}>{lang_thursday}</option>
 						<option value="FR" {moday_FR_selected}>{lang_friday}</option>
-						<option value="SA" {moday_SA_selected}>{lang_saturday}<option>
+						<option value="SA" {moday_SA_selected}>{lang_saturday}</option>
 						<option value="SU,MO,TU,WE,TH,FR,SA" {moday_day_selected}>{lang_day}</option>
 						<option value="MO,TU,WE,TH,FR" {moday_weekday_selected}>{lang_weekday}</option>
 						<option value="SA,SU" {moday_weekend_selected}>{lang_weekend}</option>
@@ -244,7 +244,7 @@
 			</div>
 
 			<div class="uk-form-row uk-margin-bottom">
-				End&nbsp;
+				{lang_end}&nbsp;
 				<select name="end-type" id="end-type">
 					<option value="0" {end_type_0_selected}>{lang_after}</option>
 					<option value="1" {end_type_1_selected}>{lang_on_date}</option>

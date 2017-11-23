@@ -1,6 +1,7 @@
 Agenda Plugin ChangeLog
 
 ## v0.6.0
+ - You can now edit all attributes of an event series
  - Use datetimepicker plugin for pop-up calendar
  - Do not allow end date to be prior to begin date
 
