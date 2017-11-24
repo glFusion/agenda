@@ -1,4 +1,4 @@
-/**
+/*!
 * glFusion CMS
 *
 * Agenda - Agenda Plugin for glFusion

@@ -1,4 +1,4 @@
-/**
+/*!
 * glFusion CMS
 *
 * Agenda - Agenda Plugin for glFusion
@@ -36,9 +36,6 @@ $(document).ready(function() {
 	});
 
 	$('select[name="freq"]').change(function(){
-		// Resets all the recurring options
-		//	resetOptions();
-		// enable the input next to the selected radio button
 		if( $(this).val() != "none" ){
 			$('#recurring-rules').show();
 			switch ( $(this).val() ) {
@@ -131,15 +128,11 @@ $(document).ready(function() {
 
 					break;
 			}
-			// Show Until Rules
-			//		$('#until-rules').show();
 		} else {
-			//disable the inputs not selected.
 			$('#recurring-rules').hide();
 			$('#intervals').hide();
 		}
 	});
-
 	$('#weekday-select button').on('click', function(){
 		$(this).toggleClass('uk-button-success');
 		var byday = [];
