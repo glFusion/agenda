@@ -674,55 +674,61 @@ class eventHandler {
 
         // parsed user input
         $parent_id      = (int) COM_applyFilter($args['parent_id'],true);
-        $title          = $args['title'];
-        $location       = $args['location'];
-        $description    = $args['description'];
-        $category       = $args['category'];
 
-        // sanitize input
-        $filter = new \sanitizer();
-        $filter->setPostmode('text');
-
-        $description = $filter->filterText($description);
-        $title       = $filter->filterText($title);
-        $location    = $filter->filterText($location);
-
-        // prepare for DB
-        $db_title           = DB_escapeString($title);
-        $db_location        = DB_escapeString($location);
-        $db_description     = DB_escapeString($description);
-        $category           = (int) $category;
-
-       // update parent record
-        $sql = "UPDATE {$_TABLES['ac_event']} SET
-                title = '{$db_title}',
-                location = '{$db_location}',
-                category = {$category},
-                description = '{$db_description}'";
-        $sql .= " WHERE parent_id=".(int) $parent_id;
-
-        DB_query($sql,1);
-
-        if ( DB_error() ) {
-            $retval = 1;
+        if ( isset($_POST['edit-recurrence'] ) ) {
+            // delete all the old
+            $retval = $this->deleteEventSeries($parent_id);
+            // save new series
+            $retval = $this->saveEvent($args);
         } else {
-            // updat events record
-            $sql = "UPDATE {$_TABLES['ac_events']} SET
+            $title          = $args['title'];
+            $location       = $args['location'];
+            $description    = $args['description'];
+            $category       = $args['category'];
+
+            // sanitize input
+            $filter = new \sanitizer();
+            $filter->setPostmode('text');
+
+            $description = $filter->filterText($description);
+            $title       = $filter->filterText($title);
+            $location    = $filter->filterText($location);
+
+            // prepare for DB
+            $db_title           = DB_escapeString($title);
+            $db_location        = DB_escapeString($location);
+            $db_description     = DB_escapeString($description);
+            $category           = (int) $category;
+
+           // update parent record
+            $sql = "UPDATE {$_TABLES['ac_event']} SET
                     title = '{$db_title}',
                     location = '{$db_location}',
                     category = {$category},
                     description = '{$db_description}'";
-            $sql .= " WHERE parent_id=".(int) $parent_id . " AND exception = 0";
+            $sql .= " WHERE parent_id=".(int) $parent_id;
+
             DB_query($sql,1);
 
             if ( DB_error() ) {
-                $retval = 2;
+                $retval = 1;
+            } else {
+                // updat events record
+                $sql = "UPDATE {$_TABLES['ac_events']} SET
+                        title = '{$db_title}',
+                        location = '{$db_location}',
+                        category = {$category},
+                        description = '{$db_description}'";
+                $sql .= " WHERE parent_id=".(int) $parent_id . " AND exception = 0";
+                DB_query($sql,1);
+
+                if ( DB_error() ) {
+                    $retval = 2;
+                }
             }
+            PLG_itemSaved($parent_id, 'agenda');
+            CACHE_remove_instance('agenda');
         }
-
-        PLG_itemSaved($parent_id, 'agenda');
-        CACHE_remove_instance('agenda');
-
         return $retval;
     }
 

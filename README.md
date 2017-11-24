@@ -66,15 +66,11 @@ If you delete the entire series, this event **will** be deleted as well.
 
 ##### Editing a Series
 
-When editing the entire series, you can only change the following data items:
+When editing an Event Series, there are two methods to edit the series - updating without changing the dates / times or recurrence rules and updating the recurrence rules (Edit Recurrence checked in the edit form).
 
-* Location
-* Description
-* Category
+When updating just the Location, Description and/or Category (Edit Recurrence checkbox **not** checked), when saved, the entire event series will be updated **except** any exception events.
 
-You cannot change the date / times or the recurring data. If you need to edit any of these, you should delete the current series and create a new one.
-
-Note that any individually edited events in the series will not be updated.
+When **Edit Recurrence** is checked, allowing you to edit all attributes of the event series, when saved, the **entire** event series (including exception events) are deleted and the series is re-created using the new rules. It is important to remember when **Edit Recurrence** is checked, all exception events are removed on save. Agenda will also place a warning on the screen to remind you of this as well.
 
 
 ### Permissions
@@ -109,6 +105,8 @@ For more information on glFusion Groups / Rights - please see the [Permissions O
 
 ### Configuration
 
+#### General
+
 **Allow Anonymous View**
 
 If set to TRUE - anonymous (non-logged-in-users) will be able to view the calendar. If set to FALSE, anonymous users will not be able to access the calendar. See the Security Exit option below to control how glFusion responds to a user without access.
@@ -137,13 +135,15 @@ If set to TRUE - the Upcoming Events block will be enabled.
 
 Number of days into the future to list upcoming events.
 
+#### Global View Options
+
 **Default View**
 
 Select the default calendar view when calendar is initially displayed. Options are Month, Week, Day or List view.
 
 **Auto Height**
 
-Determines how the calendar sizes in the browser window. Auto will use as much 'height' as needed to display the select view without adding scroll bars to the view. Auto also compresses the month view to take only the space needed.  Fit will take as much space as available and add scroll bars to the view if additional vertical space is needed.
+Determines how the calendar sizes in the browser window. Auto will use as much 'height' as needed to display the select view without adding scroll bars to the view. Auto also compresses the month view to take only the space needed. Fit will take as much space as available and add scroll bars to the view if additional vertical space is needed.
 
 **Header Left Items**
 
@@ -161,13 +161,53 @@ Select what to display in the Right header area of the calendar.
 
 Select the first day of the week for your location.
 
+**Display Week Numbers**
+
+If TRUE, the week number will be displayed on the Month, Week and Day views.
+
+**Print Enabled**
+
+If TRUE, a print button will be displayed in the Agenda header to allow printing the current view.
+
+
+#### Month View Options
+
+**Month View :: Event Limit**
+
+Limits the number of events displayed on a day. When there are too many events, a link that looks like "+2 more" is displayed.
+
+**Month View :: Time Format**
+
+Determines the time-text that will be displayed on each event. For example, 'hh:mm a' will display 12:25 am. See PHP date() formats for details on different formats.
+
+**Month View :: Display Event Time**
+
+If TRUE, the Event Start Time will display next to the event (All Day events DO NOT display a start time).
+
+**Month View :: Display Event End Time**
+
+If TRUE, the Event End Time will also display next to the event (All Day events DO NOT display a end time).
+
+#### Week View Options
+
+**Week View :: Event Limit**
+
+Limits the number of events displayed on a day. When there are too many events, a link that looks like "+2 more" is displayed.
+
+**Week View :: Time Format**
+
+Determines the time-text that will be displayed on each event. For example, 'hh:mm a' will display 12:25 am. See PHP date() formats for details on different formats.
+
 **Week View :: Display Event Time**
 
 If TRUE, the Event Start Time will display next to the event (All Day events DO NOT display a start time).
 
 **Week View :: Display Event End Time**
+If TRUE, the Event End Time will also d
+isplay next to the event (All Day events DO NOT display a end time).
 
-If TRUE, the Event End Time will also display next to the event (All Day events DO NOT display a end time).
+
+#### Day View Options
 
 **Day View :: Event Limit**
 
@@ -175,7 +215,7 @@ Limits the number of events displayed on a day. When there are too many events, 
 
 **Day View :: Time Format**
 
-Determines the time-text that will be displayed on each event. For example, 'hh:mm a' will display 12:25 am. See PHP date() formats for details on different formats.
+Determines the time-text that will be displayed on each event. For example, 'hh:mm a' will display 12:25 am. See PHP date() formats for details on different formats.formats.
 
 **Day View :: Display Event Time**
 
@@ -184,6 +224,8 @@ If TRUE, the Event Start Time will display next to the event (All Day events DO 
 **Day View :: Display Event End Time**
 
 If TRUE, the Event End Time will also display next to the event (All Day events DO NOT display a end time).
+
+#### List View Options
 
 **List View :: Time Format**
 
@@ -196,6 +238,7 @@ If TRUE, the Event Start Time will display next to the event (All Day events DO 
 **List View :: Display Event End Time**
 
 If TRUE, the Event End Time will also display next to the event (All Day events DO NOT display a end time).
+
 
 ### License
 

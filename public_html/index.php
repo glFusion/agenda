@@ -76,6 +76,18 @@ if (isset ($_GET['query'])) {
     $query = trim(COM_applyFilter ($_GET['query']));
 }
 
+// load needed JS
+$outputHandler = \outputHandler::getInstance();
+$outputHandler->addLinkScript($_CONF['site_url'].'/agenda/fc/moment.min.js',HEADER_PRIO_NORMAL);
+$outputHandler->addLinkScript($_CONF['site_url'].'/agenda/fc/fullcalendar.min.js',HEADER_PRIO_NORMAL);
+$outputHandler->addLinkScript($_CONF['site_url'].'/agenda/fc/locale-all.js',HEADER_PRIO_NORMAL);
+$outputHandler->addLinkScript($_CONF['site_url'].'/javascript/addons/datetime/jquery.datetimepicker.full.min.js',HEADER_PRIO_NORMAL);
+$outputHandler->addLinkScript($_CONF['site_url'].'/agenda/fc/jquery.qtip.min.js',HEADER_PRIO_NORMAL);
+$outputHandler->addLinkScript($_CONF['site_url'].'/agenda/js/agenda.js',HEADER_PRIO_NORMAL);
+$outputHandler->addLinkStyle($_CONF['site_url'].'/agenda/fc/fullcalendar.min.css',HEADER_PRIO_NORMAL);
+$outputHandler->addLinkStyle($_CONF['site_url'].'/agenda/fc/jquery.qtip.min.css',HEADER_PRIO_NORMAL);
+$outputHandler->addLinkStyle($_CONF['site_url'].'/javascript/addons/datetime/jquery.datetimepicker.min.css',HEADER_PRIO_NORMAL);
+
 $T = new Template ($_CONF['path'] . 'plugins/agenda/templates');
 
 $T->set_file (array (

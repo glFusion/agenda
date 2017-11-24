@@ -1,23 +1,12 @@
-/**
-* glFusion CMS
-*
-* Agenda - Agenda Plugin for glFusion
-*
-* JavaScript backend
-*
-* @license GNU General Public License version 2 or later
-*     http://www.opensource.org/licenses/gpl-license.php
-*
-*  Copyright (C) 2016-2017 by the following authors:
-*   Mark R. Evans   mark AT glfusion DOT org
-*
-*/
+/*! glFusion CMS - Agenda Plugin for glFusion - License GNU General Public License version 2 or later
+ *  Copyright (C) 2016-2017 by Mark R. Evans - mark AT glfusion DOT org */
 
 // global vars
 
 var calendar;
 var lang = new Array();
 var globalEvent;
+var agendaConfig;
 
 // fetch configuration data and language translations
 url = glfusionSiteUrl + '/agenda/ajax/ajax-controller.php';
@@ -31,7 +20,7 @@ $.ajax({
 	success: function (data) {
 		var result = $.parseJSON(data["js"]);
 		lang = result.lang;
-		var agendaConfig = result.config;
+		agendaConfig = result.config;
 		$(document).ready(function () {
 			initializeCalendar(agendaConfig);
 			initializeAgenda();
@@ -157,8 +146,8 @@ function edit_single_event( )
 		resizable: true,
 		classes: { "ui-dialog": "tm-agenda-dialog" },
 		position: {
-			my: "top left",
-			at: "top left",
+			my: "left top",
+			at: "left top",
 			of: "#calendar",
 			collision: "fit"
 		},
@@ -220,8 +209,8 @@ function edit_series_event()
 		resizable: true,
 		classes: { "ui-dialog": "tm-agenda-dialog" },
 		position: {
-			my: "top left",
-			at: "top left",
+			my: "left top",
+			at: "left top",
 			of: "#calendar",
 			collision: "fit"
 		},
@@ -331,8 +320,8 @@ function initializeCalendar( config )
 						resizable: true,
 						classes: { "ui-dialog": "tm-agenda-dialog" },
 						position: {
-							my: "top left",
-							at: "top left",
+							my: "left top",
+							at: "left top",
 							of: "#calendar",
 							collision: "fit"
 						},
@@ -486,7 +475,7 @@ function initializeCalendar( config )
 				}
 			}
 		},
-		locale: config['locale'],
+		locale: config['iso_lang'],
 		isRTL: config['isrtl'],
 		events: glfusionSiteUrl + '/agenda/ajax/json-events.php',
 		editable: false, // overriden in the event object

@@ -362,26 +362,6 @@ function plugin_getheadercss_agenda() {
     return($styles);
 }
 
-function plugin_getheadercode_agenda()
-{
-    global $_CONF;
-
-    $retval = '';
-
-    if ( strstr(COM_getCurrentURL(), $_CONF['site_url'].'/agenda') !== false ) {
-        $retval .= '<link rel="stylesheet" type="text/css" href="'.$_CONF['site_url'].'/agenda/fc/fullcalendar.min.css">' . LB;
-        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/fc/moment.min.js"></script>' . LB;
-        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/fc/fullcalendar.min.js"></script>' . LB;
-        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/fc/locale-all.js"></script>' . LB;
-        $retval .= '<link rel="stylesheet" type="text/css" href="'.$_CONF['site_url'].'/agenda/fc/jquery.qtip.min.css" />' . LB;
-        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/fc/jquery.qtip.min.js"></script>' . LB;
-        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/js/agenda.js"></script>' . LB;
-    }
-    return $retval;
-
-}
-
-
 /**
 *   Get the URL to the configuration help file.
 *
@@ -925,6 +905,162 @@ function phpblock_agenda( $help='', $title='' )
     return $retval;
 }
 
+function AC_getLocale()
+{
+    global $_CONF;
+
+    $retval = 'en';
+
+    // locale mapping $LANG_LOCALE
+    // Set the ISO 2 digit code for language
+    switch ($_CONF['language']) {
+        case 'afrikaans' :
+        case 'afrikaans_utf-8' :
+            $retval = 'af';
+            break;
+// bosnian no support by FC
+        case 'bosnian' :
+        case 'bosnian_utf-8' :
+            $retval = 'en';
+            break;
+        case 'bulgarian' :
+        case 'bulgarian_utf-8' :
+            $retval = 'bg';
+            break;
+        case 'catalan' :
+        case 'catalan_utf-8' :
+            $retval = 'ca';
+            break;
+        case 'chinese_traditional' :
+        case 'chinese_traditional_utf-8' :
+        case 'chinese_simplified' :
+        case 'chinese_simplified_utf-8' :
+            $retval = 'zh-cn';
+            break;
+        case 'croatian' :
+        case 'croatian_utf-8' :
+            $retval = 'hr';
+            break;
+        case 'czech' :
+        case 'czech_utf-8' :
+            $retval = 'cs';
+            break;
+        case 'danish' :
+        case 'danish_utf-8' :
+            $retval = 'da';
+            break;
+        case 'dutch' :
+        case 'dutch_utf-8' :
+            $retval = 'nl';
+            break;
+        case 'english' :
+        case 'english_utf-8' :
+            $retval = 'en';
+            break;
+        case 'estonian' :
+        case 'estonian_utf-8' :
+            $retval = 'et';
+            break;
+        case 'farsi' :
+        case 'farsi_utf-8' :
+            $retval = 'fa';
+            break;
+        case 'finnish' :
+        case 'finnish_utf-8' :
+            $retval = 'fi';
+            break;
+        case 'french_canada' :
+        case 'french_canada_utf-8' :
+            $retval = 'fr-ca';
+            break;
+        case 'french_france' :
+        case 'french_france_utf-8' :
+            $retval = 'fr';
+            break;
+        case 'german' :
+        case 'german_utf-8' :
+        case 'german_formal' :
+        case 'german_formal_utf-8' :
+            $retval = 'de';
+            break;
+        case 'hebrew' :
+        case 'hebrew_utf-8' :
+            $retval = 'he';
+            break;
+        case 'hellenic' :
+        case 'hellenic_utf-8' :
+            $retval = 'el';
+            break;
+        case 'indonesian' :
+        case 'indonesian_utf-8' :
+            $retval = 'id';
+            break;
+        case 'italian' :
+        case 'italian_utf-8' :
+            $retval = 'it';
+            break;
+        case 'japanese' :
+        case 'japanese_utf-8' :
+            $retval = 'ja';
+            break;
+        case 'korean' :
+        case 'korean_utf-8' :
+            $retval = 'ko';
+            break;
+        case 'norwegian' :
+        case 'norwegian_utf-8' :
+            $retval = 'nb';
+            break;
+        case 'polish' :
+        case 'polish_utf-8' :
+            $retval = 'pl';
+            break;
+        case 'portuguese_brazil' :
+        case 'portuguese_brazil_utf-8' :
+            $retval = 'pt-br';
+            break;
+        case 'portuguese' :
+        case 'portuguese_utf-8' :
+            $retval = 'pt';
+            break;
+        case 'romanian' :
+        case 'romanian_utf-8' :
+            $retval = 'ro';
+            break;
+        case 'russian' :
+        case 'russian_utf-8' :
+            $retval = 'ru';
+            break;
+        case 'slovak' :
+        case 'slovak_utf-8' :
+            $retval = 'sk';
+            break;
+        case 'slovenian' :
+        case 'slovenian_utf-8' :
+            $retval = 'sl';
+            break;
+        case 'spanish' :
+        case 'spanish_utf-8' :
+            $retval = 'es';
+            break;
+        case 'swedish' :
+        case 'swedish_utf-8' :
+            $retval = 'sv';
+            break;
+        case 'turkish' :
+        case 'turkish_utf-8' :
+            $retval = 'tr';
+            break;
+        case 'ukrainian' :
+        case 'ukrainian_utf-8' :
+            $retval = 'uk';
+            break;
+        default :
+            $retval = 'en';
+            break;
+    }
+    return $retval;
+}
 
 /*
 	Truncated text to the nearest word based on a character count - substr()

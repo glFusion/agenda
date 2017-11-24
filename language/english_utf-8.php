@@ -120,6 +120,7 @@ $LANG_AC = array (
     'end_after_date'    => 'End After Date',
     'of'                => 'of',
     'end'               => 'End',
+    'exception_warning' => 'Exception events will be removed and the entire series re-created if you edit the recurrence rules.',
 );
 
 // JavaScript specific translations

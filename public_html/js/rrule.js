@@ -1,17 +1,5 @@
-/**
-* glFusion CMS
-*
-* Agenda - Agenda Plugin for glFusion
-*
-* JavaScript rrule support
-*
-* @license GNU General Public License version 2 or later
-*     http://www.opensource.org/licenses/gpl-license.php
-*
-*  Copyright (C) 2016-2017 by the following authors:
-*   Mark R. Evans   mark AT glfusion DOT org
-*
-*/
+/*! glFusion CMS - Agenda Plugin for glFusion - License GNU General Public License version 2 or later
+ *  Copyright (C) 2016-2017 by Mark R. Evans - mark AT glfusion DOT org */
 var dowMapArray = ['SU','MO','TU','WE','TH','FR','SA'];
 
 $(document).ready(function() {
@@ -36,9 +24,6 @@ $(document).ready(function() {
 	});
 
 	$('select[name="freq"]').change(function(){
-		// Resets all the recurring options
-		//	resetOptions();
-		// enable the input next to the selected radio button
 		if( $(this).val() != "none" ){
 			$('#recurring-rules').show();
 			switch ( $(this).val() ) {
@@ -131,15 +116,11 @@ $(document).ready(function() {
 
 					break;
 			}
-			// Show Until Rules
-			//		$('#until-rules').show();
 		} else {
-			//disable the inputs not selected.
 			$('#recurring-rules').hide();
 			$('#intervals').hide();
 		}
 	});
-
 	$('#weekday-select button').on('click', function(){
 		$(this).toggleClass('uk-button-success');
 		var byday = [];
