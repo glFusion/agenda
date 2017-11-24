@@ -1,17 +1,5 @@
-/*!
-* glFusion CMS
-*
-* Agenda - Agenda Plugin for glFusion
-*
-* JavaScript Event Form Validations
-*
-* @license GNU General Public License version 2 or later
-*     http://www.opensource.org/licenses/gpl-license.php
-*
-*  Copyright (C) 2016-2017 by the following authors:
-*   Mark R. Evans   mark AT glfusion DOT org
-*
-*/
+/*! glFusion CMS - Agenda Plugin for glFusion - License GNU General Public License version 2 or later
+ *  Copyright (C) 2016-2017 by Mark R. Evans - mark AT glfusion DOT org */
 $(document).ready(function () {
 
 	$.validator.addMethod("enddate", function(value, element) {
