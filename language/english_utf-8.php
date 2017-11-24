@@ -107,7 +107,7 @@ $LANG_AC = array (
     'first'             => 'First',
     'second'            => 'Second',
     'third'             => 'Third',
-    'forth'             => 'Forth',
+    'forth'             => 'Fourth',
     'last'              => 'Last',
 //LANG WEEK has weekday names too
     'day'               => 'Day',
