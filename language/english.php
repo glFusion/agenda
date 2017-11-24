@@ -121,6 +121,7 @@ $LANG_AC = array (
     'of'                => 'of',
     'end'               => 'End',
     'exception_warning' => 'Exception events will be removed and the entire series re-created if you edit the recurrence rules.',
+    'edit_recurrence'   => 'Edit Recurrence',
 );
 
 // JavaScript specific translations

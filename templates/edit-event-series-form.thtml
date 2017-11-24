@@ -22,7 +22,7 @@
 	<div class="uk-form-row">
 		<div class="uk-form-controls">
 			<div class="uk-text-nowrap">
-				Edit Recurrence <input type="checkbox" id="edit-recurrence" name="edit-recurrence">
+				{lang_edit_recurrence} <input type="checkbox" id="edit-recurrence" name="edit-recurrence">
 			</div>
 		</div>
 	</div>
