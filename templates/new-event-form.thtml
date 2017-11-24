@@ -261,96 +261,27 @@
 			<textarea id="description" name="description" rows="4" width="120" style="width:85%;">{description}</textarea>
 		</div>
 	</div>
-	{!if admin_form}
+{!if admin_form}
 	<div class="uk-form-row">
 		<button type="submit" name="submit" class="uk-button uk-button-primary">{lang_save}</button>
 		<button type="submit" name="submit" class="uk-button uk-button-danger">{lang_delete}</button>
 		<button type="submit" name="submit" class="uk-button cancel">{lang_cancel}</button>
 	</div>
-	{!endif}
+{!endif}
 </form>
-
-{!if admin_form}
 <script>
+{!if admin_form}
 	var lang = new Array();
 	lang = {
 		'err_end_before_start' : '{lang_err_datetime}',
 		'err_enter_title' : '{lang_err_no_title}'
 	};
-</script>
 {!endif}
-<script>
-
-var lang_months = '{lang_months}';
-var lang_weeks  = '{lang_weeks}';
-var lang_days   = '{lang_days}';
-var lang_hours  = '{lang_hours}'
-
-$(document).ready(function() {
-	if ($('#event-allday').is(':checked') == true){
-		$('#start-time').prop('disabled', true);
-		$('#end-time').prop('disabled', true);
-	}
-
-	$('#start-time').change(function() {
-		var from_time = $("#start-time").val();
-		var to_time 	= $("#end-time").val();
-		var start_date = $("#event-date").val();
-		var end_date 	= $("#event-end-date").val();
-		var momentFrom = moment(start_date + ' ' + from_time, 'YYYY-MM-DD hh:mm A');
-		var momentTo   = moment(end_date + ' ' + to_time, 'YYYY-MM-DD hh:mm A');
-		if (momentFrom > momentTo) {
-			var updated_end_date_time = moment(momentFrom).add(1, 'h');
-			var newToHours = updated_end_date_time.format('hh:mm A');
-			$("#end-time").val(newToHours);
-		}
-	});
-
-	$('#event-allday').change(function(){
-		if ($('#event-allday').is(':checked') == true){
-			$('#start-time').prop('disabled', true);
-			$('#end-time').prop('disabled', true);
-		} else {
-			$('#start-time').prop('disabled', false);
-			$('#end-time').prop('disabled', false);
-		}
-	});
-
-	$('#event-date').change(function(){
-		var start_date = $("#event-date").val();
-		var end_date 	= $("#event-end-date").val();
-		var momentFrom = moment(start_date, 'YYYY-MM-DD');
-		var momentTo   = moment(end_date, 'YYYY-MM-DD');
-		if (momentFrom > momentTo) {
-			$("#event-end-date").val(start_date);
-		}
-	});
-});
-$.datetimepicker.setLocale(agendaConfig['iso_lang']);
-// don't allow an end date before the start date
-var setMinimum = function( currentDateTime ){
-	var start_date = $("#event-date").val();
-  this.setOptions({
-    minDate: start_date
-  });
-};
-$('#event-date').datetimepicker({
-  format:'Y-m-d',
-  timepicker:false,
-	mask:'9999-19-39',
-
-});
-$('#event-end-date').datetimepicker({
-  format:'Y-m-d',
-  timepicker:false,
-	mask:'9999-19-39',
-  onShow:setMinimum
-});
-$('#recur-end-date').datetimepicker({
-	format:'Y-m-d',
-	timepicker:false,
-	mask:'9999-19-39',
-});
+	var lang_months = '{lang_months}';
+	var lang_weeks  = '{lang_weeks}';
+	var lang_days   = '{lang_days}';
+	var lang_hours  = '{lang_hours}'
 </script>
+<script src="{site_url}/agenda/js/event-edit.js"></script>
 <script src="{site_url}/agenda/js/rrule.js"></script>
 <script src="{site_url}/agenda/js/event-validation.js"></script>

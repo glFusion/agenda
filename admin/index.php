@@ -45,6 +45,8 @@ function editEvent( $parent_id )
         // load needed JS
         $outputHandler = \outputHandler::getInstance();
         $outputHandler->addLinkScript($_CONF['site_url'].'/agenda/fc/moment.min.js',HEADER_PRIO_NORMAL);
+        $outputHandler->addLinkStyle($_CONF['site_url'].'/javascript/addons/datetime/jquery.datetimepicker.min.css',HEADER_PRIO_NORMAL);
+        $outputHandler->addLinkScript($_CONF['site_url'].'/javascript/addons/datetime/jquery.datetimepicker.full.min.js',HEADER_PRIO_NORMAL);
 
         $T = new \Template ($_CONF['path'] . 'plugins/agenda/templates');
         $T->set_file ('page','edit-event-form.thtml');
@@ -180,6 +182,7 @@ function editEvent( $parent_id )
             'lang_saturday'     => $LANG_WEEK[7],
             'lang_of'           => $LANG_AC['of'],
             'lang_end'          => $LANG_AC['end'],
+            'locale'            => AC_getLocale(),
          ));
          $T->set_var('repeats',1);
 
