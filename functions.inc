@@ -362,29 +362,6 @@ function plugin_getheadercss_agenda() {
     return($styles);
 }
 
-function plugin_getheadercode_agenda()
-{
-    global $_CONF;
-
-    $retval = '';
-
-    if ( strstr(COM_getCurrentURL(), $_CONF['site_url'].'/agenda') !== false ) {
-        $retval .= '<link rel="stylesheet" type="text/css" href="'.$_CONF['site_url'].'/agenda/fc/fullcalendar.min.css">' . LB;
-        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/fc/moment.min.js"></script>' . LB;
-        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/fc/fullcalendar.min.js"></script>' . LB;
-        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/fc/locale-all.js"></script>' . LB;
-        $retval .= '<link rel="stylesheet" type="text/css" href="'.$_CONF['site_url'].'/agenda/fc/jquery.qtip.min.css" />' . LB;
-        $retval .= '<link rel="stylesheet" type="text/css" href="'.$_CONF['site_url'].'/javascript/addons/datetime/jquery.datetimepicker.min.css" />' . LB;
-        $retval .= '<script src="'.$_CONF['site_url'].'/javascript/addons/datetime/jquery.datetimepicker.full.min.js"></script>' . LB;
-        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/fc/jquery.qtip.min.js"></script>' . LB;
-        $retval .= '<script src="'.$_CONF['site_url'].'/agenda/js/agenda.js"></script>' . LB;
-    }
-
-    return $retval;
-
-}
-
-
 /**
 *   Get the URL to the configuration help file.
 *
