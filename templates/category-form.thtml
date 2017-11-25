@@ -1,3 +1,4 @@
+{# begin {templatelocation} #}
 <script src="{site_admin_url}/plugins/agenda/js/spectrum.js"></script>
 <link rel="stylesheet" href="{site_admin_url}/plugins/agenda/js/spectrum.css" />
 <form class="uk-form uk-form-horizontal" action="{form_action}" method="post" id="category-form" name="category-form">
@@ -105,3 +106,4 @@
 
 $('#category-form').validate();
 </script>
+{# end {templatelocation} #}

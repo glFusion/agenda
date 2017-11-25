@@ -1,3 +1,4 @@
+{# begin {templatelocation} #}
 <form class="uk-form" action="" id="event-form" name="event-form">
 	<input type="hidden" name="action" value="edit-event-series">
 	<input type="hidden" name="parent_id" value="{parent_id}">
@@ -305,3 +306,4 @@
 <script src="{site_url}/agenda/js/event-edit.js"></script>
 <script src="{site_url}/agenda/js/rrule.js"></script>
 <script src="{site_url}/agenda/js/event-validation.js"></script>
+{# end {templatelocation} #}

@@ -1,11 +1,10 @@
+{# begin {templatelocation} #}
 <script>
 var defaultview = '{view}';
 var defaultdate = '{defaultdate}';
 </script>
 <div id="calendar-area">
 	<div id="calendar"></div>
-
-	<div id="dialog-form-full" title="{lang_agenda}" style="display:none;">
-	</div>
+	<div id="dialog-form-full" title="{lang_agenda}" style="display:none;"></div>
 </div>
-<div class="uk-text-primary">Version: {version}</div>
+{# end {templatelocation} #}
