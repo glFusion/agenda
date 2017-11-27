@@ -1,6 +1,6 @@
 Agenda Plugin ChangeLog
 
-## v0.7.0
+## v0.7.0 (November 27, 2017)
  - Add new configuration options to control column date/time format and title date/time format for Monthly, Weekly and Day views
 
 ## v0.6.1 (November 26, 2017)
