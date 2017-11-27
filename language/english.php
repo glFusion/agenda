@@ -187,6 +187,8 @@ $LANG_confignames['agenda'] = array(
     'month_timeformat'          => 'Time Format',
     'month_displayeventtime'    => 'Display Start Time',
     'month_displayeventend'     => 'Display End Time',
+    'month_columnformat'        => 'Column Date / Time Format',
+    'month_titleformat'         => 'Header Title Date / Time Format',
 
 // Week View
 
@@ -194,12 +196,16 @@ $LANG_confignames['agenda'] = array(
     'week_timeformat'           => 'Time Format',
     'week_displayeventtime'     => 'Display Start Time',
     'week_displayeventend'      => 'Display End Time',
+    'week_columnformat'         => 'Week Column Date / Time Format',
+    'week_titleformat'          => 'Header Title Date / Time Format',
 
 // Day View
     'day_eventlimit'            => 'Event Limit',
     'day_timeformat'            => 'Time Format',
     'day_displayeventtime'      => 'Display Start Time',
     'day_displayeventend'       => 'Display End Time',
+    'day_columnformat'          => 'Column Date / Time Format',
+    'day_titleformat'           => 'Header Title Date / Time Format',
 
 // List View
     'list_timeformat'           => 'Time Format',
