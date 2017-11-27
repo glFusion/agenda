@@ -253,13 +253,35 @@ $agendaConfigData = array(
     	'group' => 'agenda'
     ),
     array(
+    	'name' => 'month_columnformat',
+    	'default_value' => 'ddd',
+    	'type' => 'text',
+    	'subgroup' => 0,
+    	'fieldset' => 2,
+    	'selection_array' => NULL,
+    	'sort' => 30,
+    	'set' => TRUE,
+    	'group' => 'agenda'
+    ),
+    array(
+    	'name' => 'month_titleformat',
+    	'default_value' => 'MMMM YYYY',
+    	'type' => 'text',
+    	'subgroup' => 0,
+    	'fieldset' => 2,
+    	'selection_array' => NULL,
+    	'sort' => 40,
+    	'set' => TRUE,
+    	'group' => 'agenda'
+    ),
+    array(
     	'name' => 'month_displayeventtime',
     	'default_value' => 1,
     	'type' => 'select',
     	'subgroup' => 0,
     	'fieldset' => 2,
     	'selection_array' => 0,
-    	'sort' => 30,
+    	'sort' => 50,
     	'set' => TRUE,
     	'group' => 'agenda'
     ),
@@ -270,7 +292,7 @@ $agendaConfigData = array(
     	'subgroup' => 0,
     	'fieldset' => 2,
     	'selection_array' => 0,
-    	'sort' => 40,
+    	'sort' => 60,
     	'set' => TRUE,
     	'group' => 'agenda'
     ),
@@ -310,13 +332,35 @@ $agendaConfigData = array(
     	'group' => 'agenda'
     ),
     array(
+    	'name' => 'week_columnformat',
+    	'default_value' => 'ddd M/D',
+    	'type' => 'text',
+    	'subgroup' => 0,
+    	'fieldset' => 3,
+    	'selection_array' => NULL,
+    	'sort' => 30,
+    	'set' => TRUE,
+    	'group' => 'agenda'
+    ),
+    array(
+    	'name' => 'week_titleformat',
+    	'default_value' => 'MMM D YYYY',
+    	'type' => 'text',
+    	'subgroup' => 0,
+    	'fieldset' => 3,
+    	'selection_array' => NULL,
+    	'sort' => 40,
+    	'set' => TRUE,
+    	'group' => 'agenda'
+    ),
+    array(
     	'name' => 'week_displayeventtime',
     	'default_value' => 1,
     	'type' => 'select',
     	'subgroup' => 0,
     	'fieldset' => 3,
     	'selection_array' => 0,
-    	'sort' => 30,
+    	'sort' => 50,
     	'set' => TRUE,
     	'group' => 'agenda'
     ),
@@ -327,7 +371,7 @@ $agendaConfigData = array(
     	'subgroup' => 0,
     	'fieldset' => 3,
     	'selection_array' => 0,
-    	'sort' => 40,
+    	'sort' => 60,
     	'set' => TRUE,
     	'group' => 'agenda'
     ),
@@ -366,13 +410,35 @@ $agendaConfigData = array(
     	'group' => 'agenda'
     ),
     array(
+    	'name' => 'day_columnformat',
+    	'default_value' => 'dddd',
+    	'type' => 'text',
+    	'subgroup' => 0,
+    	'fieldset' => 4,
+    	'selection_array' => NULL,
+    	'sort' => 30,
+    	'set' => TRUE,
+    	'group' => 'agenda'
+    ),
+    array(
+    	'name' => 'day_titleformat',
+    	'default_value' => 'MMMM D YYYY',
+    	'type' => 'text',
+    	'subgroup' => 0,
+    	'fieldset' => 4,
+    	'selection_array' => NULL,
+    	'sort' => 40,
+    	'set' => TRUE,
+    	'group' => 'agenda'
+    ),
+    array(
     	'name' => 'day_displayeventtime',
     	'default_value' => 1,
     	'type' => 'select',
     	'subgroup' => 0,
     	'fieldset' => 4,
     	'selection_array' => 0,
-    	'sort' => 30,
+    	'sort' => 50,
     	'set' => TRUE,
     	'group' => 'agenda'
     ),
@@ -383,7 +449,7 @@ $agendaConfigData = array(
     	'subgroup' => 0,
     	'fieldset' => 4,
     	'selection_array' => 0,
-    	'sort' => 40,
+    	'sort' => 60,
     	'set' => TRUE,
     	'group' => 'agenda'
     ),

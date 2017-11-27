@@ -180,6 +180,16 @@ Limits the number of events displayed on a day. When there are too many events, 
 
 Determines the time-text that will be displayed on each event. For example, 'hh:mm a' will display 12:25 am. See PHP date() formats for details on different formats.
 
+**Month View :: Column Format**
+
+Determines the text that will be displayed on the calendar's column headings. For example, 'ddd' will display 'Mon', 'ddd M/D' will display 'Mon 9/7'.
+
+
+**Month View :: Title Format**
+
+Determines the text that will be displayed in the header's title. For example, MMMM YYYY' will display 'September 2009', 'MMM D YYYY' will display 'Sep 13 2009', 'MMMM D YYYY' will display 'September 8 2009'.
+
+
 **Month View :: Display Event Time**
 
 If TRUE, the Event Start Time will display next to the event (All Day events DO NOT display a start time).
@@ -197,6 +207,16 @@ Limits the number of events displayed on a day. When there are too many events, 
 **Week View :: Time Format**
 
 Determines the time-text that will be displayed on each event. For example, 'hh:mm a' will display 12:25 am. See PHP date() formats for details on different formats.
+
+**Week View :: Column Format**
+
+Determines the text that will be displayed on the calendar's column headings. For example, 'ddd' will display 'Mon', 'ddd M/D' will display 'Mon 9/7'.
+
+
+**Week View :: Title Format**
+
+Determines the text that will be displayed in the header's title. For example, MMMM YYYY' will display 'September 2009', 'MMM D YYYY' will display 'Sep 13 2009', 'MMMM D YYYY' will display 'September 8 2009'.
+
 
 **Week View :: Display Event Time**
 
@@ -216,6 +236,16 @@ Limits the number of events displayed on a day. When there are too many events, 
 **Day View :: Time Format**
 
 Determines the time-text that will be displayed on each event. For example, 'hh:mm a' will display 12:25 am. See PHP date() formats for details on different formats.formats.
+
+**Day View :: Column Format**
+
+Determines the text that will be displayed on the calendar's column headings. For example, 'ddd' will display 'Mon', 'ddd M/D' will display 'Mon 9/7'.
+
+
+**Day View :: Title Format**
+
+Determines the text that will be displayed in the header's title. For example, MMMM YYYY' will display 'September 2009', 'MMM D YYYY' will display 'Sep 13 2009', 'MMMM D YYYY' will display 'September 8 2009'.
+
 
 **Day View :: Display Event Time**
 
