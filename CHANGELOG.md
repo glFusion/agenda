@@ -1,5 +1,9 @@
 Agenda Plugin ChangeLog
 
+## v0.6.1 (November 26, 2017)
+ - Fixed incorrect reference to agenda's main JS file
+ - Fixed a few spelling issues and removed extra < in recurrence forms
+
 ## v0.6.0 (November 23, 2017)
  - You can now edit all attributes of an event series
  - Use datetimepicker plugin for pop-up calendar

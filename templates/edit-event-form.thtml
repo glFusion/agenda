@@ -1,3 +1,4 @@
+{# begin {templatelocation} #}
 {!if admin_form}
 <div class="uk-panel uk-panel-box">
 {!endif}
@@ -125,7 +126,7 @@
 						<option value="2" {setpos_2_selected}>{lang_second}</option>
 						<option value="3" {setpos_3_selected}>{lang_third}</option>
 						<option value="4" {setpos_4_selected}>{lang_forth}</option>
-						<option value="-1" {setpos_-1_selected}>{lang_last}<</option>
+						<option value="-1" {setpos_-1_selected}>{lang_last}</option>
 					</select>
 
 					<select name="mo-day" id="mo-day">
@@ -207,7 +208,7 @@
 						<option value="2" {setpos_2_selected}>{lang_second}</option>
 						<option value="3" {setpos_3_selected}>{lang_third}</option>
 						<option value="4" {setpos_4_selected}>{lang_forth}</option>
-						<option value="-1" {setpos_-1_selected}>{lang_last}<</option>
+						<option value="-1" {setpos_-1_selected}>{lang_last}</option>
 					</select>
 
 					<select name="yr-day" id="yr-day">
@@ -311,3 +312,4 @@
 <script src="{site_url}/agenda/js/event-edit.js"></script>
 <script src="{site_url}/agenda/js/rrule.js"></script>
 <script src="{site_url}/agenda/js/event-validation.js"></script>
+{# end {templatelocation} #}

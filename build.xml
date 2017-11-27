@@ -115,6 +115,7 @@
         <reflexive>
             <fileset dir="${dstDir}/${pi.id}">
                 <include name="functions.inc" />
+                <include name="public_html/index.php"/>
                 <include name="templates/*"/>
             </fileset>
             <filterchain>

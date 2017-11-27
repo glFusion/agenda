@@ -107,7 +107,7 @@ $LANG_AC = array (
     'first'             => 'First',
     'second'            => 'Second',
     'third'             => 'Third',
-    'forth'             => 'Forth',
+    'forth'             => 'Fourth',
     'last'              => 'Last',
 //LANG WEEK has weekday names too
     'day'               => 'Day',
@@ -121,6 +121,7 @@ $LANG_AC = array (
     'of'                => 'of',
     'end'               => 'End',
     'exception_warning' => 'Exception events will be removed and the entire series re-created if you edit the recurrence rules.',
+    'edit_recurrence'   => 'Edit Recurrence',
 );
 
 // JavaScript specific translations
