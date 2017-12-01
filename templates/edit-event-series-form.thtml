@@ -1,8 +1,13 @@
 {# begin {templatelocation} #}
-<form class="uk-form" action="" id="event-form" name="event-form">
+{!if admin_form}
+<div class="uk-panel uk-panel-box">
+{!endif}
+<form class="uk-form" action="{form_action}" method="post" id="event-form" name="event-form">
 	<input type="hidden" name="action" value="edit-event-series">
 	<input type="hidden" name="parent_id" value="{parent_id}">
 	<input type="hidden" name="event_id" value="{event_id}">
+	<input type="hidden" name="event_id" value="{event_id}">
+	<input type="hidden" name="{token_name}" value="{token}">
 
 	<div class="uk-form-row">
 		<div class="uk-form-controls">
@@ -286,8 +291,17 @@
 		</div>
 	</div>
 
+{!if admin_form}
+		<div class="uk-form-row">
+			<button type="submit" name="submit" class="uk-button uk-button-primary">{lang_save}</button>
+			<button type="submit" name="delete-series" class="uk-button uk-button-danger" onclick="return confirm('{lang_delete_confirm}');">{lang_delete}</button>
+			<button type="submit" name="cancel" class="uk-button cancel" value="{cancel_value}">{lang_cancel}</button>
+		</div>
+{!endif}
 </form>
-
+{!if admin_form}
+</div>
+{!endif}
 <script>
 	$('#edit-recurrence').change(function(){
 		if ($('#edit-recurrence').is(':checked') == true){

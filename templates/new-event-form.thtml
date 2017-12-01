@@ -1,6 +1,10 @@
 {# begin {templatelocation} #}
-<form class="uk-form" action="{form_action}" id="event-form" name="event-form">
+{!if admin_form}
+<div class="uk-panel uk-panel-box">
+{!endif}
+<form class="uk-form" action="{form_action}" method="post" id="event-form" name="event-form">
 	<input type="hidden" name="action" value="new-event">
+	<input type="hidden" name="{token_name}" value="{token}">
 	<div class="uk-form-row">
 		<div class="uk-form-controls">
 			<input class="required uk-form-width-large" type="text" name="title" id="title" placeholder="{lang_event_title}" value="{title}">
@@ -265,18 +269,23 @@
 {!if admin_form}
 	<div class="uk-form-row">
 		<button type="submit" name="submit" class="uk-button uk-button-primary">{lang_save}</button>
-		<button type="submit" name="submit" class="uk-button uk-button-danger">{lang_delete}</button>
-		<button type="submit" name="submit" class="uk-button cancel">{lang_cancel}</button>
+		<button type="submit" name="cancel" class="uk-button cancel">{lang_cancel}</button>
 	</div>
 {!endif}
 </form>
+{!if admin_form}
+</div>
+{!endif}
 <script>
 {!if admin_form}
 	var lang = new Array();
 	lang = {
 		'err_end_before_start' : '{lang_err_datetime}',
 		'err_enter_title' : '{lang_err_no_title}'
-	};
+	 };
+	 var agendaConfig = {
+	 	'iso_lang': '{locale}'
+	 };
 {!endif}
 	var lang_months = '{lang_months}';
 	var lang_weeks  = '{lang_weeks}';

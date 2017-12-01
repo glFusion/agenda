@@ -56,7 +56,11 @@ class eventForms {
 
         $time = strtotime($date);
         $start_date = date('Y-m-d', $time);
-        $start_time = date('h:i A', $time);
+        if ( $this->adminForm) {
+            $start_time = '08:00 AM';
+        } else {
+            $start_time = date('h:i A', $time);
+        }
         $end_date = $start_date;
         $end_time = $start_time;
 
@@ -179,7 +183,24 @@ class eventForms {
 
             'lang_of'           => $LANG_AC['of'],
             'lang_end'          => $LANG_AC['end'],
+
+            'lang_save'         => $LANG_AC['save'],
+            'lang_delete'       => $LANG_AC['delete'],
+            'lang_cancel'       => $LANG_AC['cancel'],
+
+            'token'             => SEC_createToken(),
+            'token_name'        => CSRF_TOKEN,
         ));
+
+        if ( $this->adminForm) {
+            $T->set_var(array(
+                'lang_err_no_title' => $LANG_AC_JS['err_enter_title'],
+                'lang_err_datetime' => $LANG_AC_JS['err_end_before_start'],
+                'locale'      => AC_getLocale(),
+                'admin_form'  => true,
+                'form_action' => $_CONF['site_admin_url'].'/plugins/agenda/index.php',
+            ));
+        }
 
         $T->parse('output', 'page');
         $page = $T->finish($T->get_var('output'));
@@ -267,11 +288,11 @@ class eventForms {
                 'lang_save'         => $LANG_AC['save'],
                 'lang_delete'       => $LANG_AC['delete'],
                 'lang_cancel'       => $LANG_AC['cancel'],
-
+                'lang_delete_confirm' => $LANG_AC_JS['delete_event_confirm'],
                 'lang_err_no_title' => $LANG_AC_JS['err_enter_title'],
                 'lang_err_datetime' => $LANG_AC_JS['err_end_before_start'],
-
-
+                'token'             => SEC_createToken(),
+                'token_name'        => CSRF_TOKEN,
              ));
              if ( $row['repeats'] == 1 ) {
                 $T->set_var('repeats_checked',' checked="checked" ');
@@ -303,6 +324,7 @@ class eventForms {
 
             if ( $this->adminForm) {
                 $T->set_var(array(
+                    'locale'      => AC_getLocale(),
                     'admin_form' => true,
                     'form_action' => $_CONF['site_admin_url'].'/plugins/agenda/index.php',
                 ));
@@ -389,6 +411,9 @@ class eventForms {
             'lang_save'         => $LANG_AC['save'],
             'lang_delete'       => $LANG_AC['delete'],
             'lang_cancel'       => $LANG_AC['cancel'],
+            'lang_delete_confirm' => $LANG_AC_JS['delete_series_confirm'],
+            'token'             => SEC_createToken(),
+            'token_name'        => CSRF_TOKEN,
             // recurrence engine
             'lang_repeat'       => $LANG_AC['repeat'],
             'lang_none'         => $LANG_AC['none'],
@@ -575,6 +600,15 @@ class eventForms {
             if ( $row['allday'] == 1 ) {
                 $T->set_var('allday_checked',' checked="checked" ');
             }
+
+            if ( $this->adminForm  ) {
+                $T->set_var(array(
+                    'locale'      => AC_getLocale(),
+                    'admin_form'  => true,
+                    'form_action' => $_CONF['site_admin_url'].'/plugins/agenda/index.php'
+                ));
+            }
+
             $T->parse('output', 'page');
             $page = $T->finish($T->get_var('output'));
         }

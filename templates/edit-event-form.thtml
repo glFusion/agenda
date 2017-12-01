@@ -4,8 +4,10 @@
 {!endif}
 <form class="uk-form" action="{form_action}" method="post" id="event-form" name="event-form">
 	<input type="hidden" name="action" value="edit-event">
+	<input type="hidden" name="src" value="{src}">
 	<input type="hidden" name="parent_id" value="{parent_id}">
 	<input type="hidden" name="event_id" value="{event_id}">
+	<input type="hidden" name="{token_name}" value="{token}">
 
 	<div class="uk-form-row">
 		<label class="uk-form-label uk-hidden-small">{lang_event_title}</label>
@@ -281,6 +283,7 @@
 {!if admin_form}
 		<div class="uk-form-row">
 			<button type="submit" name="submit" class="uk-button uk-button-primary">{lang_save}</button>
+			<button type="submit" name="delete-event" class="uk-button uk-button-danger cancel" onclick="return confirm('{lang_delete_confirm}');">{lang_delete}</button>
 			<button type="submit" name="cancel" class="uk-button cancel" value="{cancel_value}">{lang_cancel}</button>
 		</div>
 {!endif}

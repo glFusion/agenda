@@ -61,6 +61,7 @@ define('AC_ERR_INVALID_DATE',1);
 define('AC_ERR_DB_SAVE_PARENT',2);
 define('AC_ERR_DB_SAVE_CHILD',3);
 define('AC_ERR_NO_ACCESS',4);
+define('AC_ERR_EMPTY_TITLE',5);
 
 require_once $_CONF['path'].'plugins/agenda/vendor/autoload.php';
 
@@ -676,7 +677,7 @@ function _ac_getListField($fieldname, $fieldvalue, $A, $icon_arr, $token = "")
 
         case 'repeats' :
             if ( $fieldvalue == 1 ) {
-                $retval = '<i class="uk-icon uk-icon-repeat uk-text-success"></i>';
+                $retval = '<i class="uk-icon uk-icon-circle uk-text-success"></i>';
             } else {
                 $retval = '';
             }

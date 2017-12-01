@@ -122,6 +122,11 @@ class eventHandler {
 
         // validation checks
 
+        if ( $title == '' ) {
+            $errorCode = AC_ERR_EMPTY_TITLE;
+            $error++;
+        }
+
         if ( !agenda_validateDate($start_date, 'Y-m-d') ) {
             $errorCode = AC_ERR_INVALID_DATE;
             $errors++;
@@ -133,7 +138,7 @@ class eventHandler {
         }
 
         if ( $errors ) {
-            COM_errorLog("ERROR: Agenda Plugin: Valdation of start / end event date failed.");
+            COM_errorLog("ERROR: Agenda Plugin: Valdation of title, start / end event date failed.");
             return $errorCode;
         }
 
@@ -761,9 +766,9 @@ class eventHandler {
         $location       = $args['location'];
         $description    = $args['description'];
         $category       = $args['category'];
-
+        $repeats        = 0;
+        $repeat_freq    = 0;
         if ( isset($args['freq']) && $args['freq'] != 'none' ) {
-            $repeats = 1;
             $repeats     = 1;
             $repeat_freq = 0;
         }
