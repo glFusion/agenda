@@ -1,6 +1,6 @@
 Agenda Plugin ChangeLog
 
-## v0.8.0
+## v0.8.0 (December 6, 2017)
  - Admin event manager
 
 ## v0.7.0 (November 27, 2017)
