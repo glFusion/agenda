@@ -66,6 +66,10 @@ function agenda_upgrade()
         case '0.5.0' :
         case '0.6.0' :
         case '0.6.1' :
+        case '0.7.0' :
+            $sql = "ALTER TABLE {$_TABLES['ac_events']} ADD INDEX `start` (`start`);";
+            $sql = "ALTER TABLE {$_TABLES['ac_events']} ADD INDEX `end` (`end`);";
+            DB_query($sql,1);
 
         default:
             agenda_update_config();

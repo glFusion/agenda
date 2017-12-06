@@ -29,6 +29,9 @@ if (!SEC_hasRights('agenda.admin')) {
 
 USES_lib_admin();
 
+/*
+ * Edits an event from the submission queue
+ */
 function editEvent( $parent_id )
 {
     global $_CONF, $_AC_CONF, $_TABLES, $_USER, $LANG_ADMIN, $LANG_AC, $LANG_AC_JS, $LANG_WEEK, $LANG_MONTH;
@@ -41,12 +44,6 @@ function editEvent( $parent_id )
 
     if ( DB_numRows($result) > 0 ) {
         $row = DB_fetchArray($result);
-
-        // load needed JS
-        $outputHandler = \outputHandler::getInstance();
-        $outputHandler->addLinkScript($_CONF['site_url'].'/agenda/fc/moment.min.js',HEADER_PRIO_NORMAL);
-        $outputHandler->addLinkStyle($_CONF['site_url'].'/javascript/addons/datetime/jquery.datetimepicker.min.css',HEADER_PRIO_NORMAL);
-        $outputHandler->addLinkScript($_CONF['site_url'].'/javascript/addons/datetime/jquery.datetimepicker.full.min.js',HEADER_PRIO_NORMAL);
 
         $T = new \Template ($_CONF['path'] . 'plugins/agenda/templates');
         $T->set_file ('page','edit-event-form.thtml');
@@ -80,6 +77,7 @@ function editEvent( $parent_id )
         $T->set_var(array(
             'form_action'       => $_CONF['site_admin_url'].'/plugins/agenda/index.php',
             'cancel_value'      => 'mod',
+            'src'               => 'mod',
             'title'             => $row['title'],
             'start-date'        => $row['start_date'],
             'end-date'          => $row['end_date'],
@@ -304,6 +302,10 @@ function editEvent( $parent_id )
 }
 
 
+/*
+ * Saves an event that has been edited from the
+ * submission queue
+ */
 function saveEditEvent($args = array())
 {
     global $_CONF, $_AC_CONF, $_USER, $_TABLES;
@@ -313,6 +315,81 @@ function saveEditEvent($args = array())
     return $rc;
 }
 
+
+/*
+ * Display admin list of categories
+*/
+function listEvents()
+{
+    global $_CONF, $_TABLES, $LANG_ADMIN, $LANG_AC, $LANG_AC_JS, $_IMAGE_TYPE;
+
+    $retval = "";
+
+    $header_arr = array(
+        array('text' => $LANG_ADMIN['edit'], 'field' => 'pid', 'align' => 'center', 'width' => '25px'),
+        array('text' => $LANG_AC['title'], 'field' => 'title','align' => 'left', ),
+        array('text' => $LANG_AC_JS['details'], 'field' => 'start', 'align' => 'center', 'sort'=>false,'width' => '25px'),
+        array('text' => $LANG_AC['start_date'], 'field' => 'start_date','nowrap'=>true,'sort' => true, 'align' => 'center'),
+        array('text' => $LANG_AC['end_date'], 'field' => 'end_date','nowrap'=>true,'sort' => true, 'align' => 'center'),
+        array('text' => $LANG_AC['series'], 'field' => 'repeats', 'align' => 'center'),
+        array('text' => $LANG_AC['allday'], 'field' => 'allday', 'align' => 'center'),
+        array('text' => $LANG_AC['exception'], 'field' => 'exception', 'sort' => false, 'align' => 'center'),
+    );
+
+    $defsort_arr = array('field'     => 'start_date',
+                         'direction' => 'ASC');
+    $text_arr = array(
+            'form_url'      => $_CONF['site_admin_url'] . '/plugins/agenda/index.php?eventlist=x',
+            'help_url'      => '',
+            'has_search'    => true,
+            'has_limit'     => true,
+            'has_paging'    => true,
+            'no_data'       => $LANG_AC['no_events'],
+    );
+
+    $sql = "SELECT *, parent_id AS pid, event_id AS delid FROM {$_TABLES['ac_events']} ";
+
+    $query_arr = array( 'table' => 'ac_events',
+                        'sql' => $sql,
+                        'query_fields' => array('parent_id','title'),
+                        'default_filter' => " WHERE start_date >= curdate() ",
+                        'group_by' => "");
+
+    $filter = '';
+
+    $actions = '<input name="delsel" type="image" src="'
+            . $_CONF['layout_url'] . '/images/admin/delete.' . $_IMAGE_TYPE
+            . '" style="vertical-align:bottom;" title="' . $LANG_AC['delete_checked']
+            . '" onclick="return confirm(\'' . $LANG_AC['delete_confirm_event'] . '\');"'
+            . ' value="x" '
+            . '/>&nbsp;' . $LANG_AC['delete_checked'];
+
+    $option_arr = array(
+            'chkselect'     => false,
+            'chkfield'      => 'delid',
+            'chkname'       => 'event_ids',
+            'chkminimum'    => 0,
+            'chkall'        => true,
+            'chkactions'    => $actions
+    );
+
+    $token = SEC_createToken();
+
+    $formfields = '
+        <input name="action" type="hidden" value="delevt">
+        <input type="hidden" name="' . CSRF_TOKEN . '" value="'. $token .'">
+    ';
+
+    $form_arr = array(
+        'top' => $formfields
+    );
+
+    $retval .= ADMIN_list('eventlist', 'AC_getListField', $header_arr,
+                          $text_arr, $query_arr, $defsort_arr, $filter,
+                          $token, $option_arr, $form_arr);
+
+    return $retval;
+}
 
 /*
  * Display admin list of categories
@@ -379,19 +456,103 @@ function listCategory()
         'top' => $formfields
     );
 
-    $retval .= ADMIN_list('taglist', 'AC_getListField', $header_arr,
-    $text_arr, $query_arr, $defsort_arr, $filter, "", $option_arr, $form_arr);
+    $retval .= ADMIN_list('categorylist', 'AC_getListField', $header_arr,
+    $text_arr, $query_arr, $defsort_arr, $filter, $token, $option_arr, $form_arr);
 
     return $retval;
 }
 
-function AC_getListField($fieldname, $fieldvalue, $A, $icon_arr, $token = "")
+function AC_getListField($fieldname, $fieldvalue, &$A, $icon_arr, $token = "")
 {
-    global $_CONF, $_USER, $_TABLES, $LANG_AC, $LANG_ADMIN, $LANG04, $LANG28, $_IMAGE_TYPE;
+    global $_CONF, $_USER, $_TABLES, $LANG_AC, $LANG_AC_JS, $LANG_ADMIN, $LANG04, $LANG28, $_IMAGE_TYPE;
 
     $retval = '';
 
+    $toolTipStyle = COM_getToolTipStyle();
+
     switch ($fieldname) {
+        case 'start' :
+            $dt = new Date('now',$_USER['tzid']);
+            if ( $A['allday'] ) {
+                $acStartDate = $A['start_date'];
+                $acStartTime = '00:00:00';
+                $acEndDate = $A['end_date'];
+                $acEndTime = '24:00:00';
+                $dt->setTimestamp(strtotime($acStartDate.' '.$acStartTime));
+                $when =  $dt->format('l d-M-Y', false);
+                $dt->setTimestamp(strtotime($acEndDate. ' ' . '23:00:00'));
+                if ( $A['start_date'] != $A['end_date']) {
+                    $when .= ' to ' . $dt->format('l d-M-Y', false);
+                }
+            } else {
+                $dt->setTimestamp($A['start']);
+                $cmpStart = $dt->format('Ymd',true);
+                $tStartDate = $dt->format("l   d-M-Y", true);
+                $tStartTime = $dt->format("h:i a", true);
+                $dt->setTimestamp($A['end']);
+                $cmpEnd = $dt->format('Ymd',true);
+                $tEndDateFormat = "h:i a";
+                if ( $cmpStart != $cmpEnd ) {
+                    $tEndDateFormat = "l d-M-Y h:i a";
+                }
+                $tEndDate = $dt->format($tEndDateFormat, true);
+                $when = $tStartDate .'<br>' . $tStartTime .' to ' . $tEndDate;
+            }
+            $retval = '<i class="uk-icon uk-icon-calendar '.$toolTipStyle.'" title="';
+            $retval .= '<p><b>'.$LANG_AC_JS['when'].'</b><br>'. $when;
+            if ( $A['location'] != '' ) {
+                $retval .= '<p><b>'.$LANG_AC_JS['location'].'</b><br>'.$A['location'].'</p>';
+            }
+            if ( $A['description'] != '' ) {
+                $retval .= '<p><b>'.$LANG_AC_JS['details'].'</b><br>'.$A['description'].'</p>';
+            }
+            $retval .= '"></i>';
+            break;
+
+        case 'pid' :
+            $url = $_CONF['site_admin_url'].'/plugins/agenda/index.php?editevent=x&event_id='.$A['event_id'];
+            $retval = '<a href="'.$url.'" title="'.$LANG_AC_JS['edit_event'].'"><i class="uk-icon uk-icon-pencil"></i></a>';
+            break;
+
+        case 'parent_id' :
+            if ( $A['repeats'] == 1 ) {
+                $langConfirm = $LANG_AC_JS['delete_series_confirm'];
+            } else {
+                $langConfirm = $LANG_AC_JS['delete_event_confirm'];
+            }
+
+            $attr['title'] = $LANG_ADMIN['delete'];
+            $attr['onclick'] = "return confirm('" . $langConfirm . "');";
+            $retval .= COM_createLink($icon_arr['delete'],
+                $_CONF['site_admin_url'] . '/plugins/agenda/index.php'
+                . '?delevent=x&amp;pid=' . $fieldvalue . '&amp;' . CSRF_TOKEN . '=' . $token, $attr);
+            break;
+
+        case 'exception' :
+            if ( $fieldvalue == 1 ) {
+                $retval = '<i class="uk-icon uk-icon-circle uk-text-danger" title="'.$LANG_AC['event_exception'].'"></i>';
+            } else {
+                $retval = '';
+            }
+            break;
+
+        case 'repeats' :
+            if ( $fieldvalue == 1 && $A['exception'] == 0 ) {
+                $url = $_CONF['site_admin_url'].'/plugins/agenda/index.php?editpid=x&parent_id='.$A['parent_id'];
+                $retval = '<a href="'.$url.'" title="'.$LANG_AC_JS['edit_series'].'"><i class="uk-icon uk-icon-pencil-square-o"></i></a>';
+                break;
+            } else {
+                $retval = '';
+            }
+            break;
+
+        case 'allday' :
+            if ( $fieldvalue == 1 ) {
+                $retval = '<i class="uk-icon uk-icon-circle uk-text-success"></i>';
+            } else {
+                $retval = '';
+            }
+            break;
 
 // category list items
 
@@ -639,7 +800,7 @@ function deleteCategory()
     return listCategory();
 }
 
-function agenda_admin_menu($action)
+function agenda_admin_menu($action,$title)
 {
     global $_CONF, $_AC_CONF, $LANG_ADMIN, $LANG_AC, $LANG_AC_JS, $LANG01;
 
@@ -654,13 +815,15 @@ function agenda_admin_menu($action)
         );
     } else {
         $menu_arr = array(
+            array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php','text' => $LANG_AC['event_list'],'active' => ($action == 'list' ? true : false)),
+            array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php?newevent=x','text' => $LANG_AC['create'],'active' => ($action == 'newevent' ? true : false)),
             array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php?catlist=x','text' => $LANG_AC['category_list'],'active' => ($action == 'catlist' ? true : false)),
             array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php?newcat=x','text' => $LANG_AC['category_new'],'active' => ($action == 'newcat' ? true : false)),
             array( 'url' => $_CONF['site_admin_url'], 'text' => $LANG_ADMIN['admin_home'])
         );
     }
 
-    $retval = '<h2>'.$LANG_AC['plugin_name'].'</h2>';
+    $retval = '<h2>'.$title.'</h2>';
 
     $retval .= ADMIN_createMenu(
         $menu_arr,
@@ -673,14 +836,16 @@ function agenda_admin_menu($action)
 
 $page = '';
 $display = '';
-$cmd ='catlist';
+$cmd = 'list';
+//var_dump($_POST);exit;
+$title = $LANG_AC['admin'];
 
 if ( isset($_POST['action']) ) {
     $action = COM_applyFilter($_POST['action']);
     $_POST[$action] = 'x';
 }
 
-$expectedActions = array('edit','edit-event','catlist','editcat','edit-category','newcat','save-new-category','delcat');
+$expectedActions = array('newevent','new-event','edit','editpid','editevent','edit-event','edit-event-series','catlist','editcat','edit-category','newcat','save-new-category','delcat');
 foreach ( $expectedActions AS $action ) {
     if ( isset($_POST[$action])) {
         $cmd = $action;
@@ -691,10 +856,36 @@ foreach ( $expectedActions AS $action ) {
 if ( isset($_POST['cancel'])) {
     $src = COM_applyFilter($_POST['cancel']);
     if ( $src == 'mod' ) COM_refresh($_CONF['site_admin_url'].'/moderation.php');
-    $cmd = 'catlist';
+    $cmd = 'list';
 }
 
+// load needed JS
+$outputHandler = \outputHandler::getInstance();
+$outputHandler->addLinkScript($_CONF['site_url'].'/agenda/fc/moment.min.js',HEADER_PRIO_NORMAL);
+$outputHandler->addLinkStyle($_CONF['site_url'].'/javascript/addons/datetime/jquery.datetimepicker.min.css',HEADER_PRIO_NORMAL);
+$outputHandler->addLinkScript($_CONF['site_url'].'/javascript/addons/datetime/jquery.datetimepicker.full.min.js',HEADER_PRIO_NORMAL);
+
 switch ( $cmd ) {
+
+    case 'newevent' :
+
+        $form = new Agenda\eventForms(true);
+        $page = $form->newEvent();
+        $title = $LANG_AC['plugin_admin'] . ' :: ' . $LANG_AC_JS['add_event'];
+
+        break;
+// saves a new event
+    case 'new-event' :
+        if (isset($_POST['submit']) && SEC_checkToken() ) {
+            // save the event
+            $eventHandler = new Agenda\eventHandler();
+            $eventHandler->saveEvent($_POST);
+            COM_setMsg($LANG_AC['event_saved_msg'],'info',false);
+        }
+        $page = listEvents();
+        break;
+
+// edit from mod queue
     case 'edit' :
         if ( isset($_GET['parent_id'])) {
             $parent_id = COM_applyFilter($_GET['parent_id'],true);
@@ -704,51 +895,114 @@ switch ( $cmd ) {
         }
         break;
 
-    case 'edit-event' :
-        $rc = saveEditEvent($_POST);
-        if ( $rc == 0 ) {
-            echo COM_refresh($_CONF['site_admin_url'].'/moderation.php');
-            exit;
-        } else {
-            $parent_id = COM_applyFilter($_POST['parent_id'],true);
-            $page = editEvent($parent_id);
+// edit event from admin list
+    case 'editevent' :
+        $event_id = COM_applyFilter($_GET['event_id'],true);
+        $parent_id = DB_getItem($_TABLES['ac_events'],'parent_id','event_id='.(int) $event_id);
+        $form = new Agenda\eventForms(true);
+        $page = $form->editEvent($parent_id,$event_id);
+        $title = $LANG_AC['plugin_admin'] . ' :: ' . $LANG_AC_JS['edit_event'];
+        break;
+
+// edit series from admin list
+    case 'editpid' :
+        $parent_id = COM_applyFilter($_GET['parent_id'],true);
+        $form = new Agenda\eventForms(true);
+        $page = $form->editSeries($parent_id);
+        $title = $LANG_AC['plugin_admin'] . ' :: ' . $LANG_AC_JS['edit_event_series'];
+        break;
+
+// save edit event series from admin list
+    case 'edit-event-series' :
+        if ( isset($_POST['submit']) && SEC_checkToken() ) {
+            $eventHandler = new Agenda\eventHandler();
+            $eventHandler->updateEventSeries($_POST);
+            COM_setMsg($LANG_AC['event_saved_msg'],'info',false);
+        } elseif ( isset($_POST['delete-series']) && SEC_checkToken() ) {
+            if ( isset($_POST['parent_id'] ) ) {
+                $parent_id = COM_applyFilter($_POST['parent_id'],true);
+                $eventHandler = new Agenda\eventHandler();
+                $eventHandler->deleteEventSeries($parent_id);
+                COM_setMsg($LANG_AC['series_delete_msg'],'info',false);
+            }
         }
+        $title = $LANG_AC['plugin_admin'] . ' :: ' . $LANG_AC['event_list'];
+        $page = listEvents();
+
+        break;
+
+// edit event from moderator queue or admin list
+    case 'edit-event' :
+        // called from mod queue - or when saving from both mod queue or admin list
+        if ( isset($_POST['src']) && $_POST['src'] == 'mod' ) {
+            $rc = saveEditEvent($_POST);
+            if ( $rc == 0 ) {
+                COM_setMsg($LANG_AC['event_saved_msg'],'info',false);
+                echo COM_refresh($_CONF['site_admin_url'].'/moderation.php');
+                exit;
+            } else {
+                $parent_id = COM_applyFilter($_POST['parent_id'],true);
+                $page = editEvent($parent_id);
+            }
+        } elseif ( isset($_POST['submit'] ) && SEC_checkToken() ) {
+            // admin list save
+            $eventHandler = new Agenda\eventHandler();
+            $eventHandler->updateEvent($_POST);
+            COM_setMsg($LANG_AC['event_saved_msg'],'info',false);
+        } elseif ( isset($_POST['delete-event'] ) && SEC_checkToken() ) {
+            if ( isset($_POST['parent_id']) && isset($_POST['event_id'] ) ) {
+                $parent_id = COM_applyFilter($_POST['parent_id'],true);
+                $event_id  = COM_applyFilter($_POST['event_id'],true);
+                $eventHandler = new Agenda\eventHandler();
+                $eventHandler->deleteEvent($parent_id, $event_id);
+                COM_setMsg('Event deleted','info',false);
+            }
+        }
+        $title = $LANG_AC['plugin_admin'] . ' :: ' . $LANG_AC['event_list'];
+        $page = listEvents();
         break;
 
     case 'catlist' :
         $page = listCategory();
+        $title = $LANG_AC['plugin_admin'] . ' :: ' . $LANG_AC['category_list'];
         break;
 
     case 'editcat' :
         $category_id = isset($_GET['id']) ? (int) COM_applyFilter($_GET['id'],true) : 0;
         $page = agenda_edit_category($category_id);
+        $title = $LANG_AC['plugin_admin'] . ' :: ' . $LANG_AC['edit_category'];
         break;
 
     case 'edit-category' :
         // save an edited category
         $page = saveEditCategory();
+        $title = $LANG_AC['plugin_admin'] . ' :: ' . $LANG_AC['edit_category'];
         break;
 
     case 'newcat' :
         $page = agenda_new_category();
+        $title = $LANG_AC['plugin_admin'] . ' :: ' . $LANG_AC['category_new'];
         break;
 
     case 'save-new-category' :
         $page = saveNewCategory();
+        $title = $LANG_AC['plugin_admin'] . ' :: ' . $LANG_AC['category_list'];
         break;
 
     case 'delcat' :
         $page =  deleteCategory();
+        $title = $LANG_AC['plugin_admin'] . ' :: ' . $LANG_AC['category_list'];
         break;
 
     case 'list' :
     default :
-        $page = listCategory();
+        $page = listEvents();
+        $title = $LANG_AC['plugin_admin'] . ' :: ' . $LANG_AC['event_list'];
         break;
 }
 
 $display  = COM_siteHeader ('menu', $LANG_AC['admin']);
-$display .= agenda_admin_menu($cmd);
+$display .= agenda_admin_menu($cmd,$title);
 $display .= $page;
 $display .= COM_siteFooter (false);
 echo $display;

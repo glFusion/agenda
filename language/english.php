@@ -27,6 +27,9 @@ $LANG_AC = array (
     'access_denied'     => 'Access Denied',
     'access_denied_msg' => 'You are not authorized to view this Page. Your user name and IP have been recorded.',
     'category_list'     => 'Categories',
+    'edit_category'     => 'Edit Category',
+
+    'event_list'        => 'Events',
     'admin'		        => 'Agenda Admin',
     'cancel'			=> 'Cancel',
     'delete'			=> 'Delete',
@@ -50,12 +53,16 @@ $LANG_AC = array (
     'no_events'         => 'No Events Found',
     'delete_checked'    => 'Delete Checked',
     'delete_confirm'    => 'Are you sure you want to delete the selected category?',
+    'delete_confirm_event'    => 'Are you sure you want to delete the selected events?',
     'published'         => 'Published',
     'choose'            => 'Choose',
     'more'              => 'more',
     'less'              => 'less',
     'sample_category'   => 'Sample Category',
     'submission_mod_approved' => 'Event Submission Approved',
+    'series'            => 'Series',
+    'event_exception'   => 'This event is part of a series but has been modified',
+    'event_list'        => 'Event List',
 // block strings
     'site_events'       => 'Site Events',
     'no_upcoming'       => 'No Upcoming Events',
@@ -85,6 +92,8 @@ $LANG_AC = array (
     'what_to_edit'       => 'This is one event in a series. What do you want to edit?',
     'just_this_one'     => 'Just this one',
     'entire_series'     => 'The entire series',
+    'series_delete_msg' => 'The Event Series has been deleted',
+    'event_saved_msg'   => 'The Event  has been saved',
 
     // rrule
 
@@ -122,6 +131,7 @@ $LANG_AC = array (
     'end'               => 'End',
     'exception_warning' => 'Exception events will be removed and the entire series re-created if you edit the recurrence rules.',
     'edit_recurrence'   => 'Edit Recurrence',
+    'exception'         => 'Exception',
 );
 
 // JavaScript specific translations
