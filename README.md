@@ -2,7 +2,9 @@
 
 ### Overview
 
-This plugin offers a full featured calendar for your glFusion site.
+Agenda uses FullCalendar, a free open source jQuery plugin by Adam Arshaw which generates an awesome calendar populated with your events.
+
+This plugin combines the power of FullCalendar and glFusion to present your events in a calendar format, which can be organized by custom categories with full drag and drop capabilities.
 
 ### System Requirements
 
@@ -272,4 +274,10 @@ If TRUE, the Event End Time will also display next to the event (All Day events 
 
 ### License
 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+The glFusion Agenda Plugin is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+
+This plugin would not be possible without other OpenSource projects:
+
+* FullCalendar - Copyright (c) Adam Shaw - MIT License
+* Moments.js - Copyright (c) JS Foundation and other contributors - MIT License
+* qTip2 - Copyright (c) Craig Michael Thompson - MIT License
