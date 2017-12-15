@@ -281,4 +281,4 @@ This plugin would not be possible without other OpenSource projects:
 * FullCalendar - Copyright (c) Adam Shaw - MIT License
 * Moments.js - Copyright (c) JS Foundation and other contributors - MIT License
 * qTip2 - Copyright (c) Craig Michael Thompson - MIT License
-* RRULE for PHP - Copyright (c) Rémi Lanvin - MIT License
+* RRULE for PHP - Copyright (c) RÃ©mi Lanvin - MIT License
