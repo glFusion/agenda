@@ -137,6 +137,15 @@ If set to TRUE - the Upcoming Events block will be enabled.
 
 Number of days into the future to list upcoming events.
 
+**How Often to Purge Old Events**
+
+Number of days between the purge old events maintenance task. The purge old events maintenance task will run automatically every XX days. This task will purge old events from the Agenda database tables.
+
+**How Many Years of Old Events to Keep**
+
+How many Years of old events to keep.
+
+
 #### Global View Options
 
 **Default View**

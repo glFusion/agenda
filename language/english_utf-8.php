@@ -179,6 +179,8 @@ $LANG_confignames['agenda'] = array(
     'displayblocks'         => 'Display Blocks',
     'showupcomingevents'    => 'Show Upcoming Events Block',
     'upcomingeventsrange'   => 'Days to include in Upcoming Event Block',
+    'maintenance_check_freq' => 'How Often to Purge Old Events',
+    'maintenance_max_age'   => 'How Many Years of Old Events to Keep',
 
 // Global Calendar Settings
 

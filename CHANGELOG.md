@@ -1,5 +1,9 @@
 Agenda Plugin ChangeLog
 
+## v0.9.0 (December 17, 2017)
+ - Automatic event maintenance (remove old events)
+ - Updated FullCalendar to v3.7.0
+
 ## v0.8.0 (December 6, 2017)
  - Admin event manager
 

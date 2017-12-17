@@ -57,6 +57,16 @@ switch( $_AC_CONF['displayblocks'] ) {
         break;
 }
 
+// defaults for maintenance
+
+if ( !isset($_AC_CONF['maintenance_check_freq']) ) {
+    $_AC_CONF['maintenance_check_freq'] = 30;
+}
+$_AC_CONF['maintenance_check_frequency'] = 86400 * $_AC_CONF['maintenance_check_freq'];
+if ( !isset($_AC_CONF['maintenance_max_age']) ) {
+    $_AC_CONF['maintenance_max_age'] = 1;
+}
+
 define('AC_ERR_INVALID_DATE',1);
 define('AC_ERR_DB_SAVE_PARENT',2);
 define('AC_ERR_DB_SAVE_CHILD',3);
@@ -232,7 +242,7 @@ function plugin_moderationapprove_agenda($id)
 
 // no email support at this time.
 //	$email = DB_getItem($_TABLES['ac_event'],'email','parent_id='.(int) $id);
-//	FC_notifyUser($email);
+//	AC_notifyUser($email);
 
     return '';
 }
@@ -849,9 +859,6 @@ function phpblock_agenda( $help='', $title='' )
                 $numDays ++;
 
                 if ( $numDays < $range ) {
-//                    if( !empty( $newevents )) {
-//                         $retval .= COM_makeList( $newevents, $classname );
-//                    }
                     if ( $skipFirstBreak ) {
                         $skipFirstBreak = false;
                     }
@@ -1097,6 +1104,17 @@ function AC_notifyUser($email)
 	COM_emailNotification( $msgData );
 
 	return;
+}
+
+function AC_eventMaintenance()
+{
+    global $_CONF, $_AC_CONF, $_TABLES, $_VARS;
+
+    if ( !isset($_VARS['agenda_maintenance']) || $_VARS['agenda_maintenance'] < (time() - $_AC_CONF['maintenance_check_frequency']) ) {
+        DB_query("DELETE FROM {$_TABLES['ac_events']} where end_date < NOW() - INTERVAL ".$_AC_CONF['maintenance_max_age']." YEAR",1);
+        DB_query("DELETE FROM {$_TABLES['ac_event']} b LEFT JOIN {$_TABLES['ac_events']} f ON f.parent_id = b.parent_id WHERE b.queued = 0 AND f.parent_id IS NULL",1);
+        DB_query("REPLACE INTO {$_TABLES['vars']} (name,value) VALUES ('agenda_maintenance',UNIX_TIMESTAMP())");
+    }
 }
 
 function agenda_validateDate($date, $format = 'Y-m-d H:i:s')
