@@ -2,7 +2,9 @@
 
 ### Overview
 
-This plugin offers a full featured calendar for your glFusion site.
+Agenda uses FullCalendar, a free open source jQuery plugin by Adam Arshaw which generates an awesome calendar populated with your events.
+
+This plugin combines the power of FullCalendar and glFusion to present your events in a calendar format, which can be organized by custom categories with full drag and drop capabilities.
 
 ### System Requirements
 
@@ -134,6 +136,15 @@ If set to TRUE - the Upcoming Events block will be enabled.
 **Days to Include in Upcoming Events Block**
 
 Number of days into the future to list upcoming events.
+
+**How Often to Purge Old Events**
+
+Number of days between the purge old events maintenance task. The purge old events maintenance task will run automatically every XX days. This task will purge old events from the Agenda database tables.
+
+**How Many Years of Old Events to Keep**
+
+How many Years of old events to keep.
+
 
 #### Global View Options
 
@@ -272,4 +283,11 @@ If TRUE, the Event End Time will also display next to the event (All Day events 
 
 ### License
 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+The glFusion Agenda Plugin is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+
+This plugin would not be possible without other OpenSource projects:
+
+* FullCalendar - Copyright (c) Adam Shaw - MIT License
+* Moments.js - Copyright (c) JS Foundation and other contributors - MIT License
+* qTip2 - Copyright (c) Craig Michael Thompson - MIT License
+* RRULE for PHP - Copyright (c) Rémi Lanvin - MIT License

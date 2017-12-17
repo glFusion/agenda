@@ -18,6 +18,9 @@ require_once '../../lib-common.php';
 
 if ( !COM_isAjax() ) die;
 
+if ( !isset($_VARS['agenda_maintenance']) || $_VARS['agenda_maintenance'] < (time() - $_AC_CONF['maintenance_check_frequency']) ) {
+    AC_eventMaintenance();
+}
 $start = DB_escapeString($_GET['start']);
 $end   = DB_escapeString($_GET['end']);
 

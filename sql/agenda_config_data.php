@@ -117,6 +117,31 @@ $agendaConfigData = array(
     	'set' => TRUE,
     	'group' => 'agenda'
     ),
+
+    array(
+    	'name' => 'maintenance_check_freq',
+    	'default_value' => 30,
+    	'type' => 'text',
+    	'subgroup' => 0,
+    	'fieldset' => 0,
+    	'selection_array' => NULL,
+    	'sort' => 80,
+    	'set' => TRUE,
+    	'group' => 'agenda'
+    ),
+
+    array(
+    	'name' => 'maintenance_max_age',
+    	'default_value' => 1,
+    	'type' => 'text',
+    	'subgroup' => 0,
+    	'fieldset' => 0,
+    	'selection_array' => NULL,
+    	'sort' => 90,
+    	'set' => TRUE,
+    	'group' => 'agenda'
+    ),
+
 // Global Calendar Settings
     array(
     	'name' => 'fs_global',
