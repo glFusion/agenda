@@ -159,6 +159,21 @@ class eventHandler {
         $start = $dtStart->toUnix(false);
         $end   = $dtEnd->toUnix(false);
 
+        if (version_compare(GVERSION,'1.7.2','>=')) {
+            $spamData = array(
+                'ip'    => $_SERVER['REMOTE_ADDR']?:($_SERVER['HTTP_X_FORWARDED_FOR']?:$_SERVER['HTTP_CLIENT_IP']),
+                'type'  => 'event'
+            );
+            $result = PLG_checkforSpam ('<h1>'.$title.'</h1><p>'.$description.'</p><p>'.$location.'</p>', $_CONF['spamx'],$spamData);
+        } else {
+            $result = PLG_checkforSpam ('<h1>'.$title.'</h1><p>'.$description.'</p><p>'.$location.'</p>', $_CONF['spamx']);
+        }
+
+        if ($result > 0) {
+            $errorCode = AC_ERR_SPAM;
+            return $errorCode;
+        }
+
         $data = array(
             'allday'        => $allday,
             'start'         => $start,

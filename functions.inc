@@ -72,6 +72,7 @@ define('AC_ERR_DB_SAVE_PARENT',2);
 define('AC_ERR_DB_SAVE_CHILD',3);
 define('AC_ERR_NO_ACCESS',4);
 define('AC_ERR_EMPTY_TITLE',5);
+define('AC_ERR_SPAM',6);
 
 require_once $_CONF['path'].'plugins/agenda/vendor/autoload.php';
 

@@ -63,6 +63,9 @@ function saveevent() {
 			if ( result.errorCode == 3 ) { // queued event
 				UIkit.modal.alert(lang['event_queued']);
 			}
+			if ( result.errorCode == 6 ) {
+				UIkit.modal.alert('Event detected to be Spam');
+			}
 			$('#calendar').fullCalendar('refetchEvents');
 		},
 		error: function (e) {
