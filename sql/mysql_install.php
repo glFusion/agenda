@@ -56,7 +56,7 @@ $_SQL['ac_events'] = "CREATE TABLE {$_TABLES['ac_events']} (
     owner_id mediumint(8) unsigned NOT NULL default '1',
     PRIMARY KEY  (event_id),
     KEY (start),
-    KEY (end),
+    KEY (end)
 ) ENGINE=MyISAM
 ";
 
