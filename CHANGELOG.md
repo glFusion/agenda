@@ -1,5 +1,9 @@
 Agenda Plugin ChangeLog
 
+## v1.0.0
+ - First full production release
+ - Additional spam checks
+
 ## v0.9.0 (December 17, 2017)
  - Automatic event maintenance (remove old events)
  - Updated FullCalendar to v3.7.0
