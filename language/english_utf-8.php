@@ -9,7 +9,7 @@
 * @license GNU General Public License version 2 or later
 *     http://www.opensource.org/licenses/gpl-license.php
 *
-*  Copyright (C) 2016-2017 by the following authors:
+*  Copyright (C) 2016-2018 by the following authors:
 *   Mark R. Evans   mark AT glfusion DOT org
 *
 */
@@ -132,6 +132,7 @@ $LANG_AC = array (
     'exception_warning' => 'Exception events will be removed and the entire series re-created if you edit the recurrence rules.',
     'edit_recurrence'   => 'Edit Recurrence',
     'exception'         => 'Exception',
+    'ip_address'        => 'IP Address',
 );
 
 // JavaScript specific translations
@@ -159,6 +160,7 @@ $LANG_AC_JS = array(
     'event_queued'      => 'Thank you for your submission. Your event submission has been placed in the queue for review and approval.',
     'exception_event'   => 'Exception Event',
     'print'             => 'print',
+    'spam'              => 'Event detected to be Spam',
 );
 
 $LANG_AC_ERRORS = array(

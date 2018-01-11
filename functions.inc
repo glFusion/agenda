@@ -9,7 +9,7 @@
 * @license GNU General Public License version 2 or later
 *     http://www.opensource.org/licenses/gpl-license.php
 *
-*  Copyright (C) 2016-2017 by the following authors:
+*  Copyright (C) 2016-2018 by the following authors:
 *   Mark R. Evans   mark AT glfusion DOT org
 *
 */
@@ -318,6 +318,7 @@ function plugin_itemlist_agenda($token)
         array('text' => $LANG_AC['title'], 'field' => 'title','align' => 'left', ),
         array('text' => $LANG_AC['start_date'], 'field' => 'start_date','align' => 'center'),
         array('text' => $LANG_AC['repeats'], 'field' => 'repeats', 'align' => 'center'),
+        array('text' => $LANG29[46], 'field' => 'owner_id', 'align' => 'left'),
         array('text' => $LANG29[1], 'field' => 'approve', 'align' => 'center', 'width' => '35px'),
         array('text' => $LANG_ADMIN['delete'], 'field' => 'delete', 'align' => 'center', 'width' => '35px')
     );
@@ -694,6 +695,18 @@ function _ac_getListField($fieldname, $fieldvalue, $A, $icon_arr, $token = "")
             }
             break;
 
+        case 'owner_id' :
+            $retval = COM_getDisplayName($fieldvalue);
+            break;
+
+        case 'ip' :
+            if ( $fieldvalue != NULL ) {
+                $retval = inet_ntop($fieldvalue);
+            } else {
+                $retval = 'n/a';
+            }
+            break;
+
         default :
             $retval = $fieldvalue;
             break;
@@ -764,6 +777,8 @@ function phpblock_agenda( $help='', $title='' )
     }
 
     if ( !$_USER['noboxes'] && $_AC_CONF['showupcomingevents'] ) {
+
+        $filter = new sanitizer();
 
         $dt = new Date('now',$_USER['tzid']);
         $tzabbr = strtolower($dt->format('T',true));
@@ -888,10 +903,10 @@ function phpblock_agenda( $help='', $title='' )
 
                 $attr = array();
                 if ( $todaysEvent ) {
-                    $attr = array('class' => $todaysClassName, 'title' => $theEvent['title']);
+                    $attr = array('class' => $todaysClassName, 'title' => $filter->censor(strip_tags(htmlspecialchars_decode($theEvent['title']))));
                 }
                 $newevent = COM_createLink(
-                    $theEvent['title'],
+                    $filter->censor(strip_tags(htmlspecialchars_decode($theEvent['title']))),
                     $newevent_url,
                     $attr
                 );

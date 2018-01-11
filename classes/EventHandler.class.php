@@ -5,7 +5,7 @@
 *   Event management (save, update, delete)
 *
 *   @author     Mark R. Evans <mark@lglfusion.org>
-*   @copyright  Copyright (c) 2017 Mark R. Evans <mark@glfusion.org>
+*   @copyright  Copyright (c) 2017-2018 Mark R. Evans <mark@glfusion.org>
 *   @package    agenda
 *   @version    1.0.0
 *   @license    http://opensource.org/licenses/gpl-2.0.php
@@ -29,7 +29,7 @@ class eventHandler {
     */
     public function saveEvent($args = array() )
     {
-        global $_CONF, $_AC_CONF, $_USER, $_TABLES;
+        global $_CONF, $_AC_CONF, $_USER, $_TABLES, $REMOTE_ADDR;
 
     // initialize vars
         $errorCode  = 0;
@@ -51,6 +51,7 @@ class eventHandler {
         $location       = $args['location'];
         $description    = $args['description'];
         $category       = $args['category'];
+        $ip_binary      = inet_pton($REMOTE_ADDR);
 
         if ( isset($args['freq']) && $args['freq'] != 'none' ) {
             $repeats = 1;
@@ -164,9 +165,9 @@ class eventHandler {
                 'ip'    => $_SERVER['REMOTE_ADDR']?:($_SERVER['HTTP_X_FORWARDED_FOR']?:$_SERVER['HTTP_CLIENT_IP']),
                 'type'  => 'event'
             );
-            $result = PLG_checkforSpam ('<h1>'.$title.'</h1><p>'.$description.'</p><p>'.$location.'</p>', $_CONF['spamx'],$spamData);
+            $result = PLG_checkforSpam ('<h1>'.$title.'</h1><p>'.$filter->Linkify($description).'</p><p>'.$location.'</p>', $_CONF['spamx'],$spamData);
         } else {
-            $result = PLG_checkforSpam ('<h1>'.$title.'</h1><p>'.$description.'</p><p>'.$location.'</p>', $_CONF['spamx']);
+            $result = PLG_checkforSpam ('<h1>'.$title.'</h1><p>'.$filter->Linkify($description).'</p><p>'.$location.'</p>', $_CONF['spamx']);
         }
 
         if ($result > 0) {
@@ -187,7 +188,8 @@ class eventHandler {
             'repeat_freq'   => $repeat_freq,
             'category'      => (int) $category,
             'queued'        => $queued,
-            'owner_id'      => $owner_id
+            'owner_id'      => $owner_id,
+            'ip'            => $ip_binary
         );
 
         $parent_id = $this->saveParent($data);
@@ -993,7 +995,6 @@ class eventHandler {
         $saveValues = "'".$saveValues."'";
         $sql = "INSERT INTO {$_TABLES['ac_event']} (" . $saveColumns . " ) ";
         $sql .= " VALUES ( " . $saveValues . ")";
-
         $result = DB_query($sql,1);
 
         if ( DB_error() ) {
@@ -1018,6 +1019,7 @@ class eventHandler {
 
         // build out our data structions
         foreach ($data AS $column => $value) {
+            if ( $column == 'ip' ) continue;
             $columns[] = $column;
             $values[]  = DB_escapeString($value);
         }

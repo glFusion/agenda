@@ -9,7 +9,7 @@
 * @license GNU General Public License version 2 or later
 *     http://www.opensource.org/licenses/gpl-license.php
 *
-*  Copyright (C) 2016-2017 by the following authors:
+*  Copyright (C) 2016-2018 by the following authors:
 *   Mark R. Evans   mark AT glfusion DOT org
 *
 */
@@ -72,6 +72,10 @@ function agenda_upgrade()
             DB_query($sql,1);
 
         case '0.8.0' :
+
+        case '0.9.0' :
+            $sql = "ALTER TABLE {$_TABLES['ac_event']} ADD COLUMN `ip` VARBINARY(16) NULL AFTER `owner_id`;";
+            DB_query($sql,1);
 
         default:
             agenda_update_config();

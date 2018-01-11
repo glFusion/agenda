@@ -3,6 +3,9 @@ Agenda Plugin ChangeLog
 ## v1.0.0
  - First full production release
  - Additional spam checks
+ - Display Submitted By in the submission queue
+ - Capture the IP address of event submissions
+ - Filter title, location and description through glFusion bad word filter
 
 ## v0.9.0 (December 17, 2017)
  - Automatic event maintenance (remove old events)
