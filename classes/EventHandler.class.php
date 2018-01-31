@@ -287,6 +287,10 @@ class eventHandler {
         }
 
         PLG_itemSaved($parent_id, 'agenda');
+/*
+        $c = \glFusion\Cache::getInstance();
+        $c->deleteItemsByTag('agenda_sql');
+*/
         CACHE_remove_instance('agenda');
 
         return $errorCode;
@@ -442,6 +446,10 @@ class eventHandler {
         }
 
         PLG_itemSaved($parent_id, 'agenda');
+/*
+        $c = \glFusion\Cache::getInstance();
+        $c->deleteItemsByTag('agenda_sql');
+*/
         CACHE_remove_instance('agenda');
 
         return $errorCode;
@@ -530,6 +538,10 @@ class eventHandler {
         }
 
         PLG_itemSaved($parent_id, 'agenda');
+/*
+        $c = \glFusion\Cache::getInstance();
+        $c->deleteItemsByTag('agenda_sql');
+*/
         CACHE_remove_instance('agenda');
 
         return $retval;
@@ -677,6 +689,10 @@ class eventHandler {
         }
 
         PLG_itemSaved($parent_id, 'agenda');
+/*
+        $c = \glFusion\Cache::getInstance();
+        $c->deleteItemsByTag('agenda_sql');
+*/
         CACHE_remove_instance('agenda');
 
         return $errorCode;
@@ -890,7 +906,10 @@ class eventHandler {
         if ( DB_error() ) {
             $errorCode = 1;
         }
-
+/*
+        $c = \glFusion\Cache::getInstance();
+        $c->deleteItemsByTag('agenda_sql');
+*/
         return $errorCode;
     }
 
@@ -923,7 +942,10 @@ class eventHandler {
                 DB_query($sql);
                 PLG_itemDeleted($parent_id,'agenda');
             }
-
+/*
+            $c = \glFusion\Cache::getInstance();
+            $c->deleteItemsByTag('agenda_sql');
+*/
             CACHE_remove_instance('agenda');
             $retval = 0;
         } else {

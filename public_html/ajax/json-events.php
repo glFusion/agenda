@@ -9,7 +9,7 @@
 * @license GNU General Public License version 2 or later
 *     http://www.opensource.org/licenses/gpl-license.php
 *
-*  Copyright (C) 2016-2017 by the following authors:
+*  Copyright (C) 2016-2018 by the following authors:
 *   Mark R. Evans   mark AT glfusion DOT org
 *
 */
@@ -21,6 +21,9 @@ if ( !COM_isAjax() ) die;
 if ( !isset($_VARS['agenda_maintenance']) || $_VARS['agenda_maintenance'] < (time() - $_AC_CONF['maintenance_check_frequency']) ) {
     AC_eventMaintenance();
 }
+
+$filter = new sanitizer();
+
 $start = DB_escapeString($_GET['start']);
 $end   = DB_escapeString($_GET['end']);
 
@@ -40,7 +43,15 @@ $events = array();
 $dt = new Date('now',$_USER['tzid']);
 
 $sql = "SELECT * FROM {$_TABLES['ac_events']} AS e LEFT JOIN {$_TABLES['ac_category']} AS c ON e.category=c.category_id WHERE start BETWEEN '{$startDisplayUnix}' AND '{$endDisplayUnix}' ";
-
+/*
+$sqlkey = 'agenda__'.md5($sql);
+$c = glFusion\Cache::getInstance();
+$eventDataJSON = $c->get($sqlkey);
+if ( $eventDataJSON !== null ) {
+    echo $eventDataJSON;
+    exit;
+}
+*/
 $result = DB_query($sql);
 while ( $row = DB_fetchArray($result) ) {
     if ( $row['allday'] ) {
@@ -81,13 +92,13 @@ while ( $row = DB_fetchArray($result) ) {
         $eventArray['editable'] = false;
     }
 
-    $newdescription = AC_truncate($row['description'], 250, '...');
+    $newdescription = AC_truncate($filter->censor($row['description']), 250, '...');
 
     $eventArray['id']           = $row['event_id'];
     $eventArray['parent_id']    = $row['parent_id'];
     $eventArray['allDay']       = ($row['allday'] == 1 ? true : false );
-    $eventArray['title']        = strip_tags(htmlspecialchars_decode($row['title']));
-    $eventArray['location']     = strip_tags($row['location']);
+    $eventArray['title']        = $filter->censor(strip_tags(htmlspecialchars_decode($row['title'])));
+    $eventArray['location']     = $filter->censor(strip_tags($row['location']));
     $eventArray['description']  = nl2br($newdescription);
     $eventArray['repeats']      = $row['repeats'];
     $eventArray['backgroundColor'] = $row['bgcolor'];
@@ -95,6 +106,10 @@ while ( $row = DB_fetchArray($result) ) {
     $eventArray['exception']    = $row['exception'];
 
     $events[]                   = $eventArray;
+/*
+    $eventDataJSON = json_encode($events);
+    $c->set($sqlkey,$eventDataJSON,'agenda_sql');
+*/
 }
 echo json_encode($events);
 ?>

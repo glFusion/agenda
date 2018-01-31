@@ -1,6 +1,6 @@
 Agenda Plugin ChangeLog
 
-## v1.0.0
+## v1.0.0 (January 30, 2018)
  - First full production release
  - Additional spam checks
  - Display Submitted By in the submission queue

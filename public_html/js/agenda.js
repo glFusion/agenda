@@ -1,5 +1,5 @@
 /*! glFusion CMS - Agenda Plugin for glFusion - License GNU General Public License version 2 or later
- *  Copyright (C) 2016-2017 by Mark R. Evans - mark AT glfusion DOT org */
+ *  Copyright (C) 2016-2018 by Mark R. Evans - mark AT glfusion DOT org */
 
 // global vars
 
@@ -64,7 +64,7 @@ function saveevent() {
 				UIkit.modal.alert(lang['event_queued']);
 			}
 			if ( result.errorCode == 6 ) {
-				UIkit.modal.alert('Event detected to be Spam');
+				UIkit.modal.alert(lang['spam']);
 			}
 			$('#calendar').fullCalendar('refetchEvents');
 		},

@@ -7,7 +7,7 @@
 * @license GNU General Public License version 2 or later
 *     http://www.opensource.org/licenses/gpl-license.php
 *
-*  Copyright (C) 2016-2017 by the following authors:
+*  Copyright (C) 2016-2018 by the following authors:
 *   Mark R. Evans   mark AT glfusion DOT org
 *
 */
@@ -34,7 +34,7 @@ USES_lib_admin();
  */
 function editEvent( $parent_id )
 {
-    global $_CONF, $_AC_CONF, $_TABLES, $_USER, $LANG_ADMIN, $LANG_AC, $LANG_AC_JS, $LANG_WEEK, $LANG_MONTH;
+    global $_CONF, $_AC_CONF, $_TABLES, $_USER, $LANG_ADMIN, $LANG_AC, $LANG_AC_JS, $LANG_WEEK, $LANG_MONTH, $LANG29;
 
     $page = '';
 
@@ -86,7 +86,12 @@ function editEvent( $parent_id )
             'location'          => $row['location'],
             'description'       => $row['description'],
             'parent_id'         => $row['parent_id'],
+            'owner_id'          => $row['owner_id'],
+            'owner_name'        => COM_getDisplayName($row['owner_id']),
+            'ip_address'        => $row['ip'] == NULL ? '' : inet_ntop($row['ip']),
             'category_select'   => $catSelList,
+            'lang_submitted_by' => $LANG29[46],
+            'lang_ip_address'   => $LANG_AC['ip_address'],
             'lang_category'     => $LANG_AC['category'],
             'lang_event_title'  => $LANG_AC['event_title'],
             'lang_location'     => $LANG_AC['location'],
