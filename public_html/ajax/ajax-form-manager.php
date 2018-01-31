@@ -37,6 +37,16 @@ switch ($action) {
         $page = $form->editEvent($parent_id, $event_id);
         break;
 
+    case 'view-event' :
+        if ( !isset($_POST['parent_id']) || !isset($_POST['event_id'] ) ) {
+            return $page;
+        }
+        $parent_id = COM_applyFilter($_POST['parent_id'],true);
+        $event_id  = COM_applyFilter($_POST['event_id'],true);
+        $form = new Agenda\eventForms();
+        $page = $form->viewEvent($parent_id, $event_id);
+        break;
+
     case 'edit-event-series' :
         if ( !isset($_POST['parent_id']) || !isset($_POST['event_id'] ) ) {
             return $page;
@@ -44,6 +54,7 @@ switch ($action) {
         $parent_id = COM_applyFilter($_POST['parent_id'],true);
         $event_id  = COM_applyFilter($_POST['event_id'],true);
         $form = new Agenda\eventForms();
+
         $page = $form->editSeries($parent_id);
         break;
 

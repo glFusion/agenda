@@ -217,11 +217,11 @@ class eventForms {
     */
     public function editEvent($parent_id, $event_id)
     {
-        global $_CONF, $_AC_CONF, $_TABLES, $_USER, $LANG_AC, $LANG_AC_JS;
+        global $_CONF, $_AC_CONF, $_TABLES, $_USER, $LANG_AC, $LANG_AC_JS, $LANG29;
 
         $page = '';
 
-        $result = DB_query("SELECT * FROM {$_TABLES['ac_events']} AS events  WHERE event_id=" . (int) $event_id);
+        $result = DB_query("SELECT *, event.ip FROM {$_TABLES['ac_events']} AS events LEFT JOIN {$_TABLES['ac_event']} AS event ON events.parent_id=event.parent_id WHERE events.event_id=" . (int) $event_id);
 
         if ( DB_numRows($result) > 0 ) {
             $row = DB_fetchArray($result);
@@ -266,7 +266,12 @@ class eventForms {
                 'parent_id'         => $row['parent_id'],
                 'event_id'          => $event_id,
                 'category_select'   => $catSelList,
+                'owner_id'          => $row['owner_id'],
+                'owner_name'        => COM_getDisplayName($row['owner_id']),
+                'ip_address'        => $row['ip'] == NULL ? '' : inet_ntop($row['ip']),
                 'weekstart'         => $_AC_CONF['first_day'],
+                'lang_submitted_by' => $LANG29[46],
+                'lang_ip_address'   => $LANG_AC['ip_address'],
                 'lang_category'     => $LANG_AC['category'],
                 'lang_event_title'  => $LANG_AC['event_title'],
                 'lang_location'     => $LANG_AC['location'],

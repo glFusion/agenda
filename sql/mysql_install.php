@@ -9,7 +9,7 @@
 * @license GNU General Public License version 2 or later
 *     http://www.opensource.org/licenses/gpl-license.php
 *
-*  Copyright (C) 2016-2017 by the following authors:
+*  Copyright (C) 2016-2018 by the following authors:
 *   Mark R. Evans   mark AT glfusion DOT org
 *
 */
@@ -34,6 +34,7 @@ $_SQL['ac_event'] = "CREATE TABLE {$_TABLES['ac_event']} (
     category    int(30) default '1',
     queued      tinyint(1) unsigned default 0,
     owner_id mediumint(8) unsigned NOT NULL default '1',
+    ip          varbinary(16) default NULL,
     PRIMARY KEY  (parent_id)
 ) ENGINE=MyISAM
 ";
@@ -56,7 +57,7 @@ $_SQL['ac_events'] = "CREATE TABLE {$_TABLES['ac_events']} (
     owner_id mediumint(8) unsigned NOT NULL default '1',
     PRIMARY KEY  (event_id),
     KEY (start),
-    KEY (end),
+    KEY (end)
 ) ENGINE=MyISAM
 ";
 
