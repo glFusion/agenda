@@ -1,6 +1,6 @@
 Agenda Plugin ChangeLog
 
-## v1.0.1 (Unreleased)
+## v1.0.1 (May 14, 2018)
  - Fixed issue Agenda would return invalid results when searching by author
  - Update to address issue where all day events did not always display correctly
  - Display previous 30 days of events in admin event list
