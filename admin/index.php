@@ -357,7 +357,7 @@ function listEvents()
     $query_arr = array( 'table' => 'ac_events',
                         'sql' => $sql,
                         'query_fields' => array('parent_id','title'),
-                        'default_filter' => " WHERE start_date >= curdate() ",
+                        'default_filter' => " WHERE start_date >= (curdate() - 2678400) ", // 31 days previous
                         'group_by' => "");
 
     $filter = '';

@@ -429,9 +429,12 @@ function plugin_dopluginsearch_agenda($query, $datestart, $dateend, $topic, $typ
 
     $query = trim(DB_escapeString(htmlspecialchars($query)));
 
-    $sql = " SELECT parent_id AS id, description,start AS date, title, CONCAT('/agenda/index.php/agendaDay/',DATE_FORMAT(start_date, '%Y'),'/',DATE_FORMAT(start_date, '%m'),'/',DATE_FORMAT(start_date, '%d')) AS url ";
+    $sql = " SELECT parent_id AS id, description,start AS date, owner_id AS uid, title, CONCAT('/agenda/index.php/agendaDay/',DATE_FORMAT(start_date, '%Y'),'/',DATE_FORMAT(start_date, '%m'),'/',DATE_FORMAT(start_date, '%d')) AS url ";
     $sql .= "FROM {$_TABLES['ac_event']} ";
     $sql .= "WHERE queued = 0 ";
+
+    if (!empty ($author))
+        $sql .= "AND (owner_id = '$author') ";
 
     $search = new SearchCriteria('agenda', 'agenda');
     $columns = array('title','description');

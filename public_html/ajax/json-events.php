@@ -32,9 +32,12 @@ if ( strstr($start,'T') === false ) {
     $startDisplayUnix   = strtotime($start . ' 00:00:00');
     $endDisplayUnix     = strtotime($end   . ' 24:00:00');
 } else {
-    $startDisplayUnix = strtotime($start);
-    $endDisplayUnix   = strtotime($end);
+    $start = substr($start,0,strpos($start,'T'));
+    $end   = substr($end,0,strpos($end,'T'));
+    $startDisplayUnix   = strtotime($start . ' 00:00:00');
+    $endDisplayUnix     = strtotime($end   . ' 24:00:00');
 }
+
 $startDisplayUnix = DB_escapeString($startDisplayUnix);
 $endDisplayUnix   = DB_escapeString($endDisplayUnix);
 

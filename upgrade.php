@@ -77,6 +77,9 @@ function agenda_upgrade()
             $sql = "ALTER TABLE {$_TABLES['ac_event']} ADD COLUMN `ip` VARBINARY(16) NULL AFTER `owner_id`;";
             DB_query($sql,1);
 
+        case '1.0.0' :
+            // no changes
+
         default:
             agenda_update_config();
             DB_query("UPDATE {$_TABLES['plugins']} SET pi_version='".$_AC_CONF['pi_version']."',pi_gl_version='".$_AC_CONF['gl_version']."' WHERE pi_name='agenda' LIMIT 1");
