@@ -1131,7 +1131,7 @@ function AC_eventMaintenance()
 
     if ( !isset($_VARS['agenda_maintenance']) || $_VARS['agenda_maintenance'] < (time() - $_AC_CONF['maintenance_check_frequency']) ) {
         DB_query("DELETE FROM {$_TABLES['ac_events']} where end_date < NOW() - INTERVAL ".$_AC_CONF['maintenance_max_age']." YEAR",1);
-        DB_query("DELETE FROM {$_TABLES['ac_event']} b LEFT JOIN {$_TABLES['ac_events']} f ON f.parent_id = b.parent_id WHERE b.queued = 0 AND f.parent_id IS NULL",1);
+        DB_query("DELETE `f` FROM {$_TABLES['ac_event']} b LEFT JOIN {$_TABLES['ac_events']} f ON f.parent_id = b.parent_id WHERE b.queued = 0 AND f.parent_id IS NULL",1);
         DB_query("REPLACE INTO {$_TABLES['vars']} (name,value) VALUES ('agenda_maintenance',UNIX_TIMESTAMP())");
     }
 }

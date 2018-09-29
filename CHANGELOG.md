@@ -1,6 +1,7 @@
 Agenda Plugin ChangeLog
 
 ## v1.0.2 (unreleased)
+ - Fixed error in monthy maintenance routes that prevented recurring events with purged parents from being deleted
  - Form consistency - use standard colors for buttons - move delete to right alignment
 
 ## v1.0.1 (May 14, 2018)
