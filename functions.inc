@@ -469,7 +469,7 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
             case 'date' :
             case 'date-modified':
             case 'date-created' :
-                $fields[] = 'start_date AS unixdate';
+                $fields[] = 'UNIX_TIMESTAMP(start_date) AS unixdate';
                 break;
             case 'description':
                 $fields[] = 'description';
@@ -557,7 +557,7 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
                     $props[$p] = nl2br($A['description']);
                     break;
                 case 'excerpt':
-                    $props[$p] = nl2br(FC_truncate($A['description'],300,'...'));
+                    $props[$p] = nl2br(AC_truncate($A['description'],300,'...'));
                     break;
                 case 'searchidx' :
                     $props[$p] = $A['title'].' '.$A['description'];
@@ -580,7 +580,8 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
                     $props['label'] = $LANG_AC['plugin_name'];
                     break;
                 case 'status':
-                    $props['status'] = $A['queued'];
+//                    $props['status'] = $A['queued'];
+                    $props['status'] = $A['queued'] == 0 ? 1 : 0;
                     break;
                 case 'author' :
                     $props['author'] = $A['owner_id'];
