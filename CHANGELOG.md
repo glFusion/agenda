@@ -1,6 +1,11 @@
 Agenda Plugin ChangeLog
 
 ## v1.0.2 (unreleased)
+ - Updated Full Calendar to v3.9.0
+ - Updated Moment JS to v2.22.2
+ - Fixed incorrect function call in creating excerpt in getItemInfo()
+ - Fixed incorrect date return in getItemInfo()
+ - Fixed incorrect status return in getItemInfo()
  - Fixed error in monthy maintenance routes that prevented recurring events with purged parents from being deleted
  - Form consistency - use standard colors for buttons - move delete to right alignment
 
