@@ -1,6 +1,8 @@
-Agenda Plugin ChangeLog
+# Agenda Plugin ChangeLog
 
 ## v1.0.2 (unreleased)
+ - Fixed a long standing timezone bug that prevented some all day events from displaying properly
+ - iCal Content Syndication support (glFusion v1.7.6+ or newer only)
  - Updated Full Calendar to v3.9.0
  - Updated Moment JS to v2.22.2
  - Fixed incorrect function call in creating excerpt in getItemInfo()
