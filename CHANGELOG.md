@@ -6,6 +6,7 @@
  - iCal Content Syndication support (glFusion v1.7.6+ or newer only)
 
 ### Changed
+ - Improved warning message when editing series with exception events
  - Updated RRULE library to 1.6.2
  - Updated Full Calendar to v3.9.0
  - Updated Moment JS to v2.22.2
