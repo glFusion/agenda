@@ -1,20 +1,33 @@
 # Agenda Plugin ChangeLog
 
 ## v1.0.2 (unreleased)
- - Fixed a long standing timezone bug that prevented some all day events from displaying properly
+
+### Added
  - iCal Content Syndication support (glFusion v1.7.6+ or newer only)
+
+### Changed
+ - Updated RRULE library to 1.6.2
  - Updated Full Calendar to v3.9.0
  - Updated Moment JS to v2.22.2
+ - Form consistency - use standard colors for buttons - move delete to right alignment
+
+### Fixed
+ - Fixed a long standing timezone bug that prevented some all day events from displaying properly
  - Fixed incorrect function call in creating excerpt in getItemInfo()
  - Fixed incorrect date return in getItemInfo()
  - Fixed incorrect status return in getItemInfo()
  - Fixed error in monthy maintenance routes that prevented recurring events with purged parents from being deleted
- - Form consistency - use standard colors for buttons - move delete to right alignment
 
 ## v1.0.1 (May 14, 2018)
- - Fixed issue Agenda would return invalid results when searching by author
- - Update to address issue where all day events did not always display correctly
+
+### Added
  - Display previous 30 days of events in admin event list
+
+### Changed
+ - Update to address issue where all day events did not always display correctly
+
+### Fixed
+ - Fixed issue Agenda would return invalid results when searching by author
 
 ## v1.0.0 (January 30, 2018)
  - First full production release
