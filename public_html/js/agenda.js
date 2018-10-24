@@ -167,7 +167,7 @@ function edit_single_event( )
 		},
 		{
 			text: lang['delete_event'],
-			"class" : 'uk-button uk-button-danger',
+			"class" : 'uk-button uk-button-danger uk-align-right',
 			click: function() {
 				deleteevent();
 			}
@@ -193,6 +193,7 @@ function edit_single_event( )
 			// override the dialog buttons
 			var buttons = $('.ui-dialog-buttonset').children('button');
 			buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
+            $( ".ui-dialog-buttonset" ).css( "width", "100%" );
 			editDialog.dialog("open");
 		},
 		error: function (e) {
@@ -230,7 +231,7 @@ function edit_series_event()
 		},
 		{
 			text: lang['delete_series'],
-			"class" : 'uk-button uk-button-danger',
+			"class" : 'uk-button uk-button-danger uk-align-right',
 			click: function() {
 				deleteeventseries();
 			}
@@ -256,6 +257,7 @@ function edit_series_event()
 			form.validate();
 			var buttons = $('.ui-dialog-buttonset').children('button');
 			buttons.removeClass("ui-button ui-widget ui-state-default ui-state-active ui-state-focus");
+            $( ".ui-dialog-buttonset" ).css( "width", "100%" );
 			editDialog.dialog("open");
 		},
 		error: function (e) {
