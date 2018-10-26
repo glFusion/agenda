@@ -17,7 +17,7 @@
  - Fixed incorrect function call in creating excerpt in getItemInfo()
  - Fixed incorrect date return in getItemInfo()
  - Fixed incorrect status return in getItemInfo()
- - Fixed error in monthy maintenance routes that prevented recurring events with purged parents from being deleted
+ - Fixed error in monthly maintenance routes that prevented recurring events with purged parents from being deleted
 
 ## v1.0.1 (May 14, 2018)
 
