@@ -543,7 +543,7 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
 
     $retval = array();
     for ($i = 0; $i < $numRows; $i++) {
-        $A = DB_fetchArray($result);
+        $A = DB_fetchArray($result,false);
 
         $props = array();
         foreach ($properties as $p) {
