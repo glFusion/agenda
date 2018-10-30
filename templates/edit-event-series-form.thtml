@@ -293,9 +293,15 @@
 
 {!if admin_form}
 		<div class="uk-form-row">
-			<button type="submit" name="submit" class="uk-button uk-button-primary">{lang_save}</button>
-			<button type="submit" name="delete-series" class="uk-button uk-button-danger" onclick="return confirm('{lang_delete_confirm}');">{lang_delete}</button>
-			<button type="submit" name="cancel" class="uk-button cancel" value="{cancel_value}">{lang_cancel}</button>
+			<div class="uk-grid">
+				<div class="uk-width-small-3-4">
+					<button type="submit" name="submit" class="uk-button uk-button-success">{lang_save}</button>
+					<button type="submit" name="cancel" class="uk-button cancel" value="{cancel_value}">{lang_cancel}</button>
+				</div>
+				<div class="uk-width-small-1-4 uk-text-right">
+					<button type="submit" name="delete-series" class="uk-button uk-button-danger" onclick="return confirm('{lang_delete_confirm}');">{lang_delete}</button>
+				</div>
+			</div>
 		</div>
 {!endif}
 </form>

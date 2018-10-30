@@ -29,17 +29,20 @@ $end   = DB_escapeString($_GET['end']);
 
 // dates to use for our query
 if ( strstr($start,'T') === false ) {
-    $startDisplayUnix   = strtotime($start . ' 00:00:00');
-    $endDisplayUnix     = strtotime($end   . ' 24:00:00');
+    $sText = $start . ' 00:00:00';
+    $eText = $end   . ' 24:00:00';
 } else {
     $start = substr($start,0,strpos($start,'T'));
     $end   = substr($end,0,strpos($end,'T'));
-    $startDisplayUnix   = strtotime($start . ' 00:00:00');
-    $endDisplayUnix     = strtotime($end   . ' 24:00:00');
+    $sText = $start . ' 00:00:00';
+    $eText = $end   . ' 24:00:00';
 }
 
-$startDisplayUnix = DB_escapeString($startDisplayUnix);
-$endDisplayUnix   = DB_escapeString($endDisplayUnix);
+$dtStart = new \Date($sText,$_CONF['timezone']);
+$dtEnd   = new \Date($eText,$_CONF['timezone']);
+
+$startDisplayUnix = DB_escapeString($dtStart->toUnix());
+$endDisplayUnix   = DB_escapeString($dtEnd->toUnix());
 
 $events = array();
 

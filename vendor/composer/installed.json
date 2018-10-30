@@ -1,29 +1,29 @@
 [
     {
         "name": "rlanvin/php-rrule",
-        "version": "v1.6.0",
-        "version_normalized": "1.6.0.0",
+        "version": "v1.6.2",
+        "version_normalized": "1.6.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/rlanvin/php-rrule.git",
-            "reference": "c543bda87d2f8b6c490210f1a6e2bf0d79162a4a"
+            "reference": "539bc228f0b747760bacea8cc17b421f2010e44f"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/rlanvin/php-rrule/zipball/c543bda87d2f8b6c490210f1a6e2bf0d79162a4a",
-            "reference": "c543bda87d2f8b6c490210f1a6e2bf0d79162a4a",
+            "url": "https://api.github.com/repos/rlanvin/php-rrule/zipball/539bc228f0b747760bacea8cc17b421f2010e44f",
+            "reference": "539bc228f0b747760bacea8cc17b421f2010e44f",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.0"
         },
         "require-dev": {
-            "phpunit/phpunit": "<6"
+            "phpunit/phpunit": "^4.8|^5.5|^6.5"
         },
         "suggest": {
             "ext-intl": "Intl extension is needed for humanReadable()"
         },
-        "time": "2017-10-11 12:23:40",
+        "time": "2018-08-17T14:56:53+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

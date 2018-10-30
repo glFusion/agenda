@@ -1,6 +1,7 @@
 {# begin {templatelocation} #}
 <script src="{site_admin_url}/plugins/agenda/js/spectrum.js"></script>
 <link rel="stylesheet" href="{site_admin_url}/plugins/agenda/js/spectrum.css" />
+<div class="uk-panel uk-panel-box">
 <form class="uk-form uk-form-horizontal" action="{form_action}" method="post" id="category-form" name="category-form">
 	<input type="hidden" name="{action}" value="x">
 	<input type="hidden" name="category_id" value="{category_id}">
@@ -44,15 +45,21 @@
 	</div>
 
 	<div class="uk-form-row">
-		<button type="submit" name="submit" class="uk-button uk-button-primary">{lang_save}</button>
+		<div class="uk-grid">
+			<div class="uk-width-small-3-4">
+				<button type="submit" name="submit" class="uk-button uk-button-success">{lang_save}</button>
+				<button type="submit" name="cancel" class="uk-button cancel">{lang_cancel}</button>
+			</div>
+			<div class="uk-width-small-1-4 uk-text-right">
 {!if lang_delete}
-		<button type="submit" name="delcat" class="uk-button uk-button-danger" onclick="return confirm('{lang_delete_confirm}');">{lang_delete}</button>
+				<button type="submit" name="delcat" class="uk-button uk-button-danger" onclick="return confirm('{lang_delete_confirm}');">{lang_delete}</button>
 {!endif}
-		<button type="submit" name="cancel" class="uk-button cancel">{lang_cancel}</button>
+			</div>
+		</div>
 	</div>
 
 </form>
-
+</div>
 <script>
 	$("#fgcolor").spectrum({
 		color: "{fgcolor}",

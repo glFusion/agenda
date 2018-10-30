@@ -469,7 +469,7 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
             case 'date' :
             case 'date-modified':
             case 'date-created' :
-                $fields[] = 'start_date AS unixdate';
+                $fields[] = 'UNIX_TIMESTAMP(start_date) AS unixdate';
                 break;
             case 'description':
                 $fields[] = 'description';
@@ -543,7 +543,7 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
 
     $retval = array();
     for ($i = 0; $i < $numRows; $i++) {
-        $A = DB_fetchArray($result);
+        $A = DB_fetchArray($result,false);
 
         $props = array();
         foreach ($properties as $p) {
@@ -557,7 +557,7 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
                     $props[$p] = nl2br($A['description']);
                     break;
                 case 'excerpt':
-                    $props[$p] = nl2br(FC_truncate($A['description'],300,'...'));
+                    $props[$p] = nl2br(AC_truncate($A['description'],300,'...'));
                     break;
                 case 'searchidx' :
                     $props[$p] = $A['title'].' '.$A['description'];
@@ -580,7 +580,8 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
                     $props['label'] = $LANG_AC['plugin_name'];
                     break;
                 case 'status':
-                    $props['status'] = $A['queued'];
+//                    $props['status'] = $A['queued'];
+                    $props['status'] = $A['queued'] == 0 ? 1 : 0;
                     break;
                 case 'author' :
                     $props['author'] = $A['owner_id'];
@@ -755,7 +756,144 @@ function plugin_enablestatechange_agenda( $enable )
     }
 
     return 1;
+}
 
+/*
+* Do we support feeds?
+*/
+function plugin_getfeednames_agenda()
+{
+    global $LANG_AC;
+
+    $feeds = array ();
+
+    if (version_compare(GVERSION,'1.7.6','ge')) {
+        $feeds[] = array ('id' => 'agenda', 'name' => $LANG_AC['plugin_name']);
+    }
+
+    return $feeds;
+
+}
+
+/**
+* Get content for a feed that holds all events.
+*
+* @param    string   $feed     feed ID
+* @param    string   $link     link to homepage
+* @param    string   $update   list of story ids
+* @return   array              content of the feed
+*
+*/
+function plugin_getfeedcontent_agenda( $feed, &$link, &$update, $feedType, $feedVersion )
+{
+    global $_CONF, $_TABLES;
+
+    if ($feedType != 'ICS') return;
+
+    $sql = "SELECT * FROM {$_TABLES['ac_event']} "
+          ."WHERE queued = 0 "
+          ."ORDER BY start";
+    $result = DB_query($sql);
+
+    $content = array();
+    $eids = array();
+    $nrows = DB_numRows( $result );
+    for($i = 1; $i <= $nrows; $i++) {
+        $row = DB_fetchArray( $result );
+        $eids[] = $row['parent_id'];
+
+        $eventtitle = $row['title'];
+
+        $eventtext = SYND_truncateSummary( $row['description'], MBYTE_strlen($row['description']));
+
+        $dtLink = str_replace('-','/',$row['start_date']);
+        $dtLink = explode('-',$row['start_date']);
+
+        if (isset($dtLink[0]) && isset($dtLink[1]) && isset($dtLink[2])) {
+            $link = $_CONF['site_url'].'/agenda/index.php?v=agendaDay&y='.$dtLink[0].'&m='.$dtLink[1].'&d='.$dtLink[2];
+        } else {
+            continue;
+        }
+        $eventlink = COM_buildURL($link);
+        $extensionTags = array();
+
+        $content[] = array( 'title'      => $eventtitle,
+                            'summary'    => $eventtext,
+                            'link'       => $eventlink,
+                            'uid'        => $row['owner_id'],
+                            'author'     => COM_getDisplayName( $row['owner_id'] ),
+                            'date'       => date("Ymd\THi00",$row['start']),
+                            'dtstart'    => date("Ymd\THi00",$row['start']),
+                            'dtend'      => date("Ymd\THi00",$row['end']),
+                            'location'   => $row['location'],
+                            'format'     => 'plaintext',
+                            'allday'     => $row['allday'],
+                            'rrule'      => $row['rrule'],
+                            'guid'       => $row['parent_id'],
+                            'extensions' => $extensionTags
+                          );
+    }
+
+    $link = $_CONF['site_url'] . '/agenda/index.php';
+    $update = implode( ',', $eids );
+
+    $update = trim($update);
+    return $content;
+}
+
+/**
+* Checking if calendar feeds are up to date
+*
+* @param    int     $feed           id of feed to be checked
+* @param    string  $topic          topic (actually: category)
+* @param    string  $update_data    data describing current feed contents
+* @param    string  $limit          number of entries or number of hours
+* @param    string  $updated_type   (optional) type of feed to be updated
+* @param    string  $updated_topic  (optional) feed's "topic" to be updated
+* @param    string  $updated_id     (optional) id of entry that has changed
+*
+*/
+function plugin_feedupdatecheck_agenda ($feed, $topic, $update_data, $limit,
+                    $updated_type = '', $updated_topic = '', $updated_id = '')
+{
+    global $_CONF, $_TABLES, $_SYND_DEBUG;
+
+    $where = '';
+    if ( !empty( $limit )) {
+        if( substr( $limit, -1 ) == 'h' ) { // next xx hours
+            $limitsql = '';
+            $hours = substr( $limit, 0, -1 );
+            $where = " AND (start <= DATE_ADD('".$_CONF['_now']->toMySQL(true)."', INTERVAL $hours HOUR))";
+        } else {
+            $limitsql = ' LIMIT ' . intval($limit);
+        }
+    } else {
+        $limitsql = ' LIMIT 10';
+    }
+
+    $result = DB_query( "SELECT parent_id FROM {$_TABLES['ac_event']} WHERE queued = 0 AND end_date >= '".$_CONF['_now']->toMySQL(true)."'$where ORDER BY start $limitsql" );
+    $nrows = DB_numRows( $result );
+
+    $eids = array();
+    for( $i = 0; $i < $nrows; $i++ ) {
+        $A = DB_fetchArray( $result );
+
+        if ( $A['parent_id'] == $updated_id ) {
+            // no need to look any further - this feed has to be updated
+            return false;
+        }
+
+        $eids[] = $A['parent_id'];
+    }
+    $current = trim(implode( ',', $eids ));
+
+    if ($_SYND_DEBUG) {
+        COM_errorLog ("Agenda: Update check for events: comparing new list ($current) with old list ($update_info)", 1);
+    }
+
+    $rc = ( $current != $update_data ) ? false : true;
+
+    return $rc;
 }
 
 /**
@@ -1131,7 +1269,7 @@ function AC_eventMaintenance()
 
     if ( !isset($_VARS['agenda_maintenance']) || $_VARS['agenda_maintenance'] < (time() - $_AC_CONF['maintenance_check_frequency']) ) {
         DB_query("DELETE FROM {$_TABLES['ac_events']} where end_date < NOW() - INTERVAL ".$_AC_CONF['maintenance_max_age']." YEAR",1);
-        DB_query("DELETE FROM {$_TABLES['ac_event']} b LEFT JOIN {$_TABLES['ac_events']} f ON f.parent_id = b.parent_id WHERE b.queued = 0 AND f.parent_id IS NULL",1);
+        DB_query("DELETE `f` FROM {$_TABLES['ac_event']} b LEFT JOIN {$_TABLES['ac_events']} f ON f.parent_id = b.parent_id WHERE b.queued = 0 AND f.parent_id IS NULL",1);
         DB_query("REPLACE INTO {$_TABLES['vars']} (name,value) VALUES ('agenda_maintenance',UNIX_TIMESTAMP())");
     }
 }
