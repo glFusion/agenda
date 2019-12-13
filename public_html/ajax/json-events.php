@@ -9,7 +9,7 @@
 * @license GNU General Public License version 2 or later
 *     http://www.opensource.org/licenses/gpl-license.php
 *
-*  Copyright (C) 2016-2018 by the following authors:
+*  Copyright (C) 2016-2019 by the following authors:
 *   Mark R. Evans   mark AT glfusion DOT org
 *
 */
@@ -17,6 +17,8 @@
 require_once '../../lib-common.php';
 
 if ( !COM_isAjax() ) die;
+
+// use \glFusion\Cache\Cache;
 
 if ( !isset($_VARS['agenda_maintenance']) || $_VARS['agenda_maintenance'] < (time() - $_AC_CONF['maintenance_check_frequency']) ) {
     AC_eventMaintenance();
@@ -48,10 +50,15 @@ $events = array();
 
 $dt = new Date('now',$_USER['tzid']);
 
-$sql = "SELECT * FROM {$_TABLES['ac_events']} AS e LEFT JOIN {$_TABLES['ac_category']} AS c ON e.category=c.category_id WHERE start BETWEEN '{$startDisplayUnix}' AND '{$endDisplayUnix}' ";
+$sql = "SELECT *
+        FROM {$_TABLES['ac_events']} AS e LEFT JOIN {$_TABLES['ac_category']} AS c ON e.category=c.category_id
+        WHERE (start BETWEEN '{$startDisplayUnix}' AND '{$endDisplayUnix}')
+        OR (end BETWEEN '{$startDisplayUnix}' AND '{$endDisplayUnix}')
+        ";
+
 /*
 $sqlkey = 'agenda__'.md5($sql);
-$c = glFusion\Cache::getInstance();
+$c = Cache::getInstance();
 $eventDataJSON = $c->get($sqlkey);
 if ( $eventDataJSON !== null ) {
     echo $eventDataJSON;
