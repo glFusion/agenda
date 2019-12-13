@@ -1,5 +1,11 @@
 # Agenda Plugin ChangeLog
 
+## v1.0.3
+
+### Fixed
+  - Events that run between two months do not always display correctly #3
+  - Fixed issue where C&C icon showed for any user with access to C&C regardless if they had permission to view
+
 ## v1.0.2
 
 ### Added
