@@ -242,29 +242,29 @@ $LANG_fs['agenda'] = array(
     'fs_list'       => 'List View Settings',
 );
 
-$LANG_configselects['agenda'] = array(
-    0  => array('True' => 1, 'False' => 0 ),
-    1  => array('Not Found Page (404)' => 0, 'Login Screen' => 1),
-    2  => array('Admin Only' => 0,'Logged-In-Users' => 1, 'All Users' => 2),
-    3  => array('Disabled' => 0, 'Anonymous Only' => 1, 'All Users' => 2),
-    4  => array('Left Blocks' => 0, 'Right Blocks' => 1, 'All Blocks' => 2, 'No Blocks' => 3),
-    5  => array('Month' => 'month','Week' => 'agendaWeek', 'Day' => 'agendaDay', 'List' => 'listMonth'),
-    6  => array('Auto' => 'auto', 'Fit' => 'fit'),
+$LANG_configSelect['agenda'] = array(
+    0  => array(1=>'True', 0 => 'False'),
+    1  => array(0=>'Not Found Page (404)', 1=>'Login Screen'),
+    2  => array(0=>'Admin Only',1=>'Logged-In-Users', 2=>'All Users'),
+    3  => array(0=>'Disabled', 1=>'Anonymous Only', 2=>'All Users'),
+    4  => array(0=>'Left Blocks', 1=>'Right Blocks', 2=>'All Blocks', 3=>'No Blocks'),
+    5  => array('month'=>'Month','agendaWeek'=>'Week', 'agendaDay'=>'Day', 'listMonth'=>'List'),
+    6  => array('auto'=>'Auto', 'fit'=>'Fit'),
     7  => array(
-        'Title' => 'title',
-        'None'  => '',
-        'Today Prev,Next' => 'today prev,next',
-        'Today PrevYear,NextYear Prev,Next' => 'today prevYear,nextYear prev,next',
-        'Views' => 'month,agendaWeek,agendaDay,listMonth',
+        'title' =>'Title',
+        'none'  => 'None',
+        'today prev,next'=>'Today Prev,Next',
+        'today prevYear,nextYear prev,next' => 'Today PrevYear,NextYear Prev,Next',
+        'month,agendaWeek,agendaDay,listMonth' => 'Views',
     ),
     8  => array(
-        'Sunday'    => 0,
-        'Monday'    => 1,
-        'Tuesday'   => 2,
-        'Wednesday' => 3,
-        'Thursday'  => 4,
-        'Friday'    => 5,
-        'Saturday'  => 6
+        0 =>'Sunday',
+        1 =>'Monday',
+        2 =>'Tuesday',
+        3 =>'Wednesday',
+        4 =>'Thursday',
+        5 =>'Friday',
+        6 =>'Saturday'
     ),
 );
 
