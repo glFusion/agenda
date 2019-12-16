@@ -253,7 +253,15 @@ class eventHandler {
             $dtDiff = $dtEndD->toUnix() - $dtStartD->toUnix();
             $durationDays = (int) floor($dtDiff / (60 * 60 * 24));
 
-            for ( $x = 1; $x < $iterations; $x++ ) {
+            // in some cases rrule will return the current date as part of the iterations and in other cases it does not
+
+            if ( $startD == $startDateArray[0].' 00:00:00') {
+                $y = 1;
+            } else {
+                $y = 0;
+            }
+
+            for ( $x = $y; $x < $iterations; $x++ ) {
 
                 $start_date = $startDateArray[$x];
                 $end_date = date('Y-m-d', strtotime($start_date . ' +'.$durationDays.' days'));

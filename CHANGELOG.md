@@ -3,6 +3,7 @@
 ## v1.0.3
 
 ### Fixed
+  - In some cases, repeating events would skip the first occurence of the future events
   - Events that run between two months do not always display correctly #3
   - Fixed issue where C&C icon showed for any user with access to C&C regardless if they had permission to view
 
