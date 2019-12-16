@@ -6,6 +6,9 @@
   - Events that run between two months do not always display correctly #3
   - Fixed issue where C&C icon showed for any user with access to C&C regardless if they had permission to view
 
+### Updated
+  - Updated rlanvin/php-rrule (v1.6.2 => v1.6.3)
+
 ## v1.0.2
 
 ### Added

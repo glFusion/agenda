@@ -9,7 +9,7 @@
 * @license GNU General Public License version 2 or later
 *     http://www.opensource.org/licenses/gpl-license.php
 *
-*  Copyright (C) 2016-2018 by the following authors:
+*  Copyright (C) 2016-2019 by the following authors:
 *   Mark R. Evans   mark AT glfusion DOT org
 *
 */
@@ -81,6 +81,9 @@ function agenda_upgrade()
             // no changes
 
         case '1.0.1' :
+            // no changes
+
+        case '1.0.2' :
             // no changes
 
         default:
