@@ -4,7 +4,7 @@
 
 ### Fixed
   - Fixed issue where the 'fifth' option did not display for repeating event entry
-  - In some cases, repeating events would skip the first occurence of the future events
+  - In some cases, repeating events would skip the first occurrence of the future events
   - Events that run between two months do not always display correctly #3
   - Fixed issue where C&C icon showed for any user with access to C&C regardless if they had permission to view
 
