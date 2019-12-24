@@ -9,7 +9,7 @@
 * @license GNU General Public License version 2 or later
 *     http://www.opensource.org/licenses/gpl-license.php
 *
-*  Copyright (C) 2016-2017 by the following authors:
+*  Copyright (C) 2016-2019 by the following authors:
 *   Mark R. Evans   mark AT glfusion DOT org
 *
 */
@@ -24,7 +24,7 @@ global $_DB_table_prefix, $_TABLES;
 
 $_AC_CONF['pi_name']            = 'agenda';
 $_AC_CONF['pi_display_name']    = 'Agenda';
-$_AC_CONF['pi_version']         = '1.0.2';
+$_AC_CONF['pi_version']         = '1.0.3';
 $_AC_CONF['gl_version']         = '1.7.0';
 $_AC_CONF['pi_url']             = 'https://www.glfusion.org/';
 

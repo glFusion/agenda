@@ -125,6 +125,7 @@ class eventForms {
             'lang_second'       => $LANG_AC['second'],
             'lang_third'        => $LANG_AC['third'],
             'lang_forth'        => $LANG_AC['forth'],
+            'lang_fifth'        => $LANG_AC['fifth'],
             'lang_last'         => $LANG_AC['last'],
             'lang_day'          => $LANG_AC['day'],
             'lang_weekday'      => $LANG_AC['weekday'],

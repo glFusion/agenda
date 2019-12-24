@@ -116,6 +116,7 @@
 						<option value="2">{lang_second}</option>
 						<option value="3">{lang_third}</option>
 						<option value="4">{lang_forth}</option>
+						<option value="5">{lang_fifth}</option>
 						<option value="-1">{lang_last}</option>
 					</select>
 
@@ -198,6 +199,7 @@
 						<option value="2">{lang_second}</option>
 						<option value="3">{lang_third}</option>
 						<option value="4">{lang_forth}</option>
+						<option value="5">{lang_fifth}</option>
 						<option value="-1">{lang_last}</option>
 					</select>
 

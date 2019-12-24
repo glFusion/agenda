@@ -150,11 +150,13 @@ function plugin_cclabel_agenda()
 {
     global $_CONF, $LANG_AC;
 
-    return array(
-        $LANG_AC['plugin_name'],
-        $_CONF['site_admin_url'] . '/plugins/agenda/index.php',
-        $_CONF['site_url'] . '/agenda/images/agenda.png'
-    );
+    if (SEC_hasRights('agenda.admin')) {
+        return array(
+            $LANG_AC['plugin_name'],
+            $_CONF['site_admin_url'] . '/plugins/agenda/index.php',
+            $_CONF['site_url'] . '/agenda/images/agenda.png'
+        );
+    }
 }
 
 /**
