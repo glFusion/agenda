@@ -1,5 +1,13 @@
 # Agenda Plugin ChangeLog
 
+## v1.0.4
+
+### Updated
+  - New German translation
+
+### Fixed
+  - Fixed invalid URL for configuration help file for non-english languages
+
 ## v1.0.3
 
 ### Fixed

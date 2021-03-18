@@ -9,7 +9,7 @@
 * @license GNU General Public License version 2 or later
 *     http://www.opensource.org/licenses/gpl-license.php
 *
-*  Copyright (C) 2016-2018 by the following authors:
+*  Copyright (C) 2016-2020 by the following authors:
 *   Mark R. Evans   mark AT glfusion DOT org
 *
 */
@@ -392,7 +392,7 @@ function plugin_getconfigelementhelp_agenda($option, $doclang='english')
 
     $doc_url = $_CONF['site_url'] . '/agenda/docs/'.$doclang.'/config.html';
 
-     if (empty($doc_url))
+     if (empty($doc_url) || !file_exists($doc_url))
         return false;
 
     if (!empty($option)) {
@@ -896,6 +896,13 @@ function plugin_feedupdatecheck_agenda ($feed, $topic, $update_data, $limit,
     $rc = ( $current != $update_data ) ? false : true;
 
     return $rc;
+}
+
+function plugin_centerblock_agenda( $where=1, $page=1, $topic ='' )
+{
+    global $_CONF, $_AC_CONF;
+
+
 }
 
 /**
