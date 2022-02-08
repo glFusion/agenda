@@ -9,7 +9,7 @@
 * @license GNU General Public License version 2 or later
 *     http://www.opensource.org/licenses/gpl-license.php
 *
-*  Copyright (C) 2016-2020 by the following authors:
+*  Copyright (C) 2016-2022 by the following authors:
 *   Mark R. Evans   mark AT glfusion DOT org
 *
 */
@@ -410,45 +410,6 @@ function plugin_searchtypes_agenda()
 
     return $tmp;
 }
-
-
-/**
-* this searches for agenda matching the user query and returns an array of
-* for the header and table rows back to search.php where it will be formated and
-* printed
-*
-* @query            string          Keywords user is looking for
-* @datestart        date/time       Start date to get results for
-* @dateend          date/time       End date to get results for
-* @topic            string          The topic they were searching in
-* @type             string          Type of items they are searching
-* @author           string          Get all results by this author
-*
-*/
-function plugin_dopluginsearch_agenda($query, $datestart, $dateend, $topic, $type, $author, $keyType, $page, $perpage)
-{
-    global $_USER, $_AC_CONF, $LANG_AC, $_TABLES, $_CONF;
-
-    $query = trim(DB_escapeString(htmlspecialchars($query)));
-
-    $sql = " SELECT parent_id AS id, description,start AS date, owner_id AS uid, title, CONCAT('/agenda/index.php/agendaDay/',DATE_FORMAT(start_date, '%Y'),'/',DATE_FORMAT(start_date, '%m'),'/',DATE_FORMAT(start_date, '%d')) AS url ";
-    $sql .= "FROM {$_TABLES['ac_event']} ";
-    $sql .= "WHERE queued = 0 ";
-
-    if (!empty ($author))
-        $sql .= "AND (owner_id = '$author') ";
-
-    $search = new SearchCriteria('agenda', 'agenda');
-    $columns = array('title','description');
-    $sql .= $search->getDateRangeSQL('AND', 'start_date', $datestart, $dateend);
-    list($sql,$ftsql) = $search->buildSearchSQL($keyType, $query, $columns, $sql);
-    $search->setSQL($sql);
-    $search->setFTSQL($ftsql);
-    $search->setRank(3);
-
-    return $search;
-}
-
 
 /**
 * Return information for an event
@@ -926,7 +887,7 @@ function phpblock_agenda( $help='', $title='' )
         return $retval;
     }
 
-    if ( !$_USER['noboxes'] && $_AC_CONF['showupcomingevents'] ) {
+    if ( $_AC_CONF['showupcomingevents'] ) {
 
         $filter = new sanitizer();
 
