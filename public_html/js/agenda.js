@@ -1,5 +1,5 @@
 /*! glFusion CMS - Agenda Plugin for glFusion - License GNU General Public License version 2 or later
- *  Copyright (C) 2016-2018 by Mark R. Evans - mark AT glfusion DOT org */
+ *  Copyright (C) 2016-2020 by Mark R. Evans - mark AT glfusion DOT org */
 
 // global vars
 
@@ -295,7 +295,7 @@ function initializeCalendar( config )
 			target: 'event',
 			adjust: {
 				method: 'flip flip',
-				scroll: false
+				scroll: true
 			}
 		},
 		show: {

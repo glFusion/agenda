@@ -7,7 +7,7 @@
 * @license GNU General Public License version 2 or later
 *     http://www.opensource.org/licenses/gpl-license.php
 *
-*  Copyright (C) 2016-2018 by the following authors:
+*  Copyright (C) 2016-2021 by the following authors:
 *   Mark R. Evans   mark AT glfusion DOT org
 *
 */
@@ -816,7 +816,7 @@ function agenda_admin_menu($action,$title)
             array( 'url' => $_CONF['site_admin_url'].'/moderation.php','text' => $LANG01[10],'active' =>false),
             array( 'url' => $_CONF['site_admin_url'].'/moderation.php','text' => $LANG_AC_JS['edit_event'],'active' => true),
             array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php?catlist=x','text' => $LANG_AC['category_list'],'active' => ($action == 'catlist' ? true : false)),
-            array( 'url' => $_CONF['site_admin_url'], 'text' => $LANG_ADMIN['admin_home'])
+            array( 'url' => $_CONF['site_admin_url'].'/index.php', 'text' => $LANG_ADMIN['admin_home'])
         );
     } else {
         $menu_arr = array(
@@ -824,7 +824,7 @@ function agenda_admin_menu($action,$title)
             array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php?newevent=x','text' => $LANG_AC['create'],'active' => ($action == 'newevent' ? true : false)),
             array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php?catlist=x','text' => $LANG_AC['category_list'],'active' => ($action == 'catlist' ? true : false)),
             array( 'url' => $_CONF['site_admin_url'].'/plugins/agenda/index.php?newcat=x','text' => $LANG_AC['category_new'],'active' => ($action == 'newcat' ? true : false)),
-            array( 'url' => $_CONF['site_admin_url'], 'text' => $LANG_ADMIN['admin_home'])
+            array( 'url' => $_CONF['site_admin_url'].'/index.php', 'text' => $LANG_ADMIN['admin_home'])
         );
     }
 
