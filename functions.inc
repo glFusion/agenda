@@ -33,6 +33,13 @@ if (file_exists ($langfile)) {
 } else {
     include_once $_CONF['path'] . 'plugins/agenda/language/english_utf-8.php';
 }
+if (version_compare(GVERSION,'2.0.0','lt')) {
+    if (isset($LANG_configSelect['agenda']) && !isset($LANG_configselects['agenda'])) {
+        foreach ($LANG_configSelect['agenda'] AS $cfgItem) {
+            $LANG_configselects['agenda'][] = array_flip($cfgItem);
+        }
+    }
+}
 
 /*
 * Include agenda config file
