@@ -1,5 +1,9 @@
 # Agenda Plugin ChangeLog
 
+## v1.0.5
+
+- Updated to support LTS configuration
+
 ## v1.0.4
 
 ### Updated
