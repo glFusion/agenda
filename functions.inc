@@ -33,6 +33,13 @@ if (file_exists ($langfile)) {
 } else {
     include_once $_CONF['path'] . 'plugins/agenda/language/english_utf-8.php';
 }
+if (version_compare(GVERSION,'2.0.0','lt')) {
+    if (isset($LANG_configSelect['agenda']) && !isset($LANG_configselects['agenda'])) {
+        foreach ($LANG_configSelect['agenda'] AS $cfgItem) {
+            $LANG_configselects['agenda'][] = array_flip($cfgItem);
+        }
+    }
+}
 
 /*
 * Include agenda config file
@@ -423,7 +430,11 @@ function plugin_searchtypes_agenda()
 */
 function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
 {
-    global $_CONF, $_AC_CONF, $_TABLES, $LANG_AC;
+    global $_CONF, $_AC_CONF, $_USER, $_TABLES, $LANG_AC;
+
+    if ($uid == 0) {
+        $uid = $_USER['uid'];
+    }
 
     $properties = explode(',', $what);
     $fields = array();
@@ -543,7 +554,6 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
                     $props['label'] = $LANG_AC['plugin_name'];
                     break;
                 case 'status':
-//                    $props['status'] = $A['queued'];
                     $props['status'] = $A['queued'] == 0 ? 1 : 0;
                     break;
                 case 'author' :
@@ -558,7 +568,7 @@ function plugin_getiteminfo_agenda($id, $what, $uid = 0, $options = array())
                 case 'perms' :
                     $p_anon   = 2;
                     $p_member = 2;
-                    if ( COM_isAnonUser() && $_AC_CONF['allow_anonymous_view'] == false )  {
+                    if ( COM_isAnonUser($uid) && $_AC_CONF['allow_anonymous_view'] == false )  {
                         $p_anon = 0;
                     }
                     $props['perms'] = array(

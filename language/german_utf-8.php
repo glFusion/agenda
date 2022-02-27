@@ -9,7 +9,7 @@
 * @license GNU General Public License version 2 or later
 *     http://www.opensource.org/licenses/gpl-license.php
 *
-*  Copyright (C) 2016-2018 by the following authors:
+*  Copyright (C) 2016-2019 by the following authors:
 *   Mark R. Evans   mark AT glfusion DOT org
 *
 */
@@ -117,6 +117,7 @@ $LANG_AC = array (
     'second'            => 'Zweiten',
     'third'             => 'Dritten',
     'forth'             => 'Vierten',
+    'fifth'             => 'Fünfte',
     'last'              => 'Letzten',
 //LANG WEEK has weekday names too
     'day'               => 'Tag',
