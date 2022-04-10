@@ -1,5 +1,9 @@
 # Agenda Plugin ChangeLog
 
+## v1.0.6
+
+- Update moment.js to v 2.29.2 - fixes CVE-2022-24785
+
 ## v1.0.5
 
 - Updated to support LTS configuration

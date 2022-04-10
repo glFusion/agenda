@@ -15,13 +15,14 @@ The Agenda Plugin has the following system requirements:
 * Must be using a UIKIT based theme - will not work with Vintage or Nouveau themes
 
 ### Features
+
 Agenda is a full featured event management system that supports the following features:
+
 * Dynamic, JavaScript driven calendar view (provided by Full Calendar)
 * Recurring event support
 * Localized - supports all glFusion supported languages
 * Full RTL support
 * Upcoming Events block
-
 
 ### Installation
 
@@ -74,7 +75,6 @@ When updating just the Location, Description and/or Category (Edit Recurrence ch
 
 When **Edit Recurrence** is checked, allowing you to edit all attributes of the event series, when saved, the **entire** event series (including exception events) are deleted and the series is re-created using the new rules. It is important to remember when **Edit Recurrence** is checked, all exception events are removed on save. Agenda will also place a warning on the screen to remind you of this as well.
 
-
 ### Permissions
 
 The following controls are implemented to control access:
@@ -82,11 +82,12 @@ The following controls are implemented to control access:
 #### Configuration Settings
 
 #### Anonymous User Access
+
 You can enable or disable anonymous user access to the calendar.  Logged-in users will have access to the calendar.
 
 #### Event Submission
-Agenda supports limiting who can add new events to the calendar. You can restrict to Admin users only, allow Admins and Logged-In users, or allow anyone (including non-logged in users) to add events.
 
+Agenda supports limiting who can add new events to the calendar. You can restrict to Admin users only, allow Admins and Logged-In users, or allow anyone (including non-logged in users) to add events.
 
 #### glFusion Groups and Rights
 
@@ -103,7 +104,6 @@ Anyone, with the **agenda.view** feature assigned to a group they belong to will
 Anyone with the **agenda.noqueue** feature assigned to a group they belong to will be able to submit new events and **bypass** the submission queue (if enabled).
 
 For more information on glFusion Groups / Rights - please see the [Permissions Overview Wiki Page](https://www.glfusion.org/wiki/glfusion:permissions).
-
 
 ### Configuration
 
@@ -145,7 +145,6 @@ Number of days between the purge old events maintenance task. The purge old even
 
 How many Years of old events to keep.
 
-
 #### Global View Options
 
 **Default View**
@@ -180,7 +179,6 @@ If TRUE, the week number will be displayed on the Month, Week and Day views.
 
 If TRUE, a print button will be displayed in the Agenda header to allow printing the current view.
 
-
 #### Month View Options
 
 **Month View :: Event Limit**
@@ -195,11 +193,9 @@ Determines the time-text that will be displayed on each event. For example, 'hh:
 
 Determines the text that will be displayed on the calendar's column headings. For example, 'ddd' will display 'Mon', 'ddd M/D' will display 'Mon 9/7'.
 
-
 **Month View :: Title Format**
 
 Determines the text that will be displayed in the header's title. For example, MMMM YYYY' will display 'September 2009', 'MMM D YYYY' will display 'Sep 13 2009', 'MMMM D YYYY' will display 'September 8 2009'.
-
 
 **Month View :: Display Event Time**
 
@@ -223,11 +219,9 @@ Determines the time-text that will be displayed on each event. For example, 'hh:
 
 Determines the text that will be displayed on the calendar's column headings. For example, 'ddd' will display 'Mon', 'ddd M/D' will display 'Mon 9/7'.
 
-
 **Week View :: Title Format**
 
 Determines the text that will be displayed in the header's title. For example, MMMM YYYY' will display 'September 2009', 'MMM D YYYY' will display 'Sep 13 2009', 'MMMM D YYYY' will display 'September 8 2009'.
-
 
 **Week View :: Display Event Time**
 
@@ -236,7 +230,6 @@ If TRUE, the Event Start Time will display next to the event (All Day events DO 
 **Week View :: Display Event End Time**
 If TRUE, the Event End Time will also d
 isplay next to the event (All Day events DO NOT display a end time).
-
 
 #### Day View Options
 
@@ -252,11 +245,9 @@ Determines the time-text that will be displayed on each event. For example, 'hh:
 
 Determines the text that will be displayed on the calendar's column headings. For example, 'ddd' will display 'Mon', 'ddd M/D' will display 'Mon 9/7'.
 
-
 **Day View :: Title Format**
 
 Determines the text that will be displayed in the header's title. For example, MMMM YYYY' will display 'September 2009', 'MMM D YYYY' will display 'Sep 13 2009', 'MMMM D YYYY' will display 'September 8 2009'.
-
 
 **Day View :: Display Event Time**
 
@@ -279,7 +270,6 @@ If TRUE, the Event Start Time will display next to the event (All Day events DO 
 **List View :: Display Event End Time**
 
 If TRUE, the Event End Time will also display next to the event (All Day events DO NOT display a end time).
-
 
 ### License
 
